@@ -80,7 +80,7 @@ public class PostBadge extends Thread {
 			sPayload.addProperty("recipient", this.UUID);
 			token.addJsonObject("payload", sPayload);
 
-			HttpPost postReq = new HttpPost("http://chicago.col-engine-staging.com/partner_organizations/api.json");
+			HttpPost postReq = new HttpPost("http://chicago.col-engine.com/partner_organizations/api.json");
 
 			postReq.setHeader("Accept", "application/json");
 			postReq.setHeader("Authorization", "JWT token=" + this.orgKey);

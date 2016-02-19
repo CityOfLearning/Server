@@ -18,6 +18,7 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 
 	// the info needed to increment a requirement
 	private String data;
+	private boolean mentorAwarded;
 	
 	//this packet should only be sent when a player is in the right dimension so we shouldnt have to check for it ever
 
@@ -29,16 +30,24 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 	// We need to initialize our data, so provide a suitable constructor:
 	public SyncAchievementsMessage(String s) {
 		data = s;
+		mentorAwarded = false;
+	}
+	
+	public SyncAchievementsMessage(String s, boolean b) {
+		data = s;
+		mentorAwarded = b;
 	}
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
 		data = buffer.readStringFromBuffer(500);
+		mentorAwarded = buffer.readBoolean();
 	}
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
 		buffer.writeStringToBuffer(data);
+		buffer.writeBoolean(mentorAwarded);
 	}
 
 	@Override
@@ -64,35 +73,42 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 				type = AchievementType.PLACE;
 			} else if (values[1].equals("BREAK")) {
 				type = AchievementType.BREAK;
+			} else if (values[1].equals("MENTOR")) {
+				type = AchievementType.MENTOR;
 			}
 			int req_id = Integer.parseInt(values[2]);
 
 			AchievementPlus a = AchievementHandler.findAchievementById(ach_id);
 			if (!a.isAwarded()) {
-				if (!a.hasParent()) {
-					for (BaseRequirement r : a.getRequirements().getRequirementsByType(type)) {
-						if (r.getRequirementID() == req_id) {
-							if (r.getTotalAquired() < r.getTotalNeeded()) {
-								r.incrementTotal();
+				if(!mentorAwarded) {
+					if (!a.hasParent()) {
+						for (BaseRequirement r : a.getRequirements().getRequirementsByType(type)) {
+							if (r.getRequirementID() == req_id) {
+								if (r.getTotalAquired() < r.getTotalNeeded()) {
+									r.incrementTotal();
+								}
 							}
 						}
-					}
-					if(a.meetsRequirements()){
-						PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username ));
-						a.setAwarded();
-					}
-				} else if (a.getParent().isAwarded()) {
-					for (BaseRequirement r : a.getRequirements().getRequirementsByType(type)) {
-						if (r.getRequirementID() == req_id) {
-							if (r.getTotalAquired() < r.getTotalNeeded()) {
-								r.incrementTotal();
+						if(a.meetsRequirements()){
+							PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username ));
+							a.setAwarded();
+						}
+					} else if (a.getParent().isAwarded()) {
+						for (BaseRequirement r : a.getRequirements().getRequirementsByType(type)) {
+							if (r.getRequirementID() == req_id) {
+								if (r.getTotalAquired() < r.getTotalNeeded()) {
+									r.incrementTotal();
+								}
 							}
 						}
+						if(a.meetsRequirements()){
+							PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username));
+							a.setAwarded();
+						}
 					}
-					if(a.meetsRequirements()){
-						PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username));
-						a.setAwarded();
-					}
+				} else {
+					PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username ));
+					a.setAwarded();
 				}
 			}
 		}

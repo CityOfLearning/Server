@@ -3,9 +3,11 @@ package com.dyn.server.packets;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import com.dyn.server.packets.client.ReturnFlagMessage;
 import com.dyn.server.packets.client.SyncAchievementsMessage;
 import com.dyn.server.packets.client.TeacherSettingsMessage;
 import com.dyn.server.packets.server.AwardAchievementMessage;
+import com.dyn.server.packets.server.MentorGivingAchievementMessage;
 import com.dyn.server.packets.server.RequestUserlistMessage;
 import com.dyn.server.reference.Reference;
 
@@ -53,9 +55,11 @@ public class PacketDispatcher
 		// Packets handled on CLIENT
 		registerMessage(SyncAchievementsMessage.class);
 		registerMessage(TeacherSettingsMessage.class);
+		registerMessage(ReturnFlagMessage.class);
 
 		// Packets handled on SERVER
 		registerMessage(AwardAchievementMessage.class);
+		registerMessage(MentorGivingAchievementMessage.class);
 		registerMessage(RequestUserlistMessage.class);
 
 		// If you don't want to make a 'registerMessage' method, you can do it directly:

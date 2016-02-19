@@ -57,7 +57,7 @@ public class GetBadge extends Thread {
 			sPayload.addProperty("key", this.orgKey);
 			token.addJsonObject("payload", sPayload);
 
-			HttpGet getReq = new HttpGet("http://chicago.col-engine-staging.com/partner_organizations/api.json?jwt="
+			HttpGet getReq = new HttpGet("http://chicago.col-engine.com/partner_organizations/api.json?jwt="
 					+ token.serializeAndSign());
 			getReq.setHeader("Accept", "application/json");
 			getReq.setHeader("Authorization", "JWT token=" + this.orgKey);
