@@ -31,7 +31,9 @@ public class RequestUserlistMessage extends AbstractServerMessage<RequestUserlis
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
-		PacketDispatcher.sendTo(new TeacherSettingsMessage(ServerMod.proxy.getServerUserlist(), true),
-				(EntityPlayerMP) player);
+		if(side.isServer()){
+			PacketDispatcher.sendTo(new TeacherSettingsMessage(ServerMod.proxy.getServerUserlist(), true),
+					(EntityPlayerMP) player);	
+		}
 	}
 }

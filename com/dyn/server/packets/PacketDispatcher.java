@@ -3,6 +3,7 @@ package com.dyn.server.packets;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import com.dyn.server.packets.client.CheckDynUsernameMessage;
 import com.dyn.server.packets.client.ReturnFlagMessage;
 import com.dyn.server.packets.client.SyncAchievementsMessage;
 import com.dyn.server.packets.client.TeacherSettingsMessage;
@@ -56,6 +57,7 @@ public class PacketDispatcher
 		registerMessage(SyncAchievementsMessage.class);
 		registerMessage(TeacherSettingsMessage.class);
 		registerMessage(ReturnFlagMessage.class);
+		//registerMessage(CheckDynUsernameMessage.class);
 
 		// Packets handled on SERVER
 		registerMessage(AwardAchievementMessage.class);

@@ -45,13 +45,15 @@ public class ReturnFlagMessage extends AbstractClientMessage<ReturnFlagMessage> 
 	@Override
 	public void process(EntityPlayer player, Side side) {	
 		if (side.isClient()) {
-			for(int i=0;i<player.inventory.getSizeInventory();i++){
-				if(player.inventory.getStackInSlot(i) == null){
-					player.inventory.setInventorySlotContents(i, data);
-					break;
-				}
-			}
-			
+			if(!player.inventory.hasItem(data.getItem())){
+				player.inventory.addItemStackToInventory(data);
+				/*for(int i=0;i<player.inventory.getSizeInventory();i++){
+					if(player.inventory.getStackInSlot(i) == null){
+						player.inventory.setInventorySlotContents(i, data);
+						break;
+					}
+				}*/
+			}			
 		}
 	}
 }

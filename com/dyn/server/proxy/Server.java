@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dyn.item.items.Flags;
 import com.dyn.server.packets.PacketDispatcher;
+import com.dyn.server.packets.client.CheckDynUsernameMessage;
 import com.dyn.server.packets.client.TeacherSettingsMessage;
 //import com.forgeessentials.api.APIRegistry;
 import com.mojang.authlib.GameProfile;
@@ -45,24 +46,13 @@ public class Server implements Proxy {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	/*@SubscribeEvent
-	public void dropEvent(ItemTossEvent event){
-		System.out.println("Server Toss Event");
-		if(event.player != null && event.entityItem != null && event.entityItem.getEntityItem() != null){
-			if(event.entityItem.getEntityItem().getItem() instanceof Flags){
-				event.setCanceled(true);
-				event.player.inventory.setInventorySlotContents(event.player.inventory.currentItem, event.entityItem.getEntityItem());
-			}
-		}
-	}*/
-
 	@SubscribeEvent
 	public void loginEvent(PlayerEvent.PlayerLoggedInEvent event) {
 		if (getOpLevel(event.player.getGameProfile()) > 0) {
 			PacketDispatcher.sendTo(new TeacherSettingsMessage(getServerUserlist(), true), (EntityPlayerMP) event.player);
 		}
 
-		//PacketDispatcher.sendTo(new GetWorldsMessage(APIRegistry.namedWorldHandler.getWorldNames()), (EntityPlayerMP) event.player);
+		//PacketDispatcher.sendTo(new CheckDynUsernameMessage(), (EntityPlayerMP) event.player);
 
 	}
 
