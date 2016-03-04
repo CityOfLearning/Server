@@ -10,7 +10,7 @@ import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class RequestUserlistMessage extends AbstractServerMessage<RequestUserlistMessage> {
 

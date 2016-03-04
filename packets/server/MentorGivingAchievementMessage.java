@@ -7,14 +7,12 @@ import net.minecraft.network.PacketBuffer;
 import java.io.IOException;
 
 import com.dyn.achievements.achievement.AchievementType;
-import com.dyn.achievements.handlers.AchievementHandler;
-import com.dyn.login.LoginGUI;
 import com.dyn.server.ServerMod;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.packets.client.SyncAchievementsMessage;
 
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class MentorGivingAchievementMessage extends AbstractServerMessage<MentorGivingAchievementMessage> {
 	private String player_name;
@@ -44,7 +42,7 @@ public class MentorGivingAchievementMessage extends AbstractServerMessage<Mentor
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataOutputStream
-		buffer.writeStringToBuffer(this.player_name);
+		buffer.writeString(this.player_name);
 		buffer.writeInt(this.ach_id);
 	}
 
@@ -52,11 +50,13 @@ public class MentorGivingAchievementMessage extends AbstractServerMessage<Mentor
 	public void process(EntityPlayer player, Side side) {
 		// using the message instance gives access to 'this.id'
 		if (side.isServer()) {
+			System.out.println("Awarding to " + player_name);
 			for(EntityPlayerMP p : ServerMod.proxy.getServerUsers()){
+				System.out.println(p);
 				if(p.getDisplayName().equals(this.player_name)){
 					PacketDispatcher.sendTo(new SyncAchievementsMessage(
 							"" + this.ach_id + " " + AchievementType.MENTOR + " 0", true),
-					(EntityPlayerMP) p);
+					p);
 				}
 			}
 		}

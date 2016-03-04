@@ -7,15 +7,14 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.IThreadListener;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
 import com.dyn.server.ServerMod;
-
 import com.google.common.base.Throwables;
-
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * 
@@ -55,6 +54,8 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
 	/**
 	 * Called on whichever side the message is received;
 	 * for bidirectional packets, be sure to check side
+	 * If {@link #requiresMainThread()} returns true, this method is guaranteed
+	 * to be called on the main Minecraft thread for this side.
 	 */
 	public abstract void process(EntityPlayer player, Side side);
 
@@ -64,6 +65,14 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
 	 */
 	protected boolean isValidOnSide(Side side) {
 		return true; // default allows handling on both sides, i.e. a bidirectional packet
+	}
+
+	/**
+	 * Whether this message requires the main thread to be processed (i.e. it
+	 * requires that the world, player, and other objects are in a valid state).
+	 */
+	protected boolean requiresMainThread() {
+		return true;
 	}
 
 	@Override
@@ -98,9 +107,26 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
 	public final IMessage onMessage(T msg, MessageContext ctx) {
 		if (!msg.isValidOnSide(ctx.side)) {
 			throw new RuntimeException("Invalid side " + ctx.side.name() + " for " + msg.getClass().getSimpleName());
+		} else if (msg.requiresMainThread()) {
+			checkThreadAndEnqueue(msg, ctx);
+		} else {
+			msg.process(ServerMod.proxy.getPlayerEntity(ctx), ctx.side);
 		}
-		msg.process(ServerMod.proxy.getPlayerEntity(ctx), ctx.side);
 		return null;
+	}
+
+	/**
+	 * 1.8 ONLY: Ensures that the message is being handled on the main thread
+	 */
+	private static final <T extends AbstractMessage<T>> void checkThreadAndEnqueue(final AbstractMessage<T> msg, final MessageContext ctx) {
+		IThreadListener thread = ServerMod.proxy.getThreadFromContext(ctx);
+		// pretty much copied straight from vanilla code, see {@link PacketThreadUtil#checkThreadAndEnqueue}
+		thread.addScheduledTask(new Runnable() {
+			@Override
+			public void run() {
+				msg.process(ServerMod.proxy.getPlayerEntity(ctx), ctx.side);
+			}
+		});
 	}
 
 	/**

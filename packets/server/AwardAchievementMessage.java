@@ -11,7 +11,7 @@ import com.dyn.login.LoginGUI;
 import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class AwardAchievementMessage extends AbstractServerMessage<AwardAchievementMessage> {
 	private int id;
@@ -51,8 +51,8 @@ public class AwardAchievementMessage extends AbstractServerMessage<AwardAchievem
 	protected void write(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataOutputStream
 		buffer.writeInt(this.id);
-		buffer.writeStringToBuffer(this.uuid);
-		buffer.writeStringToBuffer(this.player_name);
+		buffer.writeString(this.uuid);
+		buffer.writeString(this.player_name);
 	}
 
 	@Override

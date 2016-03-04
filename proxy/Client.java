@@ -2,10 +2,13 @@ package com.dyn.server.proxy;
 
 import java.util.List;
 
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import com.mojang.authlib.GameProfile;
+
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.IThreadListener;
 
 public class Client implements Proxy {
 
@@ -44,5 +47,16 @@ public class Client implements Proxy {
 		public List<EntityPlayerMP> getServerUsers() {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public int getOpLevel(GameProfile profile) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+		
+		@Override
+		public IThreadListener getThreadFromContext(MessageContext ctx) {
+			return (ctx.side.isClient() ? Minecraft.getMinecraft() : null);
 		}
 }

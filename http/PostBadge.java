@@ -118,7 +118,6 @@ public class PostBadge extends Thread {
 						} else {
 							player.addChatMessage(new ChatComponentText("You have already earned this badge"));
 						}
-						//System.out.println(statusCheck);
 					}
 				} finally {
 					instream.close();

@@ -1,19 +1,12 @@
 package com.dyn.server.packets.client;
 
 import java.io.IOException;
-import com.dyn.achievements.achievement.AchievementPlus;
-import com.dyn.achievements.achievement.AchievementType;
-import com.dyn.achievements.achievement.Requirements.BaseRequirement;
-import com.dyn.achievements.handlers.AchievementHandler;
-import com.dyn.login.LoginGUI;
-import com.dyn.server.packets.PacketDispatcher;
-import com.dyn.server.packets.server.AwardAchievementMessage;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class ReturnFlagMessage extends AbstractClientMessage<ReturnFlagMessage> {
 

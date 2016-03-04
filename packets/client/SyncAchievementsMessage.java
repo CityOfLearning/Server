@@ -12,7 +12,7 @@ import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchievementsMessage> {
 
@@ -46,7 +46,7 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
-		buffer.writeStringToBuffer(data);
+		buffer.writeString(data);
 		buffer.writeBoolean(mentorAwarded);
 	}
 
@@ -107,6 +107,7 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 						}
 					}
 				} else {
+					System.out.println("Awarding Mentor Badge to " +LoginGUI.DYN_Username);
 					PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username ));
 					a.setAwarded();
 				}

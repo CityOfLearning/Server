@@ -6,7 +6,7 @@ import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class TeacherSettingsMessage extends AbstractClientMessage<TeacherSettingsMessage> {
 
@@ -35,7 +35,7 @@ public class TeacherSettingsMessage extends AbstractClientMessage<TeacherSetting
 
 		@Override
 		protected void write(PacketBuffer buffer) throws IOException {
-			buffer.writeStringToBuffer(data);
+			buffer.writeString(data);
 			buffer.writeBoolean(isOpped);
 		}
 
