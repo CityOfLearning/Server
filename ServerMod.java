@@ -1,23 +1,23 @@
 package com.dyn.server;
 
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.proxy.Proxy;
 import com.dyn.server.reference.Reference;
 
-
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 public class ServerMod {
-	
-	public static List<String> usernames = new ArrayList();
+
+	public static List<String> usernames = new ArrayList<String>();
 	public static boolean opped = false;
-	
+
 	@Mod.Instance(Reference.MOD_ID)
 	public static ServerMod instance;
 
@@ -25,13 +25,13 @@ public class ServerMod {
 	public static Proxy proxy;
 
 	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		PacketDispatcher.registerPackets();
-		proxy.init();
+	public void init(FMLInitializationEvent event) {
+
 	}
 
 	@Mod.EventHandler
-	public void init(FMLInitializationEvent event) {
-	
+	public void preInit(FMLPreInitializationEvent event) {
+		PacketDispatcher.registerPackets();
+		proxy.init();
 	}
 }

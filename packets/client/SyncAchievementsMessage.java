@@ -1,14 +1,15 @@
 package com.dyn.server.packets.client;
 
 import java.io.IOException;
+
 import com.dyn.achievements.achievement.AchievementPlus;
 import com.dyn.achievements.achievement.AchievementType;
 import com.dyn.achievements.achievement.Requirements.BaseRequirement;
 import com.dyn.achievements.handlers.AchievementHandler;
 import com.dyn.login.LoginGUI;
+import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.server.AwardAchievementMessage;
-import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
@@ -19,8 +20,9 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 	// the info needed to increment a requirement
 	private String data;
 	private boolean mentorAwarded;
-	
-	//this packet should only be sent when a player is in the right dimension so we shouldnt have to check for it ever
+
+	// this packet should only be sent when a player is in the right dimension
+	// so we shouldnt have to check for it ever
 
 	// The basic, no-argument constructor MUST be included for
 	// automated handling
@@ -29,29 +31,17 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 
 	// We need to initialize our data, so provide a suitable constructor:
 	public SyncAchievementsMessage(String s) {
-		data = s;
-		mentorAwarded = false;
+		this.data = s;
+		this.mentorAwarded = false;
 	}
-	
+
 	public SyncAchievementsMessage(String s, boolean b) {
-		data = s;
-		mentorAwarded = b;
+		this.data = s;
+		this.mentorAwarded = b;
 	}
 
 	@Override
-	protected void read(PacketBuffer buffer) throws IOException {
-		data = buffer.readStringFromBuffer(500);
-		mentorAwarded = buffer.readBoolean();
-	}
-
-	@Override
-	protected void write(PacketBuffer buffer) throws IOException {
-		buffer.writeString(data);
-		buffer.writeBoolean(mentorAwarded);
-	}
-
-	@Override
-	public void process(EntityPlayer player, Side side) {	
+	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
 
 			String[] values = this.data.split(" ");
@@ -80,7 +70,7 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 
 			AchievementPlus a = AchievementHandler.findAchievementById(ach_id);
 			if (!a.isAwarded()) {
-				if(!mentorAwarded) {
+				if (!this.mentorAwarded) {
 					if (!a.hasParent()) {
 						for (BaseRequirement r : a.getRequirements().getRequirementsByType(type)) {
 							if (r.getRequirementID() == req_id) {
@@ -89,8 +79,9 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 								}
 							}
 						}
-						if(a.meetsRequirements()){
-							PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username ));
+						if (a.meetsRequirements()) {
+							PacketDispatcher
+									.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username));
 							a.setAwarded();
 						}
 					} else if (a.getParent().isAwarded()) {
@@ -101,17 +92,30 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 								}
 							}
 						}
-						if(a.meetsRequirements()){
-							PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username));
+						if (a.meetsRequirements()) {
+							PacketDispatcher
+									.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username));
 							a.setAwarded();
 						}
 					}
 				} else {
-					System.out.println("Awarding Mentor Badge to " +LoginGUI.DYN_Username);
-					PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username ));
+					System.out.println("Awarding Mentor Badge to " + LoginGUI.DYN_Username);
+					PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username));
 					a.setAwarded();
 				}
 			}
 		}
+	}
+
+	@Override
+	protected void read(PacketBuffer buffer) throws IOException {
+		this.data = buffer.readStringFromBuffer(500);
+		this.mentorAwarded = buffer.readBoolean();
+	}
+
+	@Override
+	protected void write(PacketBuffer buffer) throws IOException {
+		buffer.writeString(this.data);
+		buffer.writeBoolean(this.mentorAwarded);
 	}
 }

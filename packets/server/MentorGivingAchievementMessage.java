@@ -1,17 +1,16 @@
 package com.dyn.server.packets.server;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.PacketBuffer;
-
 import java.io.IOException;
 
 import com.dyn.achievements.achievement.AchievementType;
 import com.dyn.server.ServerMod;
-import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
+import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.SyncAchievementsMessage;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class MentorGivingAchievementMessage extends AbstractServerMessage<MentorGivingAchievementMessage> {
@@ -26,10 +25,26 @@ public class MentorGivingAchievementMessage extends AbstractServerMessage<Mentor
 	// if there are any class fields, be sure to provide a constructor that
 	// allows
 	// for them to be initialized, and use that constructor when sending the
-	// packet	
+	// packet
 	public MentorGivingAchievementMessage(String username, int id) {
 		this.player_name = username;
 		this.ach_id = id;
+	}
+
+	@Override
+	public void process(EntityPlayer player, Side side) {
+		// using the message instance gives access to 'this.id'
+		if (side.isServer()) {
+			System.out.println("Awarding to " + this.player_name);
+			for (EntityPlayerMP p : ServerMod.proxy.getServerUsers()) {
+				System.out.println(p);
+				if (p.getDisplayName().equals(this.player_name)) {
+					PacketDispatcher.sendTo(
+							new SyncAchievementsMessage("" + this.ach_id + " " + AchievementType.MENTOR + " 0", true),
+							p);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -44,21 +59,5 @@ public class MentorGivingAchievementMessage extends AbstractServerMessage<Mentor
 		// basic Input/Output operations, very much like DataOutputStream
 		buffer.writeString(this.player_name);
 		buffer.writeInt(this.ach_id);
-	}
-
-	@Override
-	public void process(EntityPlayer player, Side side) {
-		// using the message instance gives access to 'this.id'
-		if (side.isServer()) {
-			System.out.println("Awarding to " + player_name);
-			for(EntityPlayerMP p : ServerMod.proxy.getServerUsers()){
-				System.out.println(p);
-				if(p.getDisplayName().equals(this.player_name)){
-					PacketDispatcher.sendTo(new SyncAchievementsMessage(
-							"" + this.ach_id + " " + AchievementType.MENTOR + " 0", true),
-					p);
-				}
-			}
-		}
 	}
 }

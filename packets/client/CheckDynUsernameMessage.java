@@ -28,24 +28,14 @@ public class CheckDynUsernameMessage extends AbstractClientMessage<CheckDynUsern
 	}
 
 	@Override
-	protected void read(PacketBuffer buffer) throws IOException {
-
-	}
-
-	@Override
-	protected void write(PacketBuffer buffer) throws IOException {
-
-	}
-
-	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
 			String lines = "";
 
-			List<String> dyn_usernames = new ArrayList();
-			List<String> dyn_passwords = new ArrayList();
-			Map<String, String> minecraft_usernames = new HashMap();
-			Map<String, String> minecraft_passwords = new HashMap();
+			List<String> dyn_usernames = new ArrayList<String>();
+			List<String> dyn_passwords = new ArrayList<String>();
+			Map<String, String> minecraft_usernames = new HashMap<String, String>();
+			Map<String, String> minecraft_passwords = new HashMap<String, String>();
 
 			try {
 				URL url = new URL("https://dl.dropboxusercontent.com/u/33377940/MinecraftAccounts.csv");
@@ -56,7 +46,7 @@ public class CheckDynUsernameMessage extends AbstractClientMessage<CheckDynUsern
 					// use comma as separator
 					String[] line = lines.split(",");
 
-					if (line.length > 4 && line[0] != null && !line[0].isEmpty()) {
+					if ((line.length > 4) && (line[0] != null) && !line[0].isEmpty()) {
 						dyn_usernames.add(line[0]);
 						dyn_passwords.add(line[1]);
 						minecraft_usernames.put(line[0], line[4]);
@@ -70,11 +60,21 @@ public class CheckDynUsernameMessage extends AbstractClientMessage<CheckDynUsern
 				e.printStackTrace();
 			}
 
-			if (minecraft_usernames.containsKey(player.getDisplayName())) {
+			if (minecraft_usernames.containsKey(player.getDisplayNameString())) {
 				LoginGUI.DYN_Username = minecraft_usernames.get(Minecraft.getMinecraft().thePlayer.getDisplayName());
 				LoginGUI.DYN_Password = minecraft_passwords.get(Minecraft.getMinecraft().thePlayer.getDisplayName());
 			}
 		}
+	}
+
+	@Override
+	protected void read(PacketBuffer buffer) throws IOException {
+
+	}
+
+	@Override
+	protected void write(PacketBuffer buffer) throws IOException {
+
 	}
 
 }

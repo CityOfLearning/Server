@@ -1,16 +1,6 @@
 
 package com.dyn.server.http;
 
-import com.dyn.achievements.achievement.AchievementPlus;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChatComponentText;
-import net.oauth.jsontoken.JsonToken;
-import net.oauth.jsontoken.crypto.HmacSHA256Signer;
-
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -28,29 +18,43 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.dyn.achievements.achievement.AchievementPlus;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChatComponentText;
+import net.oauth.jsontoken.JsonToken;
+import net.oauth.jsontoken.crypto.HmacSHA256Signer;
+
 public class PostBadge extends Thread {
 
 	public static JsonElement jsonResponse;
 	public static String response;
 	private String UUID;
-	private String secretKey;// = "5e4ae1a1ddce5d341bd5c0b6075d9491620c31aed80a901345fdf91fe1757ce1d8b67b99ccaf574198c99ca12c3d288ad07b022d5b70d1c72a3d728a7a27ce23";
-	private String orgKey;// = "dd10c3a735a29a9e8d46822aac0660555a25103c57fa5188b793944fd074f1b6";
+	private String secretKey;// =
+								// "5e4ae1a1ddce5d341bd5c0b6075d9491620c31aed80a901345fdf91fe1757ce1d8b67b99ccaf574198c99ca12c3d288ad07b022d5b70d1c72a3d728a7a27ce23";
+	private String orgKey;// =
+							// "dd10c3a735a29a9e8d46822aac0660555a25103c57fa5188b793944fd074f1b6";
 	private int badgeID;
 	private EntityPlayerMP player;
 	private AchievementPlus achievement;
 
 	public PostBadge(int badgeId, String uuid, String secret, String key, EntityPlayer player, AchievementPlus ach) {
-		if (uuid.isEmpty() || secret.isEmpty() || key.isEmpty())
+		if (uuid.isEmpty() || secret.isEmpty() || key.isEmpty()) {
 			return;
+		}
 		this.UUID = uuid;
 		this.secretKey = secret;
 		this.orgKey = key;
 		this.badgeID = badgeId;
 		this.player = (EntityPlayerMP) player;
 		this.achievement = ach;
-		setName("Server Mod HTTP Post");
-		setDaemon(true);
-		start();
+		this.setName("Server Mod HTTP Post");
+		this.setDaemon(true);
+		this.start();
 	}
 
 	@Override
@@ -107,16 +111,16 @@ public class PostBadge extends Thread {
 					JsonParser jParse = new JsonParser();
 					jsonResponse = jParse.parse(response);
 					JsonObject statusCheck = jsonResponse.getAsJsonObject();
-					if (statusCheck.has("status") && statusCheck.get("status").getAsInt() == 201) {
-						achievement.setAwarded(this.player);
-						player.addChatMessage(
-								new ChatComponentText("Player " + player.getDisplayName() + " has earned the badge"));
+					if (statusCheck.has("status") && (statusCheck.get("status").getAsInt() == 201)) {
+						this.achievement.setAwarded(this.player);
+						this.player.addChatMessage(new ChatComponentText(
+								"Player " + this.player.getDisplayName() + " has earned the badge"));
 					} else {
-						if (statusCheck.has("status") && statusCheck.get("status").getAsInt() != 200) {
-							player.addChatMessage(new ChatComponentText(
+						if (statusCheck.has("status") && (statusCheck.get("status").getAsInt() != 200)) {
+							this.player.addChatMessage(new ChatComponentText(
 									"Error: Returned Status: " + statusCheck.get("status").getAsInt()));
 						} else {
-							player.addChatMessage(new ChatComponentText("You have already earned this badge"));
+							this.player.addChatMessage(new ChatComponentText("You have already earned this badge"));
 						}
 					}
 				} finally {
