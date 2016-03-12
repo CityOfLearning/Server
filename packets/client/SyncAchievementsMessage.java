@@ -65,7 +65,9 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 				type = AchievementType.BREAK;
 			} else if (values[1].equals("MENTOR")) {
 				type = AchievementType.MENTOR;
-			}
+			} else if (values[1].equals("LOCATION")) {
+				type = AchievementType.LOCATION;
+			} 
 			int req_id = Integer.parseInt(values[2]);
 
 			AchievementPlus a = AchievementHandler.findAchievementById(ach_id);

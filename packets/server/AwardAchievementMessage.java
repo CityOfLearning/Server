@@ -50,7 +50,7 @@ public class AwardAchievementMessage extends AbstractServerMessage<AwardAchievem
 				AchievementHandler.findAchievementById(this.id).awardAchievement(player);
 			} else {
 				for (EntityPlayerMP p : ServerMod.proxy.getServerUsers()) {
-					if (p.getDisplayName().equals(this.player_name)) {
+					if (p.getDisplayNameString().equals(this.player_name)) {
 						AchievementHandler.findAchievementById(this.id).awardAchievement(p);
 					}
 				}

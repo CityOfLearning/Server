@@ -2,6 +2,7 @@ package com.dyn.server.proxy;
 
 import java.util.List;
 
+import com.dyn.achievements.handlers.AchievementHandler;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.CheckDynUsernameMessage;
 import com.dyn.server.packets.client.TeacherSettingsMessage;
@@ -91,7 +92,7 @@ public class Server implements Proxy {
 		}
 
 		PacketDispatcher.sendTo(new CheckDynUsernameMessage(), (EntityPlayerMP) event.player);
-
+		AchievementHandler.setupPlayerAchievements(event.player);
 	}
 
 	/**

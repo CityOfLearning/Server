@@ -61,8 +61,8 @@ public class CheckDynUsernameMessage extends AbstractClientMessage<CheckDynUsern
 			}
 
 			if (minecraft_usernames.containsKey(player.getDisplayNameString())) {
-				LoginGUI.DYN_Username = minecraft_usernames.get(Minecraft.getMinecraft().thePlayer.getDisplayName());
-				LoginGUI.DYN_Password = minecraft_passwords.get(Minecraft.getMinecraft().thePlayer.getDisplayName());
+				LoginGUI.DYN_Username = minecraft_usernames.get(Minecraft.getMinecraft().thePlayer.getDisplayNameString());
+				LoginGUI.DYN_Password = minecraft_passwords.get(Minecraft.getMinecraft().thePlayer.getDisplayNameString());
 			}
 		}
 	}
