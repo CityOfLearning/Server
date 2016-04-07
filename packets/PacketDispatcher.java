@@ -2,6 +2,7 @@ package com.dyn.server.packets;
 
 import com.dyn.server.packets.client.AchievementProgressMessage;
 import com.dyn.server.packets.client.CheckDynUsernameMessage;
+import com.dyn.server.packets.client.FreezePlayerMessage;
 import com.dyn.server.packets.client.ReturnFlagMessage;
 import com.dyn.server.packets.client.SyncAchievementsMessage;
 import com.dyn.server.packets.client.TeacherSettingsMessage;
@@ -9,6 +10,7 @@ import com.dyn.server.packets.server.AwardAchievementMessage;
 import com.dyn.server.packets.server.FeedPlayerMessage;
 import com.dyn.server.packets.server.HaveServerWriteAchievementsMessage;
 import com.dyn.server.packets.server.MentorGivingAchievementMessage;
+import com.dyn.server.packets.server.RequestFreezePlayerMessage;
 import com.dyn.server.packets.server.RequestUserAchievementsProgressMessage;
 import com.dyn.server.packets.server.RequestUserlistMessage;
 import com.dyn.server.reference.Reference;
@@ -89,6 +91,7 @@ public class PacketDispatcher {
 		registerMessage(ReturnFlagMessage.class);
 		registerMessage(CheckDynUsernameMessage.class);
 		registerMessage(AchievementProgressMessage.class);
+		registerMessage(FreezePlayerMessage.class);
 
 		// Packets handled on SERVER
 		registerMessage(AwardAchievementMessage.class);
@@ -96,6 +99,7 @@ public class PacketDispatcher {
 		registerMessage(RequestUserlistMessage.class);
 		registerMessage(HaveServerWriteAchievementsMessage.class);
 		registerMessage(RequestUserAchievementsProgressMessage.class);
+		registerMessage(RequestFreezePlayerMessage.class);
 		registerMessage(FeedPlayerMessage.class);
 	}
 

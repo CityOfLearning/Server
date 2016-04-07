@@ -38,10 +38,10 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 		// we have to split a lot here, the pipe character is each achievement
 		// tabs are titles and new lines are the items within each requirement
 		// set
-		if(side.isClient()){
+		if (side.isClient()) {
 			TeacherMod.userAchievementProgress.clear();
 			for (String s : data.split("[|]")) {// splits the achievements
-				String[] splitData = s.split("[?]"); 
+				String[] splitData = s.split("[?]");
 				AchievementPlus achievement = AchievementManager
 						.findAchievementById(Integer.parseInt(splitData[0].substring(0, splitData[0].indexOf('^'))));
 				String achName = achievement.getName();
@@ -56,8 +56,8 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 						if (req.startsWith("c")) {
 							req = req.substring(1, req.length());
 							for (String sReq : req.split("[%]")) {
-								for(BaseRequirement copy:reqCopies.getRequirementsByType(RequirementType.CRAFT)){
-									if(copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))){
+								for (BaseRequirement copy : reqCopies.getRequirementsByType(RequirementType.CRAFT)) {
+									if (copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))) {
 										copy.setAquiredTo(Integer.parseInt(sReq.split("[,]")[1]));
 										baseCopies.add(copy);
 									}
@@ -66,8 +66,8 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 						} else if (req.startsWith("s")) {
 							req = req.substring(1, req.length());
 							for (String sReq : req.split("[%]")) {
-								for(BaseRequirement copy:reqCopies.getRequirementsByType(RequirementType.SMELT)){
-									if(copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))){
+								for (BaseRequirement copy : reqCopies.getRequirementsByType(RequirementType.SMELT)) {
+									if (copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))) {
 										copy.setAquiredTo(Integer.parseInt(sReq.split("[,]")[1]));
 										baseCopies.add(copy);
 									}
@@ -76,8 +76,8 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 						} else if (req.startsWith("p")) {
 							req = req.substring(1, req.length());
 							for (String sReq : req.split("[%]")) {
-								for(BaseRequirement copy:reqCopies.getRequirementsByType(RequirementType.PICKUP)){
-									if(copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))){
+								for (BaseRequirement copy : reqCopies.getRequirementsByType(RequirementType.PICKUP)) {
+									if (copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))) {
 										copy.setAquiredTo(Integer.parseInt(sReq.split("[,]")[1]));
 										baseCopies.add(copy);
 									}
@@ -86,8 +86,8 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 						} else if (req.startsWith("t")) {
 							req = req.substring(1, req.length());
 							for (String sReq : req.split("[%]")) {
-								for(BaseRequirement copy:reqCopies.getRequirementsByType(RequirementType.STAT)){
-									if(copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))){
+								for (BaseRequirement copy : reqCopies.getRequirementsByType(RequirementType.STAT)) {
+									if (copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))) {
 										copy.setAquiredTo(Integer.parseInt(sReq.split("[,]")[1]));
 										baseCopies.add(copy);
 									}
@@ -96,8 +96,8 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 						} else if (req.startsWith("k")) {
 							req = req.substring(1, req.length());
 							for (String sReq : req.split("[%]")) {
-								for(BaseRequirement copy:reqCopies.getRequirementsByType(RequirementType.KILL)){
-									if(copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))){
+								for (BaseRequirement copy : reqCopies.getRequirementsByType(RequirementType.KILL)) {
+									if (copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))) {
 										copy.setAquiredTo(Integer.parseInt(sReq.split("[,]")[1]));
 										baseCopies.add(copy);
 									}
@@ -106,8 +106,8 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 						} else if (req.startsWith("b")) {
 							req = req.substring(1, req.length());
 							for (String sReq : req.split("[%]")) {
-								for(BaseRequirement copy:reqCopies.getRequirementsByType(RequirementType.BREW)){
-									if(copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))){
+								for (BaseRequirement copy : reqCopies.getRequirementsByType(RequirementType.BREW)) {
+									if (copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))) {
 										copy.setAquiredTo(Integer.parseInt(sReq.split("[,]")[1]));
 										baseCopies.add(copy);
 									}
@@ -116,8 +116,8 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 						} else if (req.startsWith("e")) {
 							req = req.substring(1, req.length());
 							for (String sReq : req.split("[%]")) {
-								for(BaseRequirement copy:reqCopies.getRequirementsByType(RequirementType.PLACE)){
-									if(copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))){
+								for (BaseRequirement copy : reqCopies.getRequirementsByType(RequirementType.PLACE)) {
+									if (copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))) {
 										copy.setAquiredTo(Integer.parseInt(sReq.split("[,]")[1]));
 										baseCopies.add(copy);
 									}
@@ -126,22 +126,24 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 						} else if (req.startsWith("r")) {
 							req = req.substring(1, req.length());
 							for (String sReq : req.split("[%]")) {
-								for(BaseRequirement copy:reqCopies.getRequirementsByType(RequirementType.BREAK)){
-									if(copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))){
+								for (BaseRequirement copy : reqCopies.getRequirementsByType(RequirementType.BREAK)) {
+									if (copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))) {
 										copy.setAquiredTo(Integer.parseInt(sReq.split("[,]")[1]));
 										baseCopies.add(copy);
 									}
 								}
 							}
 						} else if (req.startsWith("m")) {
-							//mentor achievements are special cases since they should only ever occur once
-							//per achievement and should always be by themselves but just incase...
+							// mentor achievements are special cases since they
+							// should only ever occur once
+							// per achievement and should always be by
+							// themselves but just incase...
 							baseCopies.addAll(reqCopies.getRequirementsByType(RequirementType.MENTOR));
 						} else if (req.startsWith("l")) {
 							req = req.substring(1, req.length());
 							for (String sReq : req.split("[%]")) {
-								for(BaseRequirement copy:reqCopies.getRequirementsByType(RequirementType.LOCATION)){
-									if(copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))){
+								for (BaseRequirement copy : reqCopies.getRequirementsByType(RequirementType.LOCATION)) {
+									if (copy.getRequirementID() == Integer.parseInt("" + sReq.charAt(0))) {
 										copy.setAquiredTo(Integer.parseInt(sReq.split("[,]")[1]));
 										baseCopies.add(copy);
 									}
@@ -150,7 +152,7 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 						}
 					}
 					Requirements r = new Requirements();
-					for(BaseRequirement br:baseCopies){
+					for (BaseRequirement br : baseCopies) {
 						r.addRequirement(br);
 					}
 					TeacherMod.userAchievementProgress.put(achName, r);

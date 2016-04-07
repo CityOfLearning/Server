@@ -49,7 +49,6 @@ public class Client implements Proxy {
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-
 	}
 
 	/**

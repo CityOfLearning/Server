@@ -3,6 +3,7 @@ package com.dyn.server.proxy;
 import java.util.List;
 
 import com.dyn.achievements.handlers.AchievementManager;
+import com.dyn.server.ServerMod;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.CheckDynUsernameMessage;
 import com.dyn.server.packets.client.TeacherSettingsMessage;
@@ -79,7 +80,9 @@ public class Server implements Proxy {
 					(EntityPlayerMP) event.player);
 		}
 
-		PacketDispatcher.sendTo(new CheckDynUsernameMessage(), (EntityPlayerMP) event.player);
+		PacketDispatcher.sendTo(
+				new CheckDynUsernameMessage(ServerMod.frozenPlayers.contains(event.player.getDisplayNameString())),
+				(EntityPlayerMP) event.player);
 		AchievementManager.setupPlayerAchievements(event.player);
 	}
 

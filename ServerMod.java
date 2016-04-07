@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class ServerMod {
 
 	public static List<String> usernames = new ArrayList<String>();
+	public static List<String> frozenPlayers = new ArrayList<String>();
 	public static boolean opped = false;
 
 	@Mod.Instance(Reference.MOD_ID)

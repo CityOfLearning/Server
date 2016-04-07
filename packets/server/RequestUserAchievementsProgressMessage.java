@@ -52,7 +52,8 @@ public class RequestUserAchievementsProgressMessage
 					achString += AchievementManager.findAchievementByName(achKeys).getId();
 					achString += "^" + (configMan.getPlayerStatsFile(configMan.getPlayerByUsername(username))
 							.hasAchievementUnlocked(AchievementManager.findAchievementByName(achKeys)) ? 1 : 0);
-					achString += "?";//regex for the achievement info split and requirements
+					achString += "?";// regex for the achievement info split and
+										// requirements
 					Requirements reqs = achProgress.get(achKeys);
 					boolean[] types = reqs.getRequirementTypes();
 					for (int i = 0; i < types.length; i++) {
@@ -64,7 +65,8 @@ public class RequestUserAchievementsProgressMessage
 								for (BaseRequirement t : typeReq) {
 									achString += t.getRequirementID();
 									achString += "," + t.getTotalAquired();
-									achString += "%"; //regex for each requirement
+									achString += "%"; // regex for each
+														// requirement
 								}
 								achString += "$";
 							}
@@ -76,7 +78,8 @@ public class RequestUserAchievementsProgressMessage
 								for (BaseRequirement t : typeReq) {
 									achString += t.getRequirementID();
 									achString += "," + t.getTotalAquired();
-									achString += "%"; //regex for each requirement
+									achString += "%"; // regex for each
+														// requirement
 								}
 								achString += "$";
 							}
@@ -88,7 +91,8 @@ public class RequestUserAchievementsProgressMessage
 								for (BaseRequirement t : typeReq) {
 									achString += t.getRequirementID();
 									achString += "," + t.getTotalAquired();
-									achString += "%"; //regex for each requirement
+									achString += "%"; // regex for each
+														// requirement
 								}
 								achString += "$";
 							}
@@ -100,7 +104,8 @@ public class RequestUserAchievementsProgressMessage
 								for (BaseRequirement t : typeReq) {
 									achString += t.getRequirementID();
 									achString += "," + t.getTotalAquired();
-									achString += "%"; //regex for each requirement
+									achString += "%"; // regex for each
+														// requirement
 								}
 								achString += "$";
 							}
@@ -112,7 +117,8 @@ public class RequestUserAchievementsProgressMessage
 								for (BaseRequirement t : typeReq) {
 									achString += t.getRequirementID();
 									achString += "," + t.getTotalAquired();
-									achString += "%"; //regex for each requirement
+									achString += "%"; // regex for each
+														// requirement
 								}
 								achString += "$";
 							}
@@ -124,7 +130,8 @@ public class RequestUserAchievementsProgressMessage
 								for (BaseRequirement t : typeReq) {
 									achString += t.getRequirementID();
 									achString += "," + t.getTotalAquired();
-									achString += "%"; //regex for each requirement
+									achString += "%"; // regex for each
+														// requirement
 								}
 								achString += "$";
 							}
@@ -136,25 +143,29 @@ public class RequestUserAchievementsProgressMessage
 								for (BaseRequirement t : typeReq) {
 									achString += t.getRequirementID();
 									achString += "," + t.getTotalAquired();
-									achString += "%"; //regex for each requirement
+									achString += "%"; // regex for each
+														// requirement
 								}
 								achString += "$";
 							}
 							break;
 						case 7:
 							if (types[i]) {
-								achString += "r"; //break
+								achString += "r"; // break
 								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(RequirementType.BREAK);
 								for (BaseRequirement t : typeReq) {
 									achString += t.getRequirementID();
 									achString += "," + t.getTotalAquired();
-									achString += "%"; //regex for each requirement
+									achString += "%"; // regex for each
+														// requirement
 								}
 								achString += "$";
 							}
 							break;
 						case 8:
-							if (types[i]) { //mentor based achievements at this point should only have 1 requirement
+							if (types[i]) { // mentor based achievements at this
+											// point should only have 1
+											// requirement
 								reqs.getRequirementsByType(RequirementType.MENTOR);
 								achString += "m";
 								achString += "$";
@@ -168,7 +179,8 @@ public class RequestUserAchievementsProgressMessage
 								for (BaseRequirement t : typeReq) {
 									achString += t.getRequirementID();
 									achString += "," + t.getTotalAquired();
-									achString += "%"; //regex for each requirement
+									achString += "%"; // regex for each
+														// requirement
 								}
 								achString += "$";
 							}
