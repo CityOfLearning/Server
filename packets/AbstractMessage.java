@@ -69,12 +69,7 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
 		IThreadListener thread = ServerMod.proxy.getThreadFromContext(ctx);
 		// pretty much copied straight from vanilla code, see {@link
 		// PacketThreadUtil#checkThreadAndEnqueue}
-		thread.addScheduledTask(new Runnable() {
-			@Override
-			public void run() {
-				msg.process(ServerMod.proxy.getPlayerEntity(ctx), ctx.side);
-			}
-		});
+		thread.addScheduledTask(() -> msg.process(ServerMod.proxy.getPlayerEntity(ctx), ctx.side));
 	}
 
 	@Override

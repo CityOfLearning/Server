@@ -2,7 +2,7 @@ package com.dyn.server.packets.server;
 
 import java.io.IOException;
 
-import com.dyn.achievements.achievement.AchievementType;
+import com.dyn.achievements.achievement.RequirementType;
 import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.packets.PacketDispatcher;
@@ -27,21 +27,20 @@ public class MentorGivingAchievementMessage extends AbstractServerMessage<Mentor
 	// for them to be initialized, and use that constructor when sending the
 	// packet
 	public MentorGivingAchievementMessage(String username, int id) {
-		this.player_name = username;
-		this.ach_id = id;
+		player_name = username;
+		ach_id = id;
 	}
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		// using the message instance gives access to 'this.id'
 		if (side.isServer()) {
-			System.out.println("Awarding to " + this.player_name);
+			System.out.println("Awarding to " + player_name);
 			for (EntityPlayerMP p : ServerMod.proxy.getServerUsers()) {
 				System.out.println(p);
-				if (p.getDisplayNameString().equals(this.player_name)) {
+				if (p.getDisplayNameString().equals(player_name)) {
 					PacketDispatcher.sendTo(
-							new SyncAchievementsMessage("" + this.ach_id + " " + AchievementType.MENTOR + " 0", true),
-							p);
+							new SyncAchievementsMessage("" + ach_id + " " + RequirementType.MENTOR + " 0", true), p);
 				}
 			}
 		}
@@ -50,14 +49,14 @@ public class MentorGivingAchievementMessage extends AbstractServerMessage<Mentor
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataInputStream
-		this.player_name = buffer.readStringFromBuffer(100);
-		this.ach_id = buffer.readInt();
+		player_name = buffer.readStringFromBuffer(100);
+		ach_id = buffer.readInt();
 	}
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataOutputStream
-		buffer.writeString(this.player_name);
-		buffer.writeInt(this.ach_id);
+		buffer.writeString(player_name);
+		buffer.writeInt(ach_id);
 	}
 }

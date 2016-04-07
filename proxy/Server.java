@@ -2,7 +2,7 @@ package com.dyn.server.proxy;
 
 import java.util.List;
 
-import com.dyn.achievements.handlers.AchievementHandler;
+import com.dyn.achievements.handlers.AchievementManager;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.CheckDynUsernameMessage;
 import com.dyn.server.packets.client.TeacherSettingsMessage;
@@ -21,18 +21,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class Server implements Proxy {
-
-	@SubscribeEvent
-	public void changedDim(PlayerEvent.PlayerChangedDimensionEvent event) {
-		// event.player.addChatMessage(new ChatComponentText("Player Warped from
-		// " + event.fromDim + " to Dimension" + event.toDim));
-		/*
-		 * PacketDispatcher.sendTo( new SyncWorldMessage(
-		 * APIRegistry.namedWorldHandler.getWorldName(event.player.worldObj.
-		 * provider.dimensionId)), (EntityPlayerMP) event.player);
-		 */
-
-	}
 
 	@Override
 	public int getOpLevel(GameProfile profile) {
@@ -86,13 +74,13 @@ public class Server implements Proxy {
 
 	@SubscribeEvent
 	public void loginEvent(PlayerEvent.PlayerLoggedInEvent event) {
-		if (this.getOpLevel(event.player.getGameProfile()) > 0) {
-			PacketDispatcher.sendTo(new TeacherSettingsMessage(this.getServerUserlist(), true),
+		if (getOpLevel(event.player.getGameProfile()) > 0) {
+			PacketDispatcher.sendTo(new TeacherSettingsMessage(getServerUserlist(), true),
 					(EntityPlayerMP) event.player);
 		}
 
 		PacketDispatcher.sendTo(new CheckDynUsernameMessage(), (EntityPlayerMP) event.player);
-		AchievementHandler.setupPlayerAchievements(event.player);
+		AchievementManager.setupPlayerAchievements(event.player);
 	}
 
 	/**

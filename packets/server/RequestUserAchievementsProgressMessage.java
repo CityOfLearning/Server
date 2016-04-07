@@ -5,19 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.dyn.achievements.achievement.AchievementType;
+import com.dyn.achievements.achievement.RequirementType;
 import com.dyn.achievements.achievement.Requirements;
 import com.dyn.achievements.achievement.Requirements.BaseRequirement;
-import com.dyn.achievements.handlers.AchievementHandler;
-import com.dyn.server.ServerMod;
+import com.dyn.achievements.handlers.AchievementManager;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.AchievementProgressMessage;
-import com.dyn.server.packets.client.TeacherSettingsMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class RequestUserAchievementsProgressMessage
@@ -31,154 +31,146 @@ public class RequestUserAchievementsProgressMessage
 	}
 
 	public RequestUserAchievementsProgressMessage(String playerName) {
-		this.username = playerName;
+		username = playerName;
 	}
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
-			//this method works but its extremely inefficent, we cant be sending huge data packets all the time
-			//over the network we should probably just send the amount aquired
-			//we already know the name of the achievement, all its requirements, and how many are needed, 
-			//so we really just need the total aquired so far. We could even make a mock requirement set
-			//on the client side to do all the mapping easier.
-			
-			
-			/*Map<String, Requirements> achProgress = AchievementHandler.getPlayerAchievementProgress(this.username);
+			// we cant be sending huge data packets all the time
+			// over the network we should probably just send the amount aquired
+			// we already know the name of the achievement, all its
+			// requirements, and how many are needed,
+			// so we really just need the total aquired
+
+			Map<String, Requirements> achProgress = AchievementManager.getPlayerAchievementProgress(username);
 			if (achProgress != null) {
 				List<String> achData = new ArrayList<String>();
+				ServerConfigurationManager configMan = MinecraftServer.getServer().getConfigurationManager();
 				String achString = "";
 				for (String achKeys : achProgress.keySet()) {
-					achString += achKeys;
-					// achData(" U: " +
-					// configMan.getPlayerStatsFile(keys).hasAchievementUnlocked(findAchievementByName(achKeys)));
+					achString += AchievementManager.findAchievementByName(achKeys).getId();
+					achString += "^" + (configMan.getPlayerStatsFile(configMan.getPlayerByUsername(username))
+							.hasAchievementUnlocked(AchievementManager.findAchievementByName(achKeys)) ? 1 : 0);
+					achString += "?";//regex for the achievement info split and requirements
 					Requirements reqs = achProgress.get(achKeys);
 					boolean[] types = reqs.getRequirementTypes();
-					for (int i = 0; i < 8; i++) {
+					for (int i = 0; i < types.length; i++) {
 						switch (i) {
 						case 0:
 							if (types[i]) {
-								achString += "\tcraft";
-								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(AchievementType.CRAFT);
+								achString += "c"; // craft
+								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(RequirementType.CRAFT);
 								for (BaseRequirement t : typeReq) {
-									achString += "\nitem " + t.getRequirementEntityName();
-
-									achString += "\namount " + t.getTotalNeeded();
-
-									achString += "\ntotal " + t.getTotalAquired();
-
+									achString += t.getRequirementID();
+									achString += "," + t.getTotalAquired();
+									achString += "%"; //regex for each requirement
 								}
+								achString += "$";
 							}
 							break;
 						case 1:
 							if (types[i]) {
-								achString += "\tsmelt";
-
-								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(AchievementType.SMELT);
+								achString += "s"; // smelt
+								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(RequirementType.SMELT);
 								for (BaseRequirement t : typeReq) {
-									achString += "\nitem " + t.getRequirementEntityName();
-
-									achString += "\namount " + t.getTotalNeeded();
-
-									achString += "\ntotal " + t.getTotalAquired();
-
+									achString += t.getRequirementID();
+									achString += "," + t.getTotalAquired();
+									achString += "%"; //regex for each requirement
 								}
+								achString += "$";
 							}
 							break;
 						case 2:
 							if (types[i]) {
-								achString += "\tpick_up";
-
-								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(AchievementType.PICKUP);
+								achString += "p"; // pickup
+								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(RequirementType.PICKUP);
 								for (BaseRequirement t : typeReq) {
-									achString += "\nitem " + t.getRequirementEntityName();
-
-									achString += "\namount " + t.getTotalNeeded();
-
-									achString += "\ntotal " + t.getTotalAquired();
-
+									achString += t.getRequirementID();
+									achString += "," + t.getTotalAquired();
+									achString += "%"; //regex for each requirement
 								}
+								achString += "$";
 							}
 							break;
 						case 3:
 							if (types[i]) {
-								achString += "\tstat";
-
-								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(AchievementType.STAT);
+								achString += "t"; // stat
+								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(RequirementType.STAT);
 								for (BaseRequirement t : typeReq) {
-									achString += "\nitem " + t.getRequirementEntityName();
-
-									achString += "\namount " + t.getTotalNeeded();
-
-									achString += "\ntotal " + t.getTotalAquired();
-
+									achString += t.getRequirementID();
+									achString += "," + t.getTotalAquired();
+									achString += "%"; //regex for each requirement
 								}
+								achString += "$";
 							}
 							break;
 						case 4:
 							if (types[i]) {
-								achString += "\tkill";
-
-								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(AchievementType.KILL);
+								achString += "k"; // kill
+								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(RequirementType.KILL);
 								for (BaseRequirement t : typeReq) {
-									achString += "\nitem " + t.getRequirementEntityName();
-
-									achString += "\namount " + t.getTotalNeeded();
-
-									achString += "\ntotal " + t.getTotalAquired();
-
+									achString += t.getRequirementID();
+									achString += "," + t.getTotalAquired();
+									achString += "%"; //regex for each requirement
 								}
+								achString += "$";
 							}
 							break;
 						case 5:
 							if (types[i]) {
-								achString += "\tbrew";
-
-								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(AchievementType.BREW);
+								achString += "b"; // brew
+								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(RequirementType.BREW);
 								for (BaseRequirement t : typeReq) {
-									achString += "\nitem " + t.getRequirementEntityName();
-
-									achString += "\namount " + t.getTotalNeeded();
-
-									achString += "\ntotal " + t.getTotalAquired();
-
+									achString += t.getRequirementID();
+									achString += "," + t.getTotalAquired();
+									achString += "%"; //regex for each requirement
 								}
+								achString += "$";
 							}
 							break;
 						case 6:
 							if (types[i]) {
-								achString += "\tplace";
-
-								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(AchievementType.PLACE);
+								achString += "e"; // place
+								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(RequirementType.PLACE);
 								for (BaseRequirement t : typeReq) {
-									achString += "\nitem " + t.getRequirementEntityName();
-
-									achString += "\namount " + t.getTotalNeeded();
-
-									achString += "\ntotal " + t.getTotalAquired();
-
+									achString += t.getRequirementID();
+									achString += "," + t.getTotalAquired();
+									achString += "%"; //regex for each requirement
 								}
+								achString += "$";
 							}
 							break;
 						case 7:
 							if (types[i]) {
-								achString += "\tbreak";
-
-								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(AchievementType.BREAK);
+								achString += "r"; //break
+								ArrayList<BaseRequirement> typeReq = reqs.getRequirementsByType(RequirementType.BREAK);
 								for (BaseRequirement t : typeReq) {
-									achString += "\nitem " + t.getRequirementEntityName();
-
-									achString += "\namount " + t.getTotalNeeded();
-
-									achString += "\ntotal " + t.getTotalAquired();
-
+									achString += t.getRequirementID();
+									achString += "," + t.getTotalAquired();
+									achString += "%"; //regex for each requirement
 								}
+								achString += "$";
 							}
 							break;
 						case 8:
+							if (types[i]) { //mentor based achievements at this point should only have 1 requirement
+								reqs.getRequirementsByType(RequirementType.MENTOR);
+								achString += "m";
+								achString += "$";
+							}
+							break;
+						case 9:
 							if (types[i]) {
-								reqs.getRequirementsByType(AchievementType.MENTOR);
-								achString += "\tmentor";
+								achString += "l";
+								ArrayList<BaseRequirement> typeReq = reqs
+										.getRequirementsByType(RequirementType.LOCATION);
+								for (BaseRequirement t : typeReq) {
+									achString += t.getRequirementID();
+									achString += "," + t.getTotalAquired();
+									achString += "%"; //regex for each requirement
+								}
+								achString += "$";
 							}
 							break;
 						default:
@@ -190,17 +182,17 @@ public class RequestUserAchievementsProgressMessage
 				}
 
 				PacketDispatcher.sendTo(new AchievementProgressMessage(achData), (EntityPlayerMP) player);
-			}*/
+			}
 		}
 	}
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
-		this.username = buffer.readStringFromBuffer(100);
+		username = buffer.readStringFromBuffer(100);
 	}
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
-		buffer.writeString(this.username);
+		buffer.writeString(username);
 	}
 }

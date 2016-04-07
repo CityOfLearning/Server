@@ -2,12 +2,12 @@ package com.dyn.server.packets.server;
 
 import java.io.IOException;
 
-import com.dyn.achievements.handlers.AchievementHandler;
+import com.dyn.achievements.handlers.AchievementManager;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class HaveServerWriteAchievementsMessage extends AbstractServerMessage<HaveServerWriteAchievementsMessage> {
@@ -22,7 +22,7 @@ public class HaveServerWriteAchievementsMessage extends AbstractServerMessage<Ha
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
-			AchievementHandler.writeOutPlayerAchievements();
+			AchievementManager.writeOutPlayerAchievements();
 			player.addChatMessage(new ChatComponentText("Finished Writing out Achievements Files"));
 		}
 	}

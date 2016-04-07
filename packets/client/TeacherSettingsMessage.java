@@ -23,15 +23,15 @@ public class TeacherSettingsMessage extends AbstractClientMessage<TeacherSetting
 	// We need to initialize our data, so provide a suitable constructor:
 	public TeacherSettingsMessage(String[] users, boolean opped) {
 		for (String s : users) {
-			this.data += " " + s;
+			data += " " + s;
 		}
-		this.isOpped = opped;
+		isOpped = opped;
 	}
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
-			String[] users = this.data.split(" ");
+			String[] users = data.split(" ");
 			ServerMod.usernames.clear();
 			for (String u : users) {
 				if ((u != null) && !u.equals("null")) {
@@ -39,19 +39,19 @@ public class TeacherSettingsMessage extends AbstractClientMessage<TeacherSetting
 				}
 			}
 			ServerMod.usernames.remove(null);
-			ServerMod.opped = this.isOpped;
+			ServerMod.opped = isOpped;
 		}
 	}
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
-		this.data = buffer.readStringFromBuffer(30000);
-		this.isOpped = buffer.readBoolean();
+		data = buffer.readStringFromBuffer(30000);
+		isOpped = buffer.readBoolean();
 	}
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
-		buffer.writeString(this.data);
-		buffer.writeBoolean(this.isOpped);
+		buffer.writeString(data);
+		buffer.writeBoolean(isOpped);
 	}
 }

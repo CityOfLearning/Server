@@ -22,12 +22,12 @@ public class ServerMod {
 
 	@Mod.Instance(Reference.MOD_ID)
 	public static ServerMod instance;
-	
-	@Mod.Metadata(Reference.MOD_ID)
-	public ModMetadata metadata;
 
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
 	public static Proxy proxy;
+
+	@Mod.Metadata(Reference.MOD_ID)
+	public ModMetadata metadata;
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
@@ -36,8 +36,8 @@ public class ServerMod {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		this.metadata = MetaData.init(this.metadata);
-		
+		metadata = MetaData.init(metadata);
+
 		PacketDispatcher.registerPackets();
 		proxy.init();
 	}
