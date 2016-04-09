@@ -7,19 +7,21 @@ import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemBucketMilk;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class FeedPlayerMessage extends AbstractServerMessage<FeedPlayerMessage> {
+public class RemoveEffectsMessage extends AbstractServerMessage<RemoveEffectsMessage> {
 
 	private String player_name;
 
 	// The basic, no-argument constructor MUST be included to use the new
 	// automated handling
-	public FeedPlayerMessage() {
+	public RemoveEffectsMessage() {
 	}
 
-	public FeedPlayerMessage(String username) {
+	public RemoveEffectsMessage(String username) {
 		player_name = username;
 	}
 
@@ -29,7 +31,7 @@ public class FeedPlayerMessage extends AbstractServerMessage<FeedPlayerMessage> 
 		if (side.isServer()) {
 			for (EntityPlayerMP p : ServerMod.proxy.getServerUsers()) {
 				if (p.getDisplayNameString().equals(player_name)) {
-					p.getFoodStats().setFoodLevel(100);
+					p.curePotionEffects(new ItemStack(new ItemBucketMilk()));
 				}
 			}
 		}
