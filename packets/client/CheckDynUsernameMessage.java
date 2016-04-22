@@ -35,28 +35,22 @@ public class CheckDynUsernameMessage extends AbstractClientMessage<CheckDynUsern
 
 			TeacherMod.frozen = freeze;
 			LoginGUI.needsVerification = false;
-			//needed for fidelity checks later on
-			/*if (LoginGUI.DYN_Username.isEmpty()) {// they must have logged in
-													// already from the client,
-													// ignore
-				if ((dynName != null) && !dynName.isEmpty()) {
-					LoginGUI.DYN_Username = dynName;
-				} else {
-					// the player is not mapped on our end, freeze them and ask
-					// them
-					// to log in.
-					LoginGUI.needsVerification = true;
-					TeacherMod.frozen = true;
-					LoginGUI.proxy.checkVerification();
-				}
-			}*/
+			// needed for fidelity checks later on
+			/*
+			 * if (LoginGUI.DYN_Username.isEmpty()) {// they must have logged in
+			 * // already from the client, // ignore if ((dynName != null) &&
+			 * !dynName.isEmpty()) { LoginGUI.DYN_Username = dynName; } else {
+			 * // the player is not mapped on our end, freeze them and ask //
+			 * them // to log in. LoginGUI.needsVerification = true;
+			 * TeacherMod.frozen = true; LoginGUI.proxy.checkVerification(); } }
+			 */
 		}
 	}
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
 		freeze = buffer.readBoolean();
-		dynName = buffer.readStringFromBuffer(50);
+		dynName = buffer.readStringFromBuffer(100);
 	}
 
 	@Override
