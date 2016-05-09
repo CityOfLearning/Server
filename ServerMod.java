@@ -3,6 +3,9 @@ package com.dyn.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.Logger;
+
+import com.dyn.server.database.DBManager;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.proxy.Proxy;
 import com.dyn.server.reference.MetaData;
@@ -29,6 +32,8 @@ public class ServerMod {
 
 	@Mod.Metadata(Reference.MOD_ID)
 	public ModMetadata metadata;
+	
+	public static Logger logger;
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
@@ -37,8 +42,12 @@ public class ServerMod {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		DBManager.init();
+		
 		metadata = MetaData.init(metadata);
 
+		logger = event.getModLog();
+		
 		PacketDispatcher.registerPackets();
 		proxy.init();
 	}
