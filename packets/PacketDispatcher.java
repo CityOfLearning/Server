@@ -10,12 +10,14 @@ import com.dyn.server.packets.client.TeacherSettingsMessage;
 import com.dyn.server.packets.server.AwardAchievementMessage;
 import com.dyn.server.packets.server.FeedPlayerMessage;
 import com.dyn.server.packets.server.HaveServerWriteAchievementsMessage;
+import com.dyn.server.packets.server.MentorCommandMessage;
 import com.dyn.server.packets.server.MentorGivingAchievementMessage;
 import com.dyn.server.packets.server.RemoveEffectsMessage;
 import com.dyn.server.packets.server.RequestFreezePlayerMessage;
 import com.dyn.server.packets.server.RequestUserAchievementsProgressMessage;
 import com.dyn.server.packets.server.RequestUserlistMessage;
 import com.dyn.server.packets.server.RequestVerificationMessage;
+import com.dyn.server.packets.server.StudentCommandBlockMessage;
 import com.dyn.server.packets.server.SyncNamesMessage;
 import com.dyn.server.reference.Reference;
 
@@ -101,6 +103,7 @@ public class PacketDispatcher {
 		// Packets handled on SERVER
 		registerMessage(AwardAchievementMessage.class);
 		registerMessage(MentorGivingAchievementMessage.class);
+		registerMessage(MentorCommandMessage.class);
 		registerMessage(RequestUserlistMessage.class);
 		registerMessage(HaveServerWriteAchievementsMessage.class);
 		registerMessage(RequestUserAchievementsProgressMessage.class);
@@ -109,6 +112,8 @@ public class PacketDispatcher {
 		registerMessage(RemoveEffectsMessage.class);
 		registerMessage(RequestVerificationMessage.class);
 		registerMessage(SyncNamesMessage.class);
+		registerMessage(StudentCommandBlockMessage.class);
+
 	}
 
 	// ========================================================//

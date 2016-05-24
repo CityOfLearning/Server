@@ -46,8 +46,8 @@ public class SyncNamesMessage extends AbstractServerMessage<SyncNamesMessage> {
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataInputStream
-		dynName = buffer.readStringFromBuffer(100);
-		playerName = buffer.readStringFromBuffer(100);
+		dynName = buffer.readStringFromBuffer(buffer.readableBytes());
+		playerName = buffer.readStringFromBuffer(buffer.readableBytes());
 	}
 
 	@Override

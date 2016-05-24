@@ -10,44 +10,15 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Properties;
 
-import com.dyn.server.ServerMod;
+import com.dyn.DYNServerMod;
 
 public class DBManager {
-	private final static String dbURL = "";
-	private final static String MasterUsername = "";
-	private final static String MasterUserPassword = "";
 
 	private static Connection conn = null;
 	private static Statement stmt = null;
 
 	private static boolean initialized = false;
 
-	public static String getNameFromMCUsername(String username){
-		if (initialized) {
-			try {
-				String sql = "select display_name from mc_name_maps where mc_username='" + username + "'";
-
-				ResultSet rs;
-
-				rs = stmt.executeQuery(sql);
-
-				if (rs.next()) {
-					return rs.getString("display_name");
-				}
-
-				ServerMod.logger.error("No name found for username");
-				return "";
-
-			} catch (SQLException e) {
-				ServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
-			}
-		} else {
-			ServerMod.logger.error("Database Manager not initialized");
-		}
-		return "";
-	}
-	
 	public static boolean checkLicenseActive(String licenseKey) {
 		if (initialized) {
 			try {
@@ -60,26 +31,26 @@ public class DBManager {
 				if (rs.next()) {
 
 					if (rs.getDate("start_dt").before(new Date(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)))) {
-						ServerMod.logger.error("License is not active yet");
+						DYNServerMod.logger.error("License is not active yet");
 						return false;
 					}
 
 					if (rs.getDate("end_dt").before(new Date(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)))) {
-						ServerMod.logger.error("License is expired");
+						DYNServerMod.logger.error("License is expired");
 						return false;
 					}
 
 					return true;
 				}
-				ServerMod.logger.error("No entry found for license");
+				DYNServerMod.logger.error("No entry found for license");
 				return false;
 
 			} catch (SQLException e) {
-				ServerMod.logger.error("Could not execute database request");
+				DYNServerMod.logger.error("Could not execute database request");
 				e.printStackTrace();
 			}
 		} else {
-			ServerMod.logger.error("Database Manager not initialized");
+			DYNServerMod.logger.error("Database Manager not initialized");
 		}
 		return false;
 	}
@@ -99,16 +70,16 @@ public class DBManager {
 						return rs.getInt("user_id");
 					}
 
-					ServerMod.logger.error("No entry found for license");
+					DYNServerMod.logger.error("No entry found for license");
 					return -1;
 
 				} catch (SQLException e) {
-					ServerMod.logger.error("Could not execute database request");
+					DYNServerMod.logger.error("Could not execute database request");
 					e.printStackTrace();
 				}
 			}
 		} else {
-			ServerMod.logger.error("Database Manager not initialized");
+			DYNServerMod.logger.error("Database Manager not initialized");
 		}
 		return -1;
 	}
@@ -127,15 +98,15 @@ public class DBManager {
 					return rs.getString("license_key");
 				}
 
-				ServerMod.logger.error("No license found for username and password");
+				DYNServerMod.logger.error("No license found for username and password");
 				return "";
 
 			} catch (SQLException e) {
-				ServerMod.logger.error("Could not execute database request");
+				DYNServerMod.logger.error("Could not execute database request");
 				e.printStackTrace();
 			}
 		} else {
-			ServerMod.logger.error("Database Manager not initialized");
+			DYNServerMod.logger.error("Database Manager not initialized");
 		}
 		return "";
 	}
@@ -153,20 +124,72 @@ public class DBManager {
 					return new Pair<String, String>(rs.getString("email"), rs.getString("password"));
 				}
 
-				ServerMod.logger.error("No entry found for license");
+				DYNServerMod.logger.error("No entry found for license");
 				return null;
 
 			} catch (SQLException e) {
-				ServerMod.logger.error("Could not execute database request");
+				DYNServerMod.logger.error("Could not execute database request");
 				e.printStackTrace();
 			}
 		} else {
-			ServerMod.logger.error("Database Manager not initialized");
+			DYNServerMod.logger.error("Database Manager not initialized");
 		}
 		return null;
 	}
 
-	public static void init() {
+	public static String getNameFromMCUsername(String username) {
+		if (initialized) {
+			try {
+				String sql = "select display_name from mc_name_maps where mc_username='" + username + "'";
+
+				ResultSet rs;
+
+				rs = stmt.executeQuery(sql);
+
+				if (rs.next()) {
+					return rs.getString("display_name");
+				}
+
+				DYNServerMod.logger.error("No name found for username");
+				return "";
+
+			} catch (SQLException e) {
+				DYNServerMod.logger.error("Could not execute database request");
+				e.printStackTrace();
+			}
+		} else {
+			DYNServerMod.logger.error("Database Manager not initialized");
+		}
+		return "";
+	}
+
+	public static String getPlayerStatus(String username) {
+		if (initialized) {
+			try {
+				String sql = "select license_type from mc_minecraft_license where mc_name='" + username + "'";
+
+				ResultSet rs;
+
+				rs = stmt.executeQuery(sql);
+
+				if (rs.next()) {
+					return rs.getString("license_type");
+				}
+
+				DYNServerMod.logger.error("No license found for username");
+				return "";
+
+			} catch (SQLException e) {
+				DYNServerMod.logger.error("Could not execute database request");
+				e.printStackTrace();
+			}
+		} else {
+			DYNServerMod.logger.error("Database Manager not initialized");
+		}
+		return "";
+	}
+
+	public static void init(String url, String username, String password) {
 		try {
 			// Dynamically load driver at runtime.
 			// Redshift JDBC 4.1 driver: com.amazon.redshift.jdbc41.Driver
@@ -179,20 +202,22 @@ public class DBManager {
 
 			// Uncomment the following line if using a keystore.
 			// props.setProperty("ssl", "true");
-			props.setProperty("user", MasterUsername);
-			props.setProperty("password", MasterUserPassword);
-			conn = DriverManager.getConnection(dbURL, props);
+			props.setProperty("user", username);
+			props.setProperty("password", password);
+			conn = DriverManager.getConnection(url, props);
 
 			stmt = conn.createStatement();
 			initialized = true;
+			
+			DYNServerMod.logger.info("Database Initialized");
 
 		} catch (ClassNotFoundException e) {
-			ServerMod.logger.error("Failed to load database class, jar may be missing");
+			DYNServerMod.logger.error("Failed to load database class, jar may be missing");
 			e.printStackTrace();
 		} catch (SQLException e) {
-			ServerMod.logger.error("Failed to initialize SQL connection to database");
+			DYNServerMod.logger.error("Failed to initialize SQL connection to database");
 			e.printStackTrace();
-		}
+		} 
 	}
 
 }

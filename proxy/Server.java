@@ -17,7 +17,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.UserListOpsEntry;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -34,8 +33,7 @@ public class Server implements Proxy {
 		if (!minecraftServer.getConfigurationManager().canSendCommands(profile)) {
 			return 0;
 		}
-		UserListOpsEntry entry = (UserListOpsEntry) minecraftServer.getConfigurationManager().getOppedPlayers()
-				.getEntry(profile);
+		UserListOpsEntry entry = minecraftServer.getConfigurationManager().getOppedPlayers().getEntry(profile);
 		return entry != null ? entry.getPermissionLevel() : MinecraftServer.getServer().getOpPermissionLevel();
 	}
 
@@ -52,7 +50,6 @@ public class Server implements Proxy {
 		return MinecraftServer.getServer().getAllUsernames();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<EntityPlayerMP> getServerUsers() {
 		return MinecraftServer.getServer().getConfigurationManager().playerEntityList;
@@ -69,16 +66,13 @@ public class Server implements Proxy {
 
 	@Override
 	public void init() {
-		FMLCommonHandler.instance().bus().register(this);
-
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@SubscribeEvent
 	public void loginEvent(PlayerEvent.PlayerLoggedInEvent event) {
 		if (getOpLevel(event.player.getGameProfile()) > 0) {
-			PacketDispatcher.sendTo(new TeacherSettingsMessage(getServerUserlist(), true),
-					(EntityPlayerMP) event.player);
+			PacketDispatcher.sendTo(new TeacherSettingsMessage(getServerUserlist()), (EntityPlayerMP) event.player);
 		}
 
 		PacketDispatcher.sendTo(

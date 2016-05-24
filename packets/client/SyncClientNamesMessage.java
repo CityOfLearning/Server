@@ -38,8 +38,8 @@ public class SyncClientNamesMessage extends AbstractClientMessage<SyncClientName
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
-		dynName = buffer.readStringFromBuffer(100);
-		playerName = buffer.readStringFromBuffer(100);
+		dynName = buffer.readStringFromBuffer(buffer.readableBytes());
+		playerName = buffer.readStringFromBuffer(buffer.readableBytes());
 	}
 
 	@Override

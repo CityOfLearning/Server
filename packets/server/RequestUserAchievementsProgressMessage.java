@@ -200,7 +200,7 @@ public class RequestUserAchievementsProgressMessage
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
-		username = buffer.readStringFromBuffer(100);
+		username = buffer.readStringFromBuffer(buffer.readableBytes());
 	}
 
 	@Override

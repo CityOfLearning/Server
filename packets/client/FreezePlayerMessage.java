@@ -2,7 +2,7 @@ package com.dyn.server.packets.client;
 
 import java.io.IOException;
 
-import com.dyn.instructor.TeacherMod;
+import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +27,7 @@ public class FreezePlayerMessage extends AbstractClientMessage<FreezePlayerMessa
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
-			TeacherMod.frozen = frozen;
+			ServerMod.frozen = frozen;
 			player.capabilities.allowEdit = frozen;
 		}
 	}

@@ -9,7 +9,7 @@ import com.dyn.achievements.achievement.RequirementType;
 import com.dyn.achievements.achievement.Requirements;
 import com.dyn.achievements.achievement.Requirements.BaseRequirement;
 import com.dyn.achievements.handlers.AchievementManager;
-import com.dyn.instructor.TeacherMod;
+import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,7 +39,7 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 		// tabs are titles and new lines are the items within each requirement
 		// set
 		if (side.isClient()) {
-			TeacherMod.userAchievementProgress.clear();
+			ServerMod.userAchievementProgress.clear();
 			for (String s : data.split("[|]")) {// splits the achievements
 				String[] splitData = s.split("[?]");
 				AchievementPlus achievement = AchievementManager
@@ -47,7 +47,7 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 				String achName = achievement.getName();
 				if (splitData[0].substring(splitData[0].indexOf('^') + 1, splitData[0].length()).equals("1")) {
 					// the achievement is unlocked no need to waste space
-					TeacherMod.userAchievementProgress.put(achName, null);
+					ServerMod.userAchievementProgress.put(achName, null);
 				} else { // we need to parse the requirements
 					Requirements reqCopies = Requirements.getCopy(achievement.getRequirements());
 					String[] reqData = splitData[1].split("[$]");
@@ -155,7 +155,7 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 					for (BaseRequirement br : baseCopies) {
 						r.addRequirement(br);
 					}
-					TeacherMod.userAchievementProgress.put(achName, r);
+					ServerMod.userAchievementProgress.put(achName, r);
 				}
 			}
 		}
@@ -164,7 +164,7 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
 		// this could potentially be a giant file...
-		data = buffer.readStringFromBuffer(100000);
+		data = buffer.readStringFromBuffer(buffer.readableBytes());
 	}
 
 	@Override

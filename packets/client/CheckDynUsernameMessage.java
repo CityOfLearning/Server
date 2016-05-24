@@ -2,8 +2,8 @@ package com.dyn.server.packets.client;
 
 import java.io.IOException;
 
-import com.dyn.instructor.TeacherMod;
 import com.dyn.login.LoginGUI;
+import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +33,7 @@ public class CheckDynUsernameMessage extends AbstractClientMessage<CheckDynUsern
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
 
-			TeacherMod.frozen = freeze;
+			ServerMod.frozen = freeze;
 			LoginGUI.needsVerification = false;
 			// needed for fidelity checks later on
 			/*
@@ -50,7 +50,7 @@ public class CheckDynUsernameMessage extends AbstractClientMessage<CheckDynUsern
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
 		freeze = buffer.readBoolean();
-		dynName = buffer.readStringFromBuffer(100);
+		dynName = buffer.readStringFromBuffer(buffer.readableBytes());
 	}
 
 	@Override

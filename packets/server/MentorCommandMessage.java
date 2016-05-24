@@ -2,50 +2,42 @@ package com.dyn.server.packets.server;
 
 import java.io.IOException;
 
-import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemBucketMilk;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class RemoveEffectsMessage extends AbstractServerMessage<RemoveEffectsMessage> {
-
-	private String player_name;
+public class MentorCommandMessage extends AbstractServerMessage<MentorCommandMessage> {
+	private String command;
 
 	// The basic, no-argument constructor MUST be included to use the new
 	// automated handling
-	public RemoveEffectsMessage() {
+	public MentorCommandMessage() {
 	}
 
-	public RemoveEffectsMessage(String username) {
-		player_name = username;
+	public MentorCommandMessage(String mentor_command) {
+		command = mentor_command.replace("  ", " ");
 	}
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
-		// using the message instance gives access to 'this.id'
 		if (side.isServer()) {
-			for (EntityPlayerMP p : ServerMod.proxy.getServerUsers()) {
-				if (p.getDisplayNameString().equals(player_name)) {
-					p.curePotionEffects(new ItemStack(new ItemBucketMilk()));
-				}
-			}
+			System.out.println(command);
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), command);
 		}
 	}
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataInputStream
-		player_name = buffer.readStringFromBuffer(buffer.readableBytes());
+		command = buffer.readStringFromBuffer(buffer.readableBytes());
 	}
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataOutputStream
-		buffer.writeString(player_name);
+		buffer.writeString(command);
 	}
 }

@@ -12,7 +12,6 @@ import net.minecraftforge.fml.relauncher.Side;
 public class TeacherSettingsMessage extends AbstractClientMessage<TeacherSettingsMessage> {
 
 	// the info needed to increment a requirement
-	private boolean isOpped;
 	private String data;
 
 	// The basic, no-argument constructor MUST be included for
@@ -21,11 +20,10 @@ public class TeacherSettingsMessage extends AbstractClientMessage<TeacherSetting
 	}
 
 	// We need to initialize our data, so provide a suitable constructor:
-	public TeacherSettingsMessage(String[] users, boolean opped) {
+	public TeacherSettingsMessage(String[] users) {
 		for (String s : users) {
 			data += " " + s;
 		}
-		isOpped = opped;
 	}
 
 	@Override
@@ -39,19 +37,17 @@ public class TeacherSettingsMessage extends AbstractClientMessage<TeacherSetting
 				}
 			}
 			ServerMod.usernames.remove(null);
-			ServerMod.opped = isOpped;
+
 		}
 	}
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
-		data = buffer.readStringFromBuffer(30000);
-		isOpped = buffer.readBoolean();
+		data = buffer.readStringFromBuffer(buffer.readableBytes());
 	}
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
 		buffer.writeString(data);
-		buffer.writeBoolean(isOpped);
 	}
 }

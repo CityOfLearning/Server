@@ -7,7 +7,6 @@ import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.FreezePlayerMessage;
 
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.server.MinecraftServer;
@@ -31,13 +30,10 @@ public class RequestFreezePlayerMessage extends AbstractServerMessage<RequestFre
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
-			EntityPlayerSP p = (EntityPlayerSP) player;
 			if (freeze) {
 				ServerMod.frozenPlayers.add(username);
-				p.sendChatMessage("/p user " + username + " group add _FROZEN_");
 			} else {
 				ServerMod.frozenPlayers.remove(username);
-				p.sendChatMessage("/p user " + username + " group remove _FROZEN_");
 			}
 			PacketDispatcher.sendTo(new FreezePlayerMessage(freeze),
 					MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(username));
@@ -46,7 +42,7 @@ public class RequestFreezePlayerMessage extends AbstractServerMessage<RequestFre
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
-		username = buffer.readStringFromBuffer(100);
+		username = buffer.readStringFromBuffer(buffer.readableBytes());
 		freeze = buffer.readBoolean();
 	}
 

@@ -49,7 +49,7 @@ public class MentorGivingAchievementMessage extends AbstractServerMessage<Mentor
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataInputStream
-		player_name = buffer.readStringFromBuffer(100);
+		player_name = buffer.readStringFromBuffer(buffer.readableBytes());
 		ach_id = buffer.readInt();
 	}
 

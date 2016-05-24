@@ -1,16 +1,51 @@
 package com.dyn.server.proxy;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import com.dyn.server.ServerMod;
+import com.dyn.server.database.DBManager;
+import com.dyn.server.utils.PlayerLevel;
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IThreadListener;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class Client implements Proxy {
+
+	@SubscribeEvent
+	public void connectionOpened(FMLNetworkEvent.ClientConnectedToServerEvent e) {
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				String playerStatus = DBManager
+						.getPlayerStatus(Minecraft.getMinecraft().thePlayer.getDisplayNameString());
+
+				if (playerStatus.contains("Admin")) {
+					ServerMod.status = PlayerLevel.ADMIN;
+				} else if (playerStatus.contains("Mentor")) {
+					ServerMod.status = PlayerLevel.MENTOR;
+				}
+			}
+		}, 6 * 1000);
+	}
+
+	@SubscribeEvent
+	public void connectionOpened(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
+		// let's close the client when we disconnect
+		FMLCommonHandler.instance().exitJava(0, false);
+	}
 
 	@Override
 	public int getOpLevel(GameProfile profile) {
@@ -48,7 +83,18 @@ public class Client implements Proxy {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
+		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
+		if (event.entity instanceof EntityPlayer) {
+			if (event.entity == Minecraft.getMinecraft().thePlayer) {
+				if (ServerMod.frozen) {
+					event.setCanceled(true);
+				}
+			}
+		}
 	}
 
 	/**

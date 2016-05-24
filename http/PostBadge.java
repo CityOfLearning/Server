@@ -34,10 +34,8 @@ public class PostBadge extends Thread {
 	public static JsonElement jsonResponse;
 	public static String response;
 	private String UUID;
-	private String secretKey;// =
-								// "5e4ae1a1ddce5d341bd5c0b6075d9491620c31aed80a901345fdf91fe1757ce1d8b67b99ccaf574198c99ca12c3d288ad07b022d5b70d1c72a3d728a7a27ce23";
-	private String orgKey;// =
-							// "dd10c3a735a29a9e8d46822aac0660555a25103c57fa5188b793944fd074f1b6";
+	private String secretKey;
+	private String orgKey;
 	private int badgeID;
 	private EntityPlayerMP player;
 	private AchievementPlus achievement;
