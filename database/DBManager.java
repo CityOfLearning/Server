@@ -162,6 +162,32 @@ public class DBManager {
 		}
 		return "";
 	}
+	
+	public static String getPasswordFromDYNUsername(String username) {
+		if (initialized) {
+			try {
+				String sql = "select password from mc_license where username='" + username + "'";
+
+				ResultSet rs;
+
+				rs = stmt.executeQuery(sql);
+
+				if (rs.next()) {
+					return rs.getString("password");
+				}
+
+				DYNServerMod.logger.error("No password found for username");
+				return "";
+
+			} catch (SQLException e) {
+				DYNServerMod.logger.error("Could not execute database request");
+				e.printStackTrace();
+			}
+		} else {
+			DYNServerMod.logger.error("Database Manager not initialized");
+		}
+		return "";
+	}
 
 	public static String getPlayerStatus(String username) {
 		if (initialized) {
