@@ -1,15 +1,8 @@
 package com.dyn.server.packets.client;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.dyn.achievements.achievement.AchievementPlus;
-import com.dyn.achievements.achievement.RequirementType;
-import com.dyn.achievements.achievement.Requirements;
-import com.dyn.achievements.achievement.Requirements.BaseRequirement;
-import com.dyn.achievements.handlers.AchievementManager;
-import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 import com.dyn.student.StudentUI;
 

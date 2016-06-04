@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -44,20 +43,21 @@ public class StudentCommandBlockMessage extends AbstractServerMessage<StudentCom
 					TileEntity tileentity = player.worldObj.getTileEntity(pos);
 
 					if (tileentity instanceof TileEntityStudentCommandBlock) {
-						StudentCommandBlockLogic commandblocklogic = ((TileEntityStudentCommandBlock) tileentity).getCommandBlockLogic();
-					
-					if (commandblocklogic != null) {
-						commandblocklogic.setCommand(command);
-						commandblocklogic.setTrackOutput(showOutput);
+						StudentCommandBlockLogic commandblocklogic = ((TileEntityStudentCommandBlock) tileentity)
+								.getCommandBlockLogic();
 
-						if (!showOutput) {
-							commandblocklogic.setLastOutput((IChatComponent) null);
+						if (commandblocklogic != null) {
+							commandblocklogic.setCommand(command);
+							commandblocklogic.setTrackOutput(showOutput);
+
+							if (!showOutput) {
+								commandblocklogic.setLastOutput((IChatComponent) null);
+							}
+
+							commandblocklogic.updateCommand();
+							player.addChatMessage(new ChatComponentTranslation("advMode.setCommand.success",
+									new Object[] { command }));
 						}
-
-						commandblocklogic.updateCommand();
-						player.addChatMessage(
-								new ChatComponentTranslation("advMode.setCommand.success", new Object[] { command }));
-					}
 					}
 				} catch (Exception exception1) {
 					DYNServerMod.logger.error("Couldn\'t set command block", exception1);

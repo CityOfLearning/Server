@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.PlotNamesMessage;
-import com.dyn.server.packets.client.TeacherSettingsMessage;
 import com.forgeessentials.commons.selections.WorldPoint;
 import com.forgeessentials.economy.plots.Plots;
 import com.forgeessentials.economy.plots.command.CommandPlot.PlotListingType;
@@ -33,15 +31,14 @@ public class RequestPlotListMessage extends AbstractServerMessage<RequestPlotLis
 		type = plotType;
 	}
 
-	
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
 			PlotListingType listType = PlotListingType.OWN;
-			if(type){
+			if (type) {
 				listType = PlotListingType.SALE;
-			} 
-			
+			}
+
 			final WorldPoint playerRef = new WorldPoint(player.getEntityWorld(), player.getPosition());
 			SortedSet<Plots> plots = new TreeSet<Plots>((a, b) -> {
 				if (a.getDimension() != playerRef.getDimension()) {
@@ -64,11 +61,11 @@ public class RequestPlotListMessage extends AbstractServerMessage<RequestPlotLis
 			}
 			List<String> sPlots = new ArrayList<>();
 			for (Plots plot : plots) {
-				sPlots.add(String.format("#%d: \"%s\" at %s|", plot.getZone().getId(), plot.getName().substring(0, 8), plot.getCenter().toString()));
+				sPlots.add(String.format("#%d: \"%s\" at %s|", plot.getZone().getId(), plot.getName().substring(0, 8),
+						plot.getCenter().toString()));
 			}
-			
-			PacketDispatcher.sendTo(new PlotNamesMessage(sPlots),
-					(EntityPlayerMP) player);
+
+			PacketDispatcher.sendTo(new PlotNamesMessage(sPlots), (EntityPlayerMP) player);
 		}
 	}
 

@@ -162,7 +162,7 @@ public class DBManager {
 		}
 		return "";
 	}
-	
+
 	public static String getPasswordFromDYNUsername(String username) {
 		if (initialized) {
 			try {
@@ -234,7 +234,7 @@ public class DBManager {
 
 			stmt = conn.createStatement();
 			initialized = true;
-			
+
 			DYNServerMod.logger.info("Database Initialized");
 
 		} catch (ClassNotFoundException e) {
@@ -243,7 +243,7 @@ public class DBManager {
 		} catch (SQLException e) {
 			DYNServerMod.logger.error("Failed to initialize SQL connection to database");
 			e.printStackTrace();
-		} 
+		}
 	}
 
 }

@@ -2,7 +2,6 @@ package com.dyn.server.packets.client;
 
 import java.io.IOException;
 
-import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 import com.dyn.student.StudentUI;
 

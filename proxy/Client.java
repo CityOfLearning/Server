@@ -7,7 +7,6 @@ import java.util.TimerTask;
 import com.dyn.server.ServerMod;
 import com.dyn.server.database.DBManager;
 import com.dyn.server.utils.PlayerLevel;
-import com.dyn.student.StudentUI;
 import com.forgeessentials.commons.network.Packet1SelectionUpdate;
 import com.mojang.authlib.GameProfile;
 
@@ -16,9 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -90,17 +87,17 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
+	@Override
+	public IMessage onMessage(Packet1SelectionUpdate message, MessageContext ctx) {
+		ServerMod.selection = message.getSelection();
+		return null;
+	}
+
 	/**
 	 * @see forge.reference.proxy.Proxy#renderGUI()
 	 */
 	@Override
 	public void renderGUI() {
 		// Render GUI when on call from client
-	}
-
-	@Override
-	public IMessage onMessage(Packet1SelectionUpdate message, MessageContext ctx) {
-		ServerMod.selection = message.getSelection();
-		return null;
 	}
 }

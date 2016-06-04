@@ -39,7 +39,7 @@ public class ServerMod {
 	public static List<String> frozenPlayers = new ArrayList<String>();
 	public static Map<String, Requirements> userAchievementProgress = new HashMap<String, Requirements>();
 	public static PlayerLevel status = PlayerLevel.STUDENT;
-	public static Selection selection; //requires forge essentials
+	public static Selection selection; // requires forge essentials
 
 	@Mod.Instance(Reference.MOD_ID)
 	public static ServerMod instance;
@@ -66,13 +66,13 @@ public class ServerMod {
 
 			DBManager.init(json.get("db_url").getAsString(), json.get("db_un").getAsString(),
 					json.get("db_pw").getAsString());
-			
-			for(JsonElement jElement : json.get("org_keys").getAsJsonArray()){
+
+			for (JsonElement jElement : json.get("org_keys").getAsJsonArray()) {
 				JsonObject jobj = jElement.getAsJsonObject();
 				KeyManager.setOrgKey(jobj.get("org_id").getAsInt(), jobj.get("org_key").getAsString());
 				KeyManager.setSecretKey(jobj.get("org_id").getAsInt(), jobj.get("secret_key").getAsString());
 			}
-			
+
 		} catch (MalformedURLException e) {
 			DYNServerMod.logger.error("Failed to get keys");
 			e.printStackTrace();
