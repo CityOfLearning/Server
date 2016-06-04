@@ -3,6 +3,9 @@ package com.dyn.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.Logger;
+
+import com.dyn.server.database.DBManager;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.proxy.Proxy;
 import com.dyn.server.reference.MetaData;
@@ -18,16 +21,19 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class ServerMod {
 
 	public static List<String> usernames = new ArrayList<String>();
+	public static List<String> frozenPlayers = new ArrayList<String>();
 	public static boolean opped = false;
 
 	@Mod.Instance(Reference.MOD_ID)
 	public static ServerMod instance;
-	
-	@Mod.Metadata(Reference.MOD_ID)
-	public ModMetadata metadata;
 
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
 	public static Proxy proxy;
+
+	@Mod.Metadata(Reference.MOD_ID)
+	public ModMetadata metadata;
+	
+	public static Logger logger;
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
@@ -36,7 +42,11 @@ public class ServerMod {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		this.metadata = MetaData.init(this.metadata);
+		DBManager.init();
+		
+		metadata = MetaData.init(metadata);
+
+		logger = event.getModLog();
 		
 		PacketDispatcher.registerPackets();
 		proxy.init();

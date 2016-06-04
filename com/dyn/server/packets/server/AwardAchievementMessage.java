@@ -2,7 +2,7 @@ package com.dyn.server.packets.server;
 
 import java.io.IOException;
 
-import com.dyn.achievements.handlers.AchievementHandler;
+import com.dyn.achievements.handlers.AchievementManager;
 import com.dyn.login.LoginGUI;
 import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
@@ -29,29 +29,29 @@ public class AwardAchievementMessage extends AbstractServerMessage<AwardAchievem
 	public AwardAchievementMessage(int id, String uuid) {
 		this.id = id;
 		this.uuid = uuid;
-		this.player_name = "";
+		player_name = "";
 	}
 
 	public AwardAchievementMessage(int id, String uuid, String username) {
 		this.id = id;
 		this.uuid = uuid;
-		this.player_name = username;
+		player_name = username;
 	}
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		// using the message instance gives access to 'this.id'
 		if (side.isServer()) {
-			LoginGUI.DYN_Username = this.uuid; // the UI is client side so we
-												// set this each time server
-												// side when awarding an
-												// achievement
-			if (this.player_name.isEmpty()) {
-				AchievementHandler.findAchievementById(this.id).awardAchievement(player);
+			LoginGUI.DYN_Username = uuid; // the UI is client side so we
+											// set this each time server
+											// side when awarding an
+											// achievement
+			if (player_name.isEmpty()) {
+				AchievementManager.findAchievementById(id).awardAchievement(player);
 			} else {
 				for (EntityPlayerMP p : ServerMod.proxy.getServerUsers()) {
-					if (p.getDisplayName().equals(this.player_name)) {
-						AchievementHandler.findAchievementById(this.id).awardAchievement(p);
+					if (p.getDisplayNameString().equals(player_name)) {
+						AchievementManager.findAchievementById(id).awardAchievement(p);
 					}
 				}
 			}
@@ -61,16 +61,16 @@ public class AwardAchievementMessage extends AbstractServerMessage<AwardAchievem
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataInputStream
-		this.id = buffer.readInt();
-		this.uuid = buffer.readStringFromBuffer(100);
-		this.player_name = buffer.readStringFromBuffer(100);
+		id = buffer.readInt();
+		uuid = buffer.readStringFromBuffer(100);
+		player_name = buffer.readStringFromBuffer(100);
 	}
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataOutputStream
-		buffer.writeInt(this.id);
-		buffer.writeString(this.uuid);
-		buffer.writeString(this.player_name);
+		buffer.writeInt(id);
+		buffer.writeString(uuid);
+		buffer.writeString(player_name);
 	}
 }

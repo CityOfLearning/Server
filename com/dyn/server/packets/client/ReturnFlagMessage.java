@@ -24,14 +24,14 @@ public class ReturnFlagMessage extends AbstractClientMessage<ReturnFlagMessage> 
 
 	// We need to initialize our data, so provide a suitable constructor:
 	public ReturnFlagMessage(ItemStack is) {
-		this.data = is;
+		data = is;
 	}
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
-			if (!player.inventory.hasItem(this.data.getItem())) {
-				player.inventory.addItemStackToInventory(this.data);
+			if (!player.inventory.hasItem(data.getItem())) {
+				player.inventory.addItemStackToInventory(data);
 				/*
 				 * for(int i=0;i<player.inventory.getSizeInventory();i++){
 				 * if(player.inventory.getStackInSlot(i) == null){
@@ -44,11 +44,11 @@ public class ReturnFlagMessage extends AbstractClientMessage<ReturnFlagMessage> 
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
-		this.data = buffer.readItemStackFromBuffer();
+		data = buffer.readItemStackFromBuffer();
 	}
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
-		buffer.writeItemStackToBuffer(this.data);
+		buffer.writeItemStackToBuffer(data);
 	}
 }

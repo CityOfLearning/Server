@@ -30,11 +30,11 @@ public class GetBadge extends Thread {
 		if (uuid != "") {
 			return;
 		}
-		this.secretKey = secret;
-		this.orgKey = key;
-		this.setName("Server Mod HTTP Get");
-		this.setDaemon(true);
-		this.start();
+		secretKey = secret;
+		orgKey = key;
+		setName("Server Mod HTTP Get");
+		setDaemon(true);
+		start();
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class GetBadge extends Thread {
 			HttpClient httpclient = HttpClients.createDefault();
 
 			// decode the base64 encoded string
-			byte[] decodedKey = this.secretKey.getBytes();
+			byte[] decodedKey = secretKey.getBytes();
 			// rebuild key using SecretKeySpec
 			SecretKey theSecretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
 
@@ -55,13 +55,13 @@ public class GetBadge extends Thread {
 			token.setParam("version", "v1");
 			token.setSubject("badges");
 			JsonObject sPayload = new JsonObject();
-			sPayload.addProperty("key", this.orgKey);
+			sPayload.addProperty("key", orgKey);
 			token.addJsonObject("payload", sPayload);
 
 			HttpGet getReq = new HttpGet(
 					"http://chicago.col-engine.com/partner_organizations/api.json?jwt=" + token.serializeAndSign());
 			getReq.setHeader("Accept", "application/json");
-			getReq.setHeader("Authorization", "JWT token=" + this.orgKey);
+			getReq.setHeader("Authorization", "JWT token=" + orgKey);
 			getReq.addHeader("jwt", token.serializeAndSign());
 
 			// Execute and get the response.
