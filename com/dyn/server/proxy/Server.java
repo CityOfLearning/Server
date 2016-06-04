@@ -2,6 +2,9 @@ package com.dyn.server.proxy;
 
 import java.util.List;
 
+import com.dyn.achievements.handlers.AchievementManager;
+import com.dyn.names.manager.NamesManager;
+import com.dyn.server.ServerMod;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.CheckDynUsernameMessage;
 import com.dyn.server.packets.client.TeacherSettingsMessage;
@@ -14,24 +17,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.UserListOpsEntry;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class Server implements Proxy {
-
-	@SubscribeEvent
-	public void changedDim(PlayerEvent.PlayerChangedDimensionEvent event) {
-		// event.player.addChatMessage(new ChatComponentText("Player Warped from
-		// " + event.fromDim + " to Dimension" + event.toDim));
-		/*
-		 * PacketDispatcher.sendTo( new SyncWorldMessage(
-		 * APIRegistry.namedWorldHandler.getWorldName(event.player.worldObj.
-		 * provider.dimensionId)), (EntityPlayerMP) event.player);
-		 */
-
-	}
 
 	@Override
 	public int getOpLevel(GameProfile profile) {
@@ -43,8 +33,7 @@ public class Server implements Proxy {
 		if (!minecraftServer.getConfigurationManager().canSendCommands(profile)) {
 			return 0;
 		}
-		UserListOpsEntry entry = (UserListOpsEntry) minecraftServer.getConfigurationManager().getOppedPlayers()
-				.getEntry(profile);
+		UserListOpsEntry entry = minecraftServer.getConfigurationManager().getOppedPlayers().getEntry(profile);
 		return entry != null ? entry.getPermissionLevel() : MinecraftServer.getServer().getOpPermissionLevel();
 	}
 
@@ -61,7 +50,6 @@ public class Server implements Proxy {
 		return MinecraftServer.getServer().getAllUsernames();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<EntityPlayerMP> getServerUsers() {
 		return MinecraftServer.getServer().getConfigurationManager().playerEntityList;
@@ -78,20 +66,20 @@ public class Server implements Proxy {
 
 	@Override
 	public void init() {
-		FMLCommonHandler.instance().bus().register(this);
-
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@SubscribeEvent
 	public void loginEvent(PlayerEvent.PlayerLoggedInEvent event) {
-		if (this.getOpLevel(event.player.getGameProfile()) > 0) {
-			PacketDispatcher.sendTo(new TeacherSettingsMessage(this.getServerUserlist(), true),
-					(EntityPlayerMP) event.player);
+		if (getOpLevel(event.player.getGameProfile()) > 0) {
+			PacketDispatcher.sendTo(new TeacherSettingsMessage(getServerUserlist()), (EntityPlayerMP) event.player);
 		}
 
-		PacketDispatcher.sendTo(new CheckDynUsernameMessage(), (EntityPlayerMP) event.player);
-
+		PacketDispatcher.sendTo(
+				new CheckDynUsernameMessage(NamesManager.getDYNUsername(event.player.getName()),
+						ServerMod.frozenPlayers.contains(event.player.getDisplayNameString())),
+				(EntityPlayerMP) event.player);
+		AchievementManager.setupPlayerAchievements(event.player);
 	}
 
 	/**

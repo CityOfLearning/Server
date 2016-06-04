@@ -2,52 +2,49 @@ package com.dyn.server.packets.client;
 
 import java.io.IOException;
 
-import com.dyn.server.ServerMod;
+import com.dyn.names.manager.NamesManager;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class TeacherSettingsMessage extends AbstractClientMessage<TeacherSettingsMessage> {
+public class SyncClientNamesMessage extends AbstractClientMessage<SyncClientNamesMessage> {
 
 	// the info needed to increment a requirement
-	private String data;
+	private String dynName;
+	private String playerName;
+
+	// this packet should only be sent when a player is in the right dimension
+	// so we shouldnt have to check for it ever
 
 	// The basic, no-argument constructor MUST be included for
 	// automated handling
-	public TeacherSettingsMessage() {
+	public SyncClientNamesMessage() {
 	}
 
 	// We need to initialize our data, so provide a suitable constructor:
-	public TeacherSettingsMessage(String[] users) {
-		for (String s : users) {
-			data += " " + s;
-		}
+	public SyncClientNamesMessage(String dyn_name, String mc_name) {
+		dynName = dyn_name;
+		playerName = mc_name;
 	}
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
-			String[] users = data.split(" ");
-			ServerMod.usernames.clear();
-			for (String u : users) {
-				if ((u != null) && !u.equals("null")) {
-					ServerMod.usernames.add(u);
-				}
-			}
-			ServerMod.usernames.remove(null);
-
+			NamesManager.addUsername(playerName, dynName);
 		}
 	}
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
-		data = buffer.readStringFromBuffer(buffer.readableBytes());
+		dynName = buffer.readStringFromBuffer(buffer.readableBytes());
+		playerName = buffer.readStringFromBuffer(buffer.readableBytes());
 	}
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
-		buffer.writeString(data);
+		buffer.writeString(dynName);
+		buffer.writeString(playerName);
 	}
 }

@@ -1,12 +1,26 @@
 package com.dyn.server.packets;
 
+import com.dyn.server.packets.client.AchievementProgressMessage;
 import com.dyn.server.packets.client.CheckDynUsernameMessage;
+import com.dyn.server.packets.client.FreezePlayerMessage;
+import com.dyn.server.packets.client.PlotNamesMessage;
 import com.dyn.server.packets.client.ReturnFlagMessage;
 import com.dyn.server.packets.client.SyncAchievementsMessage;
+import com.dyn.server.packets.client.SyncClientNamesMessage;
 import com.dyn.server.packets.client.TeacherSettingsMessage;
 import com.dyn.server.packets.server.AwardAchievementMessage;
+import com.dyn.server.packets.server.FeedPlayerMessage;
+import com.dyn.server.packets.server.HaveServerWriteAchievementsMessage;
+import com.dyn.server.packets.server.MentorCommandMessage;
 import com.dyn.server.packets.server.MentorGivingAchievementMessage;
+import com.dyn.server.packets.server.RemoveEffectsMessage;
+import com.dyn.server.packets.server.RequestFreezePlayerMessage;
+import com.dyn.server.packets.server.RequestPlotListMessage;
+import com.dyn.server.packets.server.RequestUserAchievementsProgressMessage;
 import com.dyn.server.packets.server.RequestUserlistMessage;
+import com.dyn.server.packets.server.RequestVerificationMessage;
+import com.dyn.server.packets.server.StudentCommandBlockMessage;
+import com.dyn.server.packets.server.SyncNamesMessage;
 import com.dyn.server.reference.Reference;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -84,11 +98,26 @@ public class PacketDispatcher {
 		registerMessage(TeacherSettingsMessage.class);
 		registerMessage(ReturnFlagMessage.class);
 		registerMessage(CheckDynUsernameMessage.class);
+		registerMessage(AchievementProgressMessage.class);
+		registerMessage(FreezePlayerMessage.class);
+		registerMessage(SyncClientNamesMessage.class);
+		registerMessage(PlotNamesMessage.class);
 
 		// Packets handled on SERVER
 		registerMessage(AwardAchievementMessage.class);
 		registerMessage(MentorGivingAchievementMessage.class);
+		registerMessage(MentorCommandMessage.class);
 		registerMessage(RequestUserlistMessage.class);
+		registerMessage(HaveServerWriteAchievementsMessage.class);
+		registerMessage(RequestUserAchievementsProgressMessage.class);
+		registerMessage(RequestFreezePlayerMessage.class);
+		registerMessage(FeedPlayerMessage.class);
+		registerMessage(RemoveEffectsMessage.class);
+		registerMessage(RequestVerificationMessage.class);
+		registerMessage(SyncNamesMessage.class);
+		registerMessage(StudentCommandBlockMessage.class);
+		registerMessage(RequestPlotListMessage.class);
+
 	}
 
 	// ========================================================//

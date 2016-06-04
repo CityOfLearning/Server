@@ -34,10 +34,8 @@ public class PostBadge extends Thread {
 	public static JsonElement jsonResponse;
 	public static String response;
 	private String UUID;
-	private String secretKey;// =
-								// "5e4ae1a1ddce5d341bd5c0b6075d9491620c31aed80a901345fdf91fe1757ce1d8b67b99ccaf574198c99ca12c3d288ad07b022d5b70d1c72a3d728a7a27ce23";
-	private String orgKey;// =
-							// "dd10c3a735a29a9e8d46822aac0660555a25103c57fa5188b793944fd074f1b6";
+	private String secretKey;
+	private String orgKey;
 	private int badgeID;
 	private EntityPlayerMP player;
 	private AchievementPlus achievement;
@@ -46,15 +44,15 @@ public class PostBadge extends Thread {
 		if (uuid.isEmpty() || secret.isEmpty() || key.isEmpty()) {
 			return;
 		}
-		this.UUID = uuid;
-		this.secretKey = secret;
-		this.orgKey = key;
-		this.badgeID = badgeId;
+		UUID = uuid;
+		secretKey = secret;
+		orgKey = key;
+		badgeID = badgeId;
 		this.player = (EntityPlayerMP) player;
-		this.achievement = ach;
-		this.setName("Server Mod HTTP Post");
-		this.setDaemon(true);
-		this.start();
+		achievement = ach;
+		setName("Server Mod HTTP Post");
+		setDaemon(true);
+		start();
 	}
 
 	@Override
@@ -63,7 +61,7 @@ public class PostBadge extends Thread {
 			HttpClient httpclient = HttpClients.createDefault();
 
 			// decode the base64 encoded string
-			byte[] decodedKey = this.secretKey.getBytes();
+			byte[] decodedKey = secretKey.getBytes();
 			// rebuild key using SecretKeySpec
 			SecretKey theSecretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
 
@@ -75,19 +73,19 @@ public class PostBadge extends Thread {
 			token.setParam("version", "v1");
 			token.setSubject("issued_badge");
 			JsonObject sPayload = new JsonObject();
-			sPayload.addProperty("badge_id", this.badgeID);
-			if (this.UUID.contains("@")) {
+			sPayload.addProperty("badge_id", badgeID);
+			if (UUID.contains("@")) {
 				sPayload.addProperty("user_identifier_type", 2);
 			} else {
 				sPayload.addProperty("user_identifier_type", 1);
 			}
-			sPayload.addProperty("recipient", this.UUID);
+			sPayload.addProperty("recipient", UUID);
 			token.addJsonObject("payload", sPayload);
 
 			HttpPost postReq = new HttpPost("http://chicago.col-engine.com/partner_organizations/api.json");
 
 			postReq.setHeader("Accept", "application/json");
-			postReq.setHeader("Authorization", "JWT token=" + this.orgKey);
+			postReq.setHeader("Authorization", "JWT token=" + orgKey);
 
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 			pairs.add(new BasicNameValuePair("jwt", token.serializeAndSign()));
@@ -112,15 +110,15 @@ public class PostBadge extends Thread {
 					jsonResponse = jParse.parse(response);
 					JsonObject statusCheck = jsonResponse.getAsJsonObject();
 					if (statusCheck.has("status") && (statusCheck.get("status").getAsInt() == 201)) {
-						this.achievement.setAwarded(this.player);
-						this.player.addChatMessage(new ChatComponentText(
-								"Player " + this.player.getDisplayName() + " has earned the badge"));
+						achievement.setAwarded(player);
+						player.addChatMessage(
+								new ChatComponentText("Player " + player.getDisplayName() + " has earned the badge"));
 					} else {
 						if (statusCheck.has("status") && (statusCheck.get("status").getAsInt() != 200)) {
-							this.player.addChatMessage(new ChatComponentText(
+							player.addChatMessage(new ChatComponentText(
 									"Error: Returned Status: " + statusCheck.get("status").getAsInt()));
 						} else {
-							this.player.addChatMessage(new ChatComponentText("You have already earned this badge"));
+							player.addChatMessage(new ChatComponentText("You have already earned this badge"));
 						}
 					}
 				} finally {

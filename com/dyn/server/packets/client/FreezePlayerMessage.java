@@ -4,50 +4,42 @@ import java.io.IOException;
 
 import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
+import com.dyn.student.StudentUI;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class TeacherSettingsMessage extends AbstractClientMessage<TeacherSettingsMessage> {
+public class FreezePlayerMessage extends AbstractClientMessage<FreezePlayerMessage> {
 
 	// the info needed to increment a requirement
-	private String data;
+	private boolean frozen;
 
 	// The basic, no-argument constructor MUST be included for
 	// automated handling
-	public TeacherSettingsMessage() {
+	public FreezePlayerMessage() {
 	}
 
 	// We need to initialize our data, so provide a suitable constructor:
-	public TeacherSettingsMessage(String[] users) {
-		for (String s : users) {
-			data += " " + s;
-		}
+	public FreezePlayerMessage(boolean freeze) {
+		frozen = freeze;
 	}
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
-			String[] users = data.split(" ");
-			ServerMod.usernames.clear();
-			for (String u : users) {
-				if ((u != null) && !u.equals("null")) {
-					ServerMod.usernames.add(u);
-				}
-			}
-			ServerMod.usernames.remove(null);
-
+			StudentUI.frozen = frozen;
+			player.capabilities.allowEdit = frozen;
 		}
 	}
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
-		data = buffer.readStringFromBuffer(buffer.readableBytes());
+		frozen = buffer.readBoolean();
 	}
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
-		buffer.writeString(data);
+		buffer.writeBoolean(frozen);
 	}
 }

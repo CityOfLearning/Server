@@ -2,10 +2,11 @@ package com.dyn.server.packets.client;
 
 import java.io.IOException;
 
+import com.dyn.achievements.AchievementsMod;
 import com.dyn.achievements.achievement.AchievementPlus;
-import com.dyn.achievements.achievement.AchievementType;
+import com.dyn.achievements.achievement.RequirementType;
 import com.dyn.achievements.achievement.Requirements.BaseRequirement;
-import com.dyn.achievements.handlers.AchievementHandler;
+import com.dyn.achievements.handlers.AchievementManager;
 import com.dyn.login.LoginGUI;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 import com.dyn.server.packets.PacketDispatcher;
@@ -31,51 +32,70 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 
 	// We need to initialize our data, so provide a suitable constructor:
 	public SyncAchievementsMessage(String s) {
-		this.data = s;
-		this.mentorAwarded = false;
+		data = s;
+		mentorAwarded = false;
 	}
 
 	public SyncAchievementsMessage(String s, boolean b) {
-		this.data = s;
-		this.mentorAwarded = b;
+		data = s;
+		mentorAwarded = b;
 	}
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
 
-			String[] values = this.data.split(" ");
+			String[] values = data.split(" ");
+			String description = "You ";
 			int ach_id = Integer.parseInt(values[0]);
-			AchievementType type = null;
+			RequirementType type = null;
 			if (values[1].equals("CRAFT")) {
-				type = AchievementType.CRAFT;
+				type = RequirementType.CRAFT;
+				description += "Crafted ";
 			} else if (values[1].equals("SMELT")) {
-				type = AchievementType.SMELT;
+				type = RequirementType.SMELT;
+				description += "Smelted ";
 			} else if (values[1].equals("PICKUP")) {
-				type = AchievementType.PICKUP;
+				type = RequirementType.PICKUP;
+				description += "Picked up ";
 			} else if (values[1].equals("KILL")) {
-				type = AchievementType.KILL;
+				type = RequirementType.KILL;
+				description += "Killed ";
 			} else if (values[1].equals("BREW")) {
-				type = AchievementType.BREW;
+				type = RequirementType.BREW;
+				description += "Brewed ";
 			} else if (values[1].equals("STAT")) {
-				type = AchievementType.STAT;
+				type = RequirementType.STAT;
 			} else if (values[1].equals("PLACE")) {
-				type = AchievementType.PLACE;
+				type = RequirementType.PLACE;
+				description += "Placed ";
 			} else if (values[1].equals("BREAK")) {
-				type = AchievementType.BREAK;
+				type = RequirementType.BREAK;
+				description += "Broke ";
 			} else if (values[1].equals("MENTOR")) {
-				type = AchievementType.MENTOR;
+				type = RequirementType.MENTOR;
+			} else if (values[1].equals("LOCATION")) {
+				type = RequirementType.LOCATION;
+				description += "Found ";
 			}
 			int req_id = Integer.parseInt(values[2]);
 
-			AchievementPlus a = AchievementHandler.findAchievementById(ach_id);
+			AchievementPlus a = AchievementManager.findAchievementById(ach_id);
 			if (!a.isAwarded()) {
-				if (!this.mentorAwarded) {
+				if (!mentorAwarded) {
 					if (!a.hasParent()) {
 						for (BaseRequirement r : a.getRequirements().getRequirementsByType(type)) {
 							if (r.getRequirementID() == req_id) {
 								if (r.getTotalAquired() < r.getTotalNeeded()) {
 									r.incrementTotal();
+									if (r.getTotalAquired() == r.getTotalNeeded()) {
+										if (type != RequirementType.LOCATION) {
+											description += r.getTotalNeeded() + " ";
+										}
+										description += r.getRequirementEntityName();
+										AchievementsMod.proxy.getNotificationsManager()
+												.addNotification("Requirement Met:", description);
+									}
 								}
 							}
 						}
@@ -89,6 +109,14 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 							if (r.getRequirementID() == req_id) {
 								if (r.getTotalAquired() < r.getTotalNeeded()) {
 									r.incrementTotal();
+									if (r.getTotalAquired() == r.getTotalNeeded()) {
+										if (type != RequirementType.LOCATION) {
+											description += r.getTotalNeeded() + " ";
+										}
+										description += r.getRequirementEntityName();
+										AchievementsMod.proxy.getNotificationsManager()
+												.addNotification("Requirement Met:", description);
+									}
 								}
 							}
 						}
@@ -99,7 +127,8 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 						}
 					}
 				} else {
-					System.out.println("Awarding Mentor Badge to " + LoginGUI.DYN_Username);
+					// System.out.println("Awarding Mentor Badge to " +
+					// LoginGUI.DYN_Username);
 					PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username));
 					a.setAwarded();
 				}
@@ -109,13 +138,13 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
-		this.data = buffer.readStringFromBuffer(500);
-		this.mentorAwarded = buffer.readBoolean();
+		data = buffer.readStringFromBuffer(buffer.readableBytes());
+		mentorAwarded = buffer.readBoolean();
 	}
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
-		buffer.writeString(this.data);
-		buffer.writeBoolean(this.mentorAwarded);
+		buffer.writeString(data);
+		buffer.writeBoolean(mentorAwarded);
 	}
 }
