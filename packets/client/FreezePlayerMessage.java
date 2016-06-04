@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
+import com.dyn.student.StudentUI;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
@@ -27,7 +28,7 @@ public class FreezePlayerMessage extends AbstractClientMessage<FreezePlayerMessa
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
-			ServerMod.frozen = frozen;
+			StudentUI.frozen = frozen;
 			player.capabilities.allowEdit = frozen;
 		}
 	}

@@ -26,10 +26,7 @@ public class GetBadge extends Thread {
 	private String secretKey;
 	private String orgKey;
 
-	public GetBadge(String uuid, String secret, String key) {
-		if (uuid != "") {
-			return;
-		}
+	public GetBadge(String secret, String key) {
 		secretKey = secret;
 		orgKey = key;
 		setName("Server Mod HTTP Get");

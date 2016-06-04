@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.dyn.login.LoginGUI;
 import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
+import com.dyn.student.StudentUI;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
@@ -33,7 +34,7 @@ public class CheckDynUsernameMessage extends AbstractClientMessage<CheckDynUsern
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
 
-			ServerMod.frozen = freeze;
+			StudentUI.frozen = freeze;
 			LoginGUI.needsVerification = false;
 			// needed for fidelity checks later on
 			/*

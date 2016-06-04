@@ -18,6 +18,7 @@ import com.dyn.server.proxy.Proxy;
 import com.dyn.server.reference.MetaData;
 import com.dyn.server.reference.Reference;
 import com.dyn.server.utils.PlayerLevel;
+import com.forgeessentials.commons.selections.Selection;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
@@ -37,12 +38,11 @@ public class ServerMod {
 	public static List<String> usernames = new ArrayList<String>();
 	public static List<String> frozenPlayers = new ArrayList<String>();
 	public static Map<String, Requirements> userAchievementProgress = new HashMap<String, Requirements>();
-	public static PlayerLevel status = PlayerLevel.ADMIN;
+	public static PlayerLevel status = PlayerLevel.STUDENT;
+	public static Selection selection; //requires forge essentials
 
 	@Mod.Instance(Reference.MOD_ID)
 	public static ServerMod instance;
-
-	public static boolean frozen = false;
 
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
 	public static Proxy proxy;

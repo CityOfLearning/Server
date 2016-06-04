@@ -1,5 +1,5 @@
 package com.dyn.server.utils;
 
 public enum PlayerLevel {
-	ADMIN, MENTOR, STUDENT;
+	ADMIN, BUILDER, MENTOR, STUDENT;
 }
