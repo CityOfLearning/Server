@@ -9,15 +9,15 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class MentorCommandMessage extends AbstractServerMessage<MentorCommandMessage> {
+public class ServerCommandMessage extends AbstractServerMessage<ServerCommandMessage> {
 	private String command;
 
 	// The basic, no-argument constructor MUST be included to use the new
 	// automated handling
-	public MentorCommandMessage() {
+	public ServerCommandMessage() {
 	}
 
-	public MentorCommandMessage(String mentor_command) {
+	public ServerCommandMessage(String mentor_command) {
 		command = mentor_command.replace("  ", " ");
 	}
 

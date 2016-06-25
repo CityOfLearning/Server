@@ -51,5 +51,4 @@ public class BooleanListener implements BooleanChangeDispatcher {
 			dispatchEvent();
 		}
 	}
-
 }

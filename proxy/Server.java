@@ -2,19 +2,17 @@ package com.dyn.server.proxy;
 
 import java.util.List;
 
+import com.dyn.DYNServerMod;
 import com.dyn.achievements.handlers.AchievementManager;
 import com.dyn.names.manager.NamesManager;
-import com.dyn.server.ServerMod;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.CheckDynUsernameMessage;
 import com.dyn.server.packets.client.TeacherSettingsMessage;
-//import com.forgeessentials.api.APIRegistry;
-import com.mojang.authlib.GameProfile;
+import com.dyn.server.utils.PlayerLevel;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.UserListOpsEntry;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -22,20 +20,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class Server implements Proxy {
-
-	@Override
-	public int getOpLevel(GameProfile profile) {
-		// does the configuration manager return null on the client side?
-		MinecraftServer minecraftServer = MinecraftServer.getServer();
-		if (minecraftServer == null) {
-			return 0;
-		}
-		if (!minecraftServer.getConfigurationManager().canSendCommands(profile)) {
-			return 0;
-		}
-		UserListOpsEntry entry = minecraftServer.getConfigurationManager().getOppedPlayers().getEntry(profile);
-		return entry != null ? entry.getPermissionLevel() : MinecraftServer.getServer().getOpPermissionLevel();
-	}
 
 	/**
 	 * Returns a side-appropriate EntityPlayer for use during message handling
@@ -71,15 +55,22 @@ public class Server implements Proxy {
 
 	@SubscribeEvent
 	public void loginEvent(PlayerEvent.PlayerLoggedInEvent event) {
-		if (getOpLevel(event.player.getGameProfile()) > 0) {
-			PacketDispatcher.sendTo(new TeacherSettingsMessage(getServerUserlist()), (EntityPlayerMP) event.player);
+		if (DYNServerMod.status != PlayerLevel.STUDENT) {
+			PacketDispatcher.sendTo(new TeacherSettingsMessage(MinecraftServer.getServer().getAllUsernames()),
+					(EntityPlayerMP) event.player);
 		}
 
 		PacketDispatcher.sendTo(
 				new CheckDynUsernameMessage(NamesManager.getDYNUsername(event.player.getName()),
-						ServerMod.frozenPlayers.contains(event.player.getDisplayNameString())),
+						DYNServerMod.frozenPlayers.contains(event.player.getDisplayNameString())),
 				(EntityPlayerMP) event.player);
 		AchievementManager.setupPlayerAchievements(event.player);
+	}
+
+	@Override
+	public void preInit() {
+		// TODO Auto-generated method stub
+
 	}
 
 	/**

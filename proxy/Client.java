@@ -1,19 +1,22 @@
 package com.dyn.server.proxy;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import com.dyn.server.ServerMod;
+import com.dyn.DYNServerMod;
+import com.dyn.betterachievements.gui.GuiBetterAchievements;
+import com.dyn.betterachievements.handler.GuiOpenHandler;
 import com.dyn.server.database.DBManager;
 import com.dyn.server.utils.PlayerLevel;
 import com.forgeessentials.commons.network.Packet1SelectionUpdate;
-import com.mojang.authlib.GameProfile;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiCommandBlock;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IThreadListener;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -25,33 +28,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IMessage> {
 
 	@SubscribeEvent
-	public void connectionOpened(FMLNetworkEvent.ClientConnectedToServerEvent e) {
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				String playerStatus = DBManager
-						.getPlayerStatus(Minecraft.getMinecraft().thePlayer.getDisplayNameString());
-
-				if (playerStatus.contains("Admin")) {
-					ServerMod.status = PlayerLevel.ADMIN;
-				} else if (playerStatus.contains("Mentor")) {
-					ServerMod.status = PlayerLevel.MENTOR;
-				}
-			}
-		}, 6 * 1000);
-	}
-
-	@SubscribeEvent
-	public void connectionOpened(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
+	public void connectionClosed(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
 		// let's close the client when we disconnect
 		FMLCommonHandler.instance().exitJava(0, false);
-	}
-
-	@Override
-	public int getOpLevel(GameProfile profile) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	@Override
@@ -67,13 +46,11 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 
 	@Override
 	public String[] getServerUserlist() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<EntityPlayerMP> getServerUsers() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -87,10 +64,50 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
+	@SubscribeEvent
+	public void onGuiOpen(GuiOpenEvent event) // we can probably remove this
+												// once we have it set to the
+												// key listener
+	{
+		// Do nothing if I want to open the old GUI
+		if (event.gui instanceof GuiAchievements) {
+			return;
+		}
+
+		// this seems weird to be placed here but it will stop unintended
+		// command block manipulations
+		if ((event.gui instanceof GuiCommandBlock) && !(DYNServerMod.status == PlayerLevel.ADMIN)) {
+			event.setCanceled(true);
+			return;
+		}
+
+		if (event.gui instanceof GuiAchievements) {
+			event.setCanceled(true);
+			try {
+				Minecraft.getMinecraft().displayGuiScreen(
+						new GuiBetterAchievements((GuiScreen) GuiOpenHandler.prevScreen.get(event.gui),
+								(Integer) GuiOpenHandler.currentPage.get(event.gui) + 1));
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
 	@Override
 	public IMessage onMessage(Packet1SelectionUpdate message, MessageContext ctx) {
-		ServerMod.selection = message.getSelection();
+		DYNServerMod.selection = message.getSelection();
 		return null;
+	}
+
+	@Override
+	public void preInit() {
+		String playerStatus = DBManager.getPlayerStatus(Minecraft.getMinecraft().getSession().getUsername());
+
+		if (playerStatus.contains("Admin")) {
+			DYNServerMod.status = PlayerLevel.ADMIN;
+		} else if (playerStatus.contains("Mentor")) {
+			DYNServerMod.status = PlayerLevel.MENTOR;
+		}
 	}
 
 	/**

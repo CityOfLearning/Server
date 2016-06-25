@@ -4,21 +4,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.dyn.DYNServerMod;
-import com.dyn.achievements.achievement.Requirements;
 import com.dyn.server.database.DBManager;
 import com.dyn.server.keys.KeyManager;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.proxy.Proxy;
 import com.dyn.server.reference.MetaData;
 import com.dyn.server.reference.Reference;
-import com.dyn.server.utils.PlayerLevel;
-import com.forgeessentials.commons.selections.Selection;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
@@ -34,12 +27,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 public class ServerMod {
-
-	public static List<String> usernames = new ArrayList<String>();
-	public static List<String> frozenPlayers = new ArrayList<String>();
-	public static Map<String, Requirements> userAchievementProgress = new HashMap<String, Requirements>();
-	public static PlayerLevel status = PlayerLevel.STUDENT;
-	public static Selection selection; // requires forge essentials
 
 	@Mod.Instance(Reference.MOD_ID)
 	public static ServerMod instance;
@@ -66,6 +53,8 @@ public class ServerMod {
 
 			DBManager.init(json.get("db_url").getAsString(), json.get("db_un").getAsString(),
 					json.get("db_pw").getAsString());
+
+			proxy.preInit();
 
 			for (JsonElement jElement : json.get("org_keys").getAsJsonArray()) {
 				JsonObject jobj = jElement.getAsJsonObject();

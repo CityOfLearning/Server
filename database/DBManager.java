@@ -22,7 +22,7 @@ public class DBManager {
 	public static boolean checkLicenseActive(String licenseKey) {
 		if (initialized) {
 			try {
-				String sql = "select * from mc_licenses where license_key='" + licenseKey + "'";
+				String sql = "select * from mc_user_license where license_key='" + licenseKey + "'";
 
 				ResultSet rs;
 
@@ -60,14 +60,14 @@ public class DBManager {
 			if (checkLicenseActive(licenseKey)) {
 				try {
 
-					String sql = "select mc_license_id from mc_user_license where license_key='" + licenseKey + "'";
+					String sql = "select user_id from mc_user_license where license_key='" + licenseKey + "'";
 
 					ResultSet rs;
 
 					rs = stmt.executeQuery(sql);
 
 					if (rs.next()) {
-						return rs.getInt("mc_license_id");
+						return rs.getInt("user_id");
 					}
 
 					DYNServerMod.logger.error("No entry found for license");
@@ -87,8 +87,8 @@ public class DBManager {
 	public static String getLicenceFromUsernameAndPassword(String username, String password) {
 		if (initialized) {
 			try {
-				String sql = "select ml.license_key from users u join mc_licenses ml on u.mc_license_id = ml.mc_license_id where u.launcher_username = '"
-						+ username +"' and u.launcher_password = '" + password + "'";
+				String sql = "select license_key from mc_license where username='" + username + "' and password='"
+						+ password + "'";
 
 				ResultSet rs;
 
@@ -114,7 +114,7 @@ public class DBManager {
 	public static Pair<String, String> getMinecraftCredentials(int id) {
 		if (initialized) {
 			try {
-				String sql = "select * from mc_account where mc_account_id=" + id + "";
+				String sql = "select * from mc_minecraft_license where id=" + id + "";
 
 				ResultSet rs;
 
@@ -140,7 +140,7 @@ public class DBManager {
 	public static String getNameFromMCUsername(String username) {
 		if (initialized) {
 			try {
-				String sql = "select display_name from mc_name_map where mc_name='" + username + "'";
+				String sql = "select display_name from mc_name_maps where mc_username='" + username + "'";
 
 				ResultSet rs;
 
@@ -166,14 +166,14 @@ public class DBManager {
 	public static String getPasswordFromDYNUsername(String username) {
 		if (initialized) {
 			try {
-				String sql = "select launcher_password from users where launcher_username='" + username + "'";
+				String sql = "select password from mc_license where username='" + username + "'";
 
 				ResultSet rs;
 
 				rs = stmt.executeQuery(sql);
 
 				if (rs.next()) {
-					return rs.getString("launcher_password");
+					return rs.getString("password");
 				}
 
 				DYNServerMod.logger.error("No password found for username");
@@ -192,7 +192,7 @@ public class DBManager {
 	public static String getPlayerStatus(String username) {
 		if (initialized) {
 			try {
-				String sql = "select license_type from mc_account where mc_name='" + username + "'";
+				String sql = "select license_type from mc_minecraft_license where mc_name='" + username + "'";
 
 				ResultSet rs;
 

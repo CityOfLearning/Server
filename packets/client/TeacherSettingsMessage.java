@@ -2,7 +2,7 @@ package com.dyn.server.packets.client;
 
 import java.io.IOException;
 
-import com.dyn.server.ServerMod;
+import com.dyn.DYNServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,13 +30,13 @@ public class TeacherSettingsMessage extends AbstractClientMessage<TeacherSetting
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
 			String[] users = data.split(" ");
-			ServerMod.usernames.clear();
+			DYNServerMod.usernames.clear();
 			for (String u : users) {
 				if ((u != null) && !u.equals("null")) {
-					ServerMod.usernames.add(u);
+					DYNServerMod.usernames.add(u);
 				}
 			}
-			ServerMod.usernames.remove(null);
+			DYNServerMod.usernames.remove(null);
 
 		}
 	}

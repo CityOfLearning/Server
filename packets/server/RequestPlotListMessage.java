@@ -10,7 +10,7 @@ import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.PlotNamesMessage;
 import com.forgeessentials.commons.selections.WorldPoint;
-import com.forgeessentials.economy.plots.Plots;
+import com.forgeessentials.economy.plots.Plot;
 import com.forgeessentials.economy.plots.command.CommandPlot.PlotListingType;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,7 +40,7 @@ public class RequestPlotListMessage extends AbstractServerMessage<RequestPlotLis
 			}
 
 			final WorldPoint playerRef = new WorldPoint(player.getEntityWorld(), player.getPosition());
-			SortedSet<Plots> plots = new TreeSet<Plots>((a, b) -> {
+			SortedSet<Plot> plots = new TreeSet<Plot>((a, b) -> {
 				if (a.getDimension() != playerRef.getDimension()) {
 					if (b.getDimension() == playerRef.getDimension()) {
 						return 1;
@@ -54,14 +54,16 @@ public class RequestPlotListMessage extends AbstractServerMessage<RequestPlotLis
 				double bDist = b.getZone().getArea().getCenter().setY(0).distance(playerRef);
 				return (int) Math.signum(aDist - bDist);
 			});
-			for (Plots plot : Plots.getPlots()) {
+			for (Plot plot : Plot.getPlots()) {
 				if (listType.check(player, plot)) {
 					plots.add(plot);
 				}
 			}
-			List<String> sPlots = new ArrayList<>();
-			for (Plots plot : plots) {
-				sPlots.add(String.format("#%d: \"%s\" at %s|", plot.getZone().getId(), plot.getName().substring(0, 8),
+			List<String> sPlots = new ArrayList<String>();
+			int plotNum = 1;
+			for (Plot plot : plots) {
+				sPlots.add(String.format("#%d: \"%s\"", plotNum++,
+						plot.getName().substring(0, plot.getName().length() > 8 ? 8 : plot.getName().length()),
 						plot.getCenter().toString()));
 			}
 
