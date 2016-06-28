@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.dyn.DYNServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
+import com.google.gson.JsonObject;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
@@ -30,7 +31,11 @@ public class PlayerStatusMessage extends AbstractClientMessage<PlayerStatusMessa
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
-			DYNServerMod.playerStatus = new boolean[] { frozen, muted, mode };
+			JsonObject status = new JsonObject();
+			status.addProperty("frozen", frozen);
+			status.addProperty("muted", muted);
+			status.addProperty("mode", mode);
+			DYNServerMod.playerStatus = status;
 			DYNServerMod.playerStatusReturned.setFlag(true);
 		}
 	}

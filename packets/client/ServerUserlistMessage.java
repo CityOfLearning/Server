@@ -9,18 +9,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class TeacherSettingsMessage extends AbstractClientMessage<TeacherSettingsMessage> {
+public class ServerUserlistMessage extends AbstractClientMessage<ServerUserlistMessage> {
 
 	// the info needed to increment a requirement
 	private String data;
 
 	// The basic, no-argument constructor MUST be included for
 	// automated handling
-	public TeacherSettingsMessage() {
+	public ServerUserlistMessage() {
 	}
 
 	// We need to initialize our data, so provide a suitable constructor:
-	public TeacherSettingsMessage(String[] users) {
+	public ServerUserlistMessage(String[] users) {
 		for (String s : users) {
 			data += " " + s;
 		}
@@ -37,6 +37,7 @@ public class TeacherSettingsMessage extends AbstractClientMessage<TeacherSetting
 				}
 			}
 			DYNServerMod.usernames.remove(null);
+			DYNServerMod.serverUserlistReturned.setFlag(true);
 
 		}
 	}

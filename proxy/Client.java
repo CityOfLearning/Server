@@ -6,7 +6,7 @@ import com.dyn.DYNServerMod;
 import com.dyn.betterachievements.gui.GuiBetterAchievements;
 import com.dyn.betterachievements.handler.GuiOpenHandler;
 import com.dyn.server.database.DBManager;
-import com.dyn.server.utils.PlayerLevel;
+import com.dyn.utils.PlayerLevel;
 import com.forgeessentials.commons.network.Packet1SelectionUpdate;
 
 import net.minecraft.client.Minecraft;
@@ -65,15 +65,8 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 	}
 
 	@SubscribeEvent
-	public void onGuiOpen(GuiOpenEvent event) // we can probably remove this
-												// once we have it set to the
-												// key listener
+	public void onGuiOpen(GuiOpenEvent event) 
 	{
-		// Do nothing if I want to open the old GUI
-		if (event.gui instanceof GuiAchievements) {
-			return;
-		}
-
 		// this seems weird to be placed here but it will stop unintended
 		// command block manipulations
 		if ((event.gui instanceof GuiCommandBlock) && !(DYNServerMod.status == PlayerLevel.ADMIN)) {
@@ -101,13 +94,7 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 
 	@Override
 	public void preInit() {
-		String playerStatus = DBManager.getPlayerStatus(Minecraft.getMinecraft().getSession().getUsername());
-
-		if (playerStatus.contains("Admin")) {
-			DYNServerMod.status = PlayerLevel.ADMIN;
-		} else if (playerStatus.contains("Mentor")) {
-			DYNServerMod.status = PlayerLevel.MENTOR;
-		}
+		
 	}
 
 	/**

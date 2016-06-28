@@ -7,7 +7,7 @@ import com.dyn.server.packets.client.PlotNamesMessage;
 import com.dyn.server.packets.client.ReturnFlagMessage;
 import com.dyn.server.packets.client.SyncAchievementsMessage;
 import com.dyn.server.packets.client.SyncClientNamesMessage;
-import com.dyn.server.packets.client.TeacherSettingsMessage;
+import com.dyn.server.packets.client.ServerUserlistMessage;
 import com.dyn.server.packets.server.AwardAchievementMessage;
 import com.dyn.server.packets.server.FeedPlayerMessage;
 import com.dyn.server.packets.server.HaveServerWriteAchievementsMessage;
@@ -95,7 +95,7 @@ public class PacketDispatcher {
 	public static void registerPackets() {
 		// Packets handled on CLIENT
 		registerMessage(SyncAchievementsMessage.class);
-		registerMessage(TeacherSettingsMessage.class);
+		registerMessage(ServerUserlistMessage.class);
 		registerMessage(ReturnFlagMessage.class);
 		registerMessage(CheckDynUsernameMessage.class);
 		registerMessage(AchievementProgressMessage.class);

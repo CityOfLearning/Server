@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:dyn")
 public class ServerMod {
 
 	@Mod.Instance(Reference.MOD_ID)
@@ -44,37 +44,6 @@ public class ServerMod {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		try {
-			URL url = new URL("https://dl.dropboxusercontent.com/u/33377940/keys.json");
-
-			JsonParser parser = new JsonParser();
-			JsonElement element = parser.parse(new JsonReader(new InputStreamReader(url.openStream())));
-			JsonObject json = element.getAsJsonObject();
-
-			DBManager.init(json.get("db_url").getAsString(), json.get("db_un").getAsString(),
-					json.get("db_pw").getAsString());
-
-			proxy.preInit();
-
-			for (JsonElement jElement : json.get("org_keys").getAsJsonArray()) {
-				JsonObject jobj = jElement.getAsJsonObject();
-				KeyManager.setOrgKey(jobj.get("org_id").getAsInt(), jobj.get("org_key").getAsString());
-				KeyManager.setSecretKey(jobj.get("org_id").getAsInt(), jobj.get("secret_key").getAsString());
-			}
-
-		} catch (MalformedURLException e) {
-			DYNServerMod.logger.error("Failed to get keys");
-			e.printStackTrace();
-		} catch (JsonIOException e) {
-			DYNServerMod.logger.error("Failed to intialize json");
-			e.printStackTrace();
-		} catch (JsonSyntaxException e) {
-			DYNServerMod.logger.error("Failed to parse json");
-			e.printStackTrace();
-		} catch (IOException e) {
-			DYNServerMod.logger.error("Failed to read stream");
-			e.printStackTrace();
-		}
 		metadata = MetaData.init(metadata);
 
 		PacketDispatcher.registerPackets();

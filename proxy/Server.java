@@ -7,8 +7,8 @@ import com.dyn.achievements.handlers.AchievementManager;
 import com.dyn.names.manager.NamesManager;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.CheckDynUsernameMessage;
-import com.dyn.server.packets.client.TeacherSettingsMessage;
-import com.dyn.server.utils.PlayerLevel;
+import com.dyn.server.packets.client.ServerUserlistMessage;
+import com.dyn.utils.PlayerLevel;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -55,8 +55,8 @@ public class Server implements Proxy {
 
 	@SubscribeEvent
 	public void loginEvent(PlayerEvent.PlayerLoggedInEvent event) {
-		if (DYNServerMod.status != PlayerLevel.STUDENT) {
-			PacketDispatcher.sendTo(new TeacherSettingsMessage(MinecraftServer.getServer().getAllUsernames()),
+		if (DYNServerMod.status != PlayerLevel.ADMIN) {
+			PacketDispatcher.sendTo(new ServerUserlistMessage(MinecraftServer.getServer().getAllUsernames()),
 					(EntityPlayerMP) event.player);
 		}
 

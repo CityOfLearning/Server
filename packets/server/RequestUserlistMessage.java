@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.packets.PacketDispatcher;
-import com.dyn.server.packets.client.TeacherSettingsMessage;
+import com.dyn.server.packets.client.ServerUserlistMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,7 +24,7 @@ public class RequestUserlistMessage extends AbstractServerMessage<RequestUserlis
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
-			PacketDispatcher.sendTo(new TeacherSettingsMessage(ServerMod.proxy.getServerUserlist()),
+			PacketDispatcher.sendTo(new ServerUserlistMessage(ServerMod.proxy.getServerUserlist()),
 					(EntityPlayerMP) player);
 		}
 	}
