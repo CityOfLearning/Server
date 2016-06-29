@@ -5,7 +5,6 @@ import java.util.List;
 import com.dyn.DYNServerMod;
 import com.dyn.betterachievements.gui.GuiBetterAchievements;
 import com.dyn.betterachievements.handler.GuiOpenHandler;
-import com.dyn.server.database.DBManager;
 import com.dyn.utils.PlayerLevel;
 import com.forgeessentials.commons.network.Packet1SelectionUpdate;
 
@@ -65,8 +64,7 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 	}
 
 	@SubscribeEvent
-	public void onGuiOpen(GuiOpenEvent event) 
-	{
+	public void onGuiOpen(GuiOpenEvent event) {
 		// this seems weird to be placed here but it will stop unintended
 		// command block manipulations
 		if ((event.gui instanceof GuiCommandBlock) && !(DYNServerMod.status == PlayerLevel.ADMIN)) {
@@ -94,7 +92,7 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 
 	@Override
 	public void preInit() {
-		
+
 	}
 
 	/**

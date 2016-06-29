@@ -1,23 +1,9 @@
 package com.dyn.server;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import com.dyn.DYNServerMod;
-import com.dyn.server.database.DBManager;
-import com.dyn.server.keys.KeyManager;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.proxy.Proxy;
 import com.dyn.server.reference.MetaData;
 import com.dyn.server.reference.Reference;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.JsonReader;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModMetadata;
