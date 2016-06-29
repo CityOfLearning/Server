@@ -362,7 +362,9 @@ public class DBManager {
 				rs = stmt.executeQuery(sql);
 
 				if (rs.next()) {
-					return UUID.fromString(rs.getString("ccol_id"));
+					if(rs.getString("ccol_id") != null){
+						return UUID.fromString(rs.getString("ccol_id"));
+					}
 				}
 
 				DYNServerMod.logger.error("No ccol id found for user id");
