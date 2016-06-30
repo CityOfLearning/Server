@@ -5,6 +5,7 @@ import java.util.List;
 import com.dyn.DYNServerMod;
 import com.dyn.achievements.handlers.AchievementManager;
 import com.dyn.names.manager.NamesManager;
+import com.dyn.server.database.DBManager;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.CheckDynUsernameMessage;
 import com.dyn.server.packets.client.ServerUserlistMessage;
@@ -55,15 +56,32 @@ public class Server implements Proxy {
 
 	@SubscribeEvent
 	public void loginEvent(PlayerEvent.PlayerLoggedInEvent event) {
-		if (DYNServerMod.status != PlayerLevel.ADMIN) {
+		String playerStatus = DBManager.getPlayerStatus(event.player.getDisplayNameString());
+		PlayerLevel status = PlayerLevel.STUDENT;
+		if (playerStatus.contains("Admin")) {
+			status = PlayerLevel.ADMIN;
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group add _OP_");			
+		} else if (playerStatus.contains("Mentor")) {
+			status = PlayerLevel.MENTOR;
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group remove _STUDENT_");
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group add _MENTOR_");
+		} else {
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group remove _MENTOR_");
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group add _STUDENT_");
+		}
+		
+		
+		
+		if (status == PlayerLevel.ADMIN) {
 			PacketDispatcher.sendTo(new ServerUserlistMessage(MinecraftServer.getServer().getAllUsernames()),
 					(EntityPlayerMP) event.player);
 		}
 
-		PacketDispatcher.sendTo(
-				new CheckDynUsernameMessage(NamesManager.getDYNUsername(event.player.getName()),
-						DYNServerMod.frozenPlayers.contains(event.player.getDisplayNameString())),
-				(EntityPlayerMP) event.player);
+		//this has to do with verification but we are not doing that till later
+//		PacketDispatcher.sendTo(
+//				new CheckDynUsernameMessage(NamesManager.getDYNUsername(event.player.getName()),
+//						DYNServerMod.frozenPlayers.contains(event.player.getDisplayNameString())),
+//				(EntityPlayerMP) event.player);
 		AchievementManager.setupPlayerAchievements(event.player);
 	}
 

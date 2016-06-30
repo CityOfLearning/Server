@@ -25,10 +25,10 @@ public class RequestVerificationMessage extends AbstractServerMessage<RequestVer
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
-			PacketDispatcher.sendTo(
-					new CheckDynUsernameMessage(NamesManager.getDYNUsername(player.getName()),
-							DYNServerMod.frozenPlayers.contains(player.getDisplayNameString())),
-					(EntityPlayerMP) player);
+//			PacketDispatcher.sendTo(
+//					new CheckDynUsernameMessage(NamesManager.getDYNUsername(player.getName()),
+//							DYNServerMod.frozenPlayers.contains(player.getDisplayNameString())),
+//					(EntityPlayerMP) player);
 		}
 	}
 
