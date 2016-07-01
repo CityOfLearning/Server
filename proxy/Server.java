@@ -60,14 +60,14 @@ public class Server implements Proxy {
 		PlayerLevel status = PlayerLevel.STUDENT;
 		if (playerStatus.contains("Admin")) {
 			status = PlayerLevel.ADMIN;
-			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group add _OP_");			
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group add _OPS_");			
 		} else if (playerStatus.contains("Mentor")) {
 			status = PlayerLevel.MENTOR;
-			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group remove _STUDENT_");
-			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group add _MENTOR_");
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group remove _STUDENTS_");
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group add _MENTORS_");
 		} else {
-			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group remove _MENTOR_");
-			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group add _STUDENT_");
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group remove _MENTORS_");
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group add _STUDENTS_");
 		}
 		
 		
