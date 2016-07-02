@@ -138,8 +138,8 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
-		data = buffer.readStringFromBuffer(buffer.readableBytes());
 		mentorAwarded = buffer.readBoolean();
+		data = buffer.readStringFromBuffer(buffer.readableBytes() - 1);
 	}
 
 	@Override

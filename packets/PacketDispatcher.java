@@ -3,6 +3,7 @@ package com.dyn.server.packets;
 import com.dyn.server.packets.client.AchievementProgressMessage;
 import com.dyn.server.packets.client.CheckDynUsernameMessage;
 import com.dyn.server.packets.client.FreezePlayerMessage;
+import com.dyn.server.packets.client.PlayerStatusMessage;
 import com.dyn.server.packets.client.PlotNamesMessage;
 import com.dyn.server.packets.client.ReturnFlagMessage;
 import com.dyn.server.packets.client.ServerUserlistMessage;
@@ -16,6 +17,7 @@ import com.dyn.server.packets.server.RemoveEffectsMessage;
 import com.dyn.server.packets.server.RequestFreezePlayerMessage;
 import com.dyn.server.packets.server.RequestPlotListMessage;
 import com.dyn.server.packets.server.RequestUserAchievementsProgressMessage;
+import com.dyn.server.packets.server.RequestUserStatusMessage;
 import com.dyn.server.packets.server.RequestUserlistMessage;
 import com.dyn.server.packets.server.RequestVerificationMessage;
 import com.dyn.server.packets.server.ServerCommandMessage;
@@ -94,29 +96,31 @@ public class PacketDispatcher {
 	 */
 	public static void registerPackets() {
 		// Packets handled on CLIENT
-		registerMessage(SyncAchievementsMessage.class);
-		registerMessage(ServerUserlistMessage.class);
-		registerMessage(ReturnFlagMessage.class);
-		registerMessage(CheckDynUsernameMessage.class);
 		registerMessage(AchievementProgressMessage.class);
+		registerMessage(CheckDynUsernameMessage.class);
 		registerMessage(FreezePlayerMessage.class);
-		registerMessage(SyncClientNamesMessage.class);
+		registerMessage(PlayerStatusMessage.class);
 		registerMessage(PlotNamesMessage.class);
+		registerMessage(ReturnFlagMessage.class);
+		registerMessage(ServerUserlistMessage.class);
+		registerMessage(SyncAchievementsMessage.class);
+		registerMessage(SyncClientNamesMessage.class);
 
 		// Packets handled on SERVER
 		registerMessage(AwardAchievementMessage.class);
-		registerMessage(MentorGivingAchievementMessage.class);
-		registerMessage(ServerCommandMessage.class);
-		registerMessage(RequestUserlistMessage.class);
-		registerMessage(HaveServerWriteAchievementsMessage.class);
-		registerMessage(RequestUserAchievementsProgressMessage.class);
-		registerMessage(RequestFreezePlayerMessage.class);
 		registerMessage(FeedPlayerMessage.class);
+		registerMessage(HaveServerWriteAchievementsMessage.class);
+		registerMessage(MentorGivingAchievementMessage.class);
 		registerMessage(RemoveEffectsMessage.class);
-		registerMessage(RequestVerificationMessage.class);
-		registerMessage(SyncNamesMessage.class);
-		registerMessage(StudentCommandBlockMessage.class);
+		registerMessage(RequestFreezePlayerMessage.class);
 		registerMessage(RequestPlotListMessage.class);
+		registerMessage(RequestUserAchievementsProgressMessage.class);
+		registerMessage(RequestUserlistMessage.class);
+		registerMessage(RequestUserStatusMessage.class);
+		registerMessage(RequestVerificationMessage.class);
+		registerMessage(ServerCommandMessage.class);
+		registerMessage(StudentCommandBlockMessage.class);
+		registerMessage(SyncNamesMessage.class);
 
 	}
 

@@ -2,12 +2,9 @@ package com.dyn.server.proxy;
 
 import java.util.List;
 
-import com.dyn.DYNServerMod;
 import com.dyn.achievements.handlers.AchievementManager;
-import com.dyn.names.manager.NamesManager;
 import com.dyn.server.database.DBManager;
 import com.dyn.server.packets.PacketDispatcher;
-import com.dyn.server.packets.client.CheckDynUsernameMessage;
 import com.dyn.server.packets.client.ServerUserlistMessage;
 import com.dyn.utils.PlayerLevel;
 
@@ -60,28 +57,32 @@ public class Server implements Proxy {
 		PlayerLevel status = PlayerLevel.STUDENT;
 		if (playerStatus.contains("Admin")) {
 			status = PlayerLevel.ADMIN;
-			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group add _OPS_");			
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
+					"/p user " + event.player.getDisplayNameString() + " group add _OPS_");
 		} else if (playerStatus.contains("Mentor")) {
 			status = PlayerLevel.MENTOR;
-			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group remove _STUDENTS_");
-			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group add _MENTORS_");
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
+					"/p user " + event.player.getDisplayNameString() + " group remove _STUDENTS_");
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
+					"/p user " + event.player.getDisplayNameString() + " group add _MENTORS_");
 		} else {
-			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group remove _MENTORS_");
-			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + event.player.getDisplayNameString() + " group add _STUDENTS_");
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
+					"/p user " + event.player.getDisplayNameString() + " group remove _MENTORS_");
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
+					"/p user " + event.player.getDisplayNameString() + " group add _STUDENTS_");
 		}
-		
-		
-		
+
 		if (status == PlayerLevel.ADMIN) {
 			PacketDispatcher.sendTo(new ServerUserlistMessage(MinecraftServer.getServer().getAllUsernames()),
 					(EntityPlayerMP) event.player);
 		}
 
-		//this has to do with verification but we are not doing that till later
-//		PacketDispatcher.sendTo(
-//				new CheckDynUsernameMessage(NamesManager.getDYNUsername(event.player.getName()),
-//						DYNServerMod.frozenPlayers.contains(event.player.getDisplayNameString())),
-//				(EntityPlayerMP) event.player);
+		// this has to do with verification but we are not doing that till later
+		// PacketDispatcher.sendTo(
+		// new
+		// CheckDynUsernameMessage(NamesManager.getDYNUsername(event.player.getName()),
+		// DYNServerMod.frozenPlayers.contains(event.player.getDisplayNameString())),
+		// (EntityPlayerMP) event.player);
 		AchievementManager.setupPlayerAchievements(event.player);
 	}
 

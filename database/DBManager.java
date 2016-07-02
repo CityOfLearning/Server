@@ -362,7 +362,7 @@ public class DBManager {
 				rs = stmt.executeQuery(sql);
 
 				if (rs.next()) {
-					if(rs.getString("ccol_id") != null){
+					if (rs.getString("ccol_id") != null) {
 						return UUID.fromString(rs.getString("ccol_id"));
 					}
 				}
@@ -484,7 +484,7 @@ public class DBManager {
 				if (rs.next()) {
 					reply.addProperty("ccol_id", rs.getString("ccol_id"));
 					reply.addProperty("user_type", rs.getString("user_type"));
-					reply.addProperty("display_name", rs.getInt("display_name"));
+					reply.addProperty("display_name", rs.getString("display_name"));
 					reply.addProperty("username", rs.getString("launcher_username"));
 					reply.addProperty("password", rs.getString("launcher_password"));
 					return reply;
