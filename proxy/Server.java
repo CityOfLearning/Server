@@ -77,6 +77,10 @@ public class Server implements Proxy {
 					(EntityPlayerMP) event.player);
 		}
 
+		MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
+				String.format("/nick %s %s", event.player.getDisplayNameString(),
+						DBManager.getDisplayNameFromMCUsername(event.player.getDisplayNameString())));
+
 		// this has to do with verification but we are not doing that till later
 		// PacketDispatcher.sendTo(
 		// new

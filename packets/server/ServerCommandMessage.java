@@ -24,7 +24,6 @@ public class ServerCommandMessage extends AbstractServerMessage<ServerCommandMes
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
-			System.out.println(command);
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), command);
 		}
 	}
