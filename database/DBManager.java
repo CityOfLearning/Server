@@ -654,7 +654,7 @@ public class DBManager {
 			Class.forName("com.amazon.redshift.jdbc41.Driver");
 
 			// Open a connection and define properties.
-			System.out.println("Connecting to database...");
+			DYNServerMod.logger.info("Connecting to database...");
 			Properties props = new Properties();
 
 			// Uncomment the following line if using a keystore.

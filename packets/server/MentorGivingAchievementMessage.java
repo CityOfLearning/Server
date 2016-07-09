@@ -35,9 +35,7 @@ public class MentorGivingAchievementMessage extends AbstractServerMessage<Mentor
 	public void process(EntityPlayer player, Side side) {
 		// using the message instance gives access to 'this.id'
 		if (side.isServer()) {
-			System.out.println("Awarding to " + player_name);
 			for (EntityPlayerMP p : ServerMod.proxy.getServerUsers()) {
-				System.out.println(p);
 				if (p.getDisplayNameString().equals(player_name)) {
 					PacketDispatcher.sendTo(
 							new SyncAchievementsMessage("" + ach_id + " " + RequirementType.MENTOR + " 0", true), p);

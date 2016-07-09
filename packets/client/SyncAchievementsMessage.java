@@ -2,6 +2,7 @@ package com.dyn.server.packets.client;
 
 import java.io.IOException;
 
+import com.derimagia.forgeslack.slack.SlackSender;
 import com.dyn.achievements.AchievementsMod;
 import com.dyn.achievements.achievement.AchievementPlus;
 import com.dyn.achievements.achievement.RequirementType;
@@ -95,6 +96,8 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 										description += r.getRequirementEntityName();
 										AchievementsMod.proxy.getNotificationsManager()
 												.addNotification("Requirement Met:", description);
+										SlackSender.getInstance().send("Requirement Met: " + description,
+												player.getDisplayNameString());
 									}
 								}
 							}
@@ -116,6 +119,8 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 										description += r.getRequirementEntityName();
 										AchievementsMod.proxy.getNotificationsManager()
 												.addNotification("Requirement Met:", description);
+										SlackSender.getInstance().send("Requirement Met: " + description,
+												player.getDisplayNameString());
 									}
 								}
 							}
