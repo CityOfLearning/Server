@@ -96,8 +96,6 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 										description += r.getRequirementEntityName();
 										AchievementsMod.proxy.getNotificationsManager()
 												.addNotification("Requirement Met:", description);
-										SlackSender.getInstance().send("Requirement Met: " + description,
-												player.getDisplayNameString());
 									}
 								}
 							}
@@ -119,8 +117,6 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 										description += r.getRequirementEntityName();
 										AchievementsMod.proxy.getNotificationsManager()
 												.addNotification("Requirement Met:", description);
-										SlackSender.getInstance().send("Requirement Met: " + description,
-												player.getDisplayNameString());
 									}
 								}
 							}

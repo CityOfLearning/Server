@@ -11,12 +11,14 @@ import org.apache.commons.net.ftp.FTPClient;
 
 import com.dyn.DYNServerMod;
 import com.dyn.achievements.handlers.AchievementManager;
+import com.dyn.server.commands.CommandFreeze;
 import com.dyn.server.database.DBManager;
 import com.dyn.server.keys.KeyManager;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.ServerUserlistMessage;
 import com.dyn.utils.PlayerLevel;
 
+import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -59,6 +61,7 @@ public class Server implements Proxy {
 	@Override
 	public void init() {
 		MinecraftForge.EVENT_BUS.register(this);
+		((CommandHandler) MinecraftServer.getServer().getCommandManager()).registerCommand(new CommandFreeze());
 	}
 
 	@SubscribeEvent
