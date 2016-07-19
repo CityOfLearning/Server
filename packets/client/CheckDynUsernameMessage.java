@@ -33,7 +33,7 @@ public class CheckDynUsernameMessage extends AbstractClientMessage<CheckDynUsern
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
 
-			StudentUI.frozen = freeze;
+			StudentUI.frozen.setFlag(freeze);
 			LoginGUI.needsVerification = false;
 			// needed for fidelity checks later on
 			/*

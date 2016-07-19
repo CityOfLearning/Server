@@ -2,7 +2,6 @@ package com.dyn.server.packets.client;
 
 import java.io.IOException;
 
-import com.derimagia.forgeslack.slack.SlackSender;
 import com.dyn.achievements.AchievementsMod;
 import com.dyn.achievements.achievement.AchievementPlus;
 import com.dyn.achievements.achievement.RequirementType;

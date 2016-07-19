@@ -21,7 +21,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:dyn")
 public class ServerMod {
@@ -43,9 +42,10 @@ public class ServerMod {
 
 		PacketDispatcher.registerPackets();
 	}
-	
-	//on the client side this also is done by the launcher but since it cleans up after itself
-	//it should prevent duplicates
+
+	// on the client side this also is done by the launcher but since it cleans
+	// up after itself
+	// it should prevent duplicates
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent event) {
 		String path = MinecraftServer.getServer().getDataDirectory().getAbsolutePath();

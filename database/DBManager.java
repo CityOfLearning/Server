@@ -269,7 +269,7 @@ public class DBManager {
 								reqSubTypes.addProperty("x", rs.getInt("loc_x"));
 								reqSubTypes.addProperty("y", rs.getInt("loc_y"));
 								reqSubTypes.addProperty("z", rs.getInt("loc_z"));
-								if (rs.getInt("loc_r") >= 0) {
+								if (rs.getInt("loc_r") > 0) { //null values become 0 
 									reqSubTypes.addProperty("radius", rs.getInt("loc_r"));
 								} else {
 									reqSubTypes.addProperty("x2", rs.getInt("loc_x2"));

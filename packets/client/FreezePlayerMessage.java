@@ -30,7 +30,7 @@ public class FreezePlayerMessage extends AbstractClientMessage<FreezePlayerMessa
 		if (side.isClient()) {
 			player.addChatMessage(
 					new ChatComponentText(String.format("You were %s by the teacher", frozen ? "frozen" : "unfrozen")));
-			StudentUI.frozen = frozen;
+			StudentUI.frozen.setFlag(frozen);
 			player.capabilities.allowEdit = frozen;
 		}
 	}
