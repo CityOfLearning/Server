@@ -2,6 +2,7 @@ package com.dyn.server.proxy;
 
 import java.util.List;
 
+import com.dyn.DYNServerMod;
 import com.dyn.achievements.handlers.AchievementManager;
 import com.dyn.server.commands.CommandFreeze;
 import com.dyn.server.database.DBManager;
@@ -73,6 +74,11 @@ public class Server implements Proxy {
 					"/p user " + event.player.getDisplayNameString() + " group remove _MENTORS_");
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
 					"/p user " + event.player.getDisplayNameString() + " group add _STUDENTS_");
+		}
+
+		if (!DYNServerMod.frozenPlayers.contains(event.player)) {
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
+					"/p user " + event.player + " group remove _FROZEN_");
 		}
 
 		if (status == PlayerLevel.ADMIN) {
