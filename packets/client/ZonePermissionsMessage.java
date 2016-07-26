@@ -1,7 +1,7 @@
 package com.dyn.server.packets.client;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import com.dyn.admin.AdminUI;
@@ -22,8 +22,8 @@ public class ZonePermissionsMessage extends AbstractClientMessage<ZonePermission
 	}
 
 	// We need to initialize our data, so provide a suitable constructor:
-	public ZonePermissionsMessage(Set<String> set) {
-		for (String s : set) {
+	public ZonePermissionsMessage(List<String> perms) {
+		for (String s : perms) {
 			data += s + "|";
 		}
 	}

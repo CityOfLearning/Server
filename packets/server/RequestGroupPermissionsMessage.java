@@ -49,7 +49,6 @@ public class RequestGroupPermissionsMessage extends AbstractServerMessage<Reques
 								|| perm.getKey().equals(FEPermissions.SUFFIX)) {
 							continue;
 						}
-
 						permissions.add("\u00a7d" + perm.getKey() + "\u00a7r = \u00a7a" + perm.getValue());
 					}
 				}
