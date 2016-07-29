@@ -31,15 +31,20 @@ public class RequestFreezePlayerMessage extends AbstractServerMessage<RequestFre
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
-			if (freeze) {
-				DYNServerMod.frozenPlayers.add(username);
-			} else {
-				DYNServerMod.frozenPlayers.remove(username);
+			if(username != null && MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(username) != null){
+				if (freeze) {
+					DYNServerMod.frozenPlayers.add(username);
+					MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + username + " group add _FROZEN_");
+				} else {
+					DYNServerMod.frozenPlayers.remove(username);
+					MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), "/p user " + username + " group remove _FROZEN_");
+				}
+				
+				player.addChatMessage(new ChatComponentText(
+						String.format("You %s player %s", freeze ? "froze" : "unfroze", username)));
+				PacketDispatcher.sendTo(new FreezePlayerMessage(freeze),
+						MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(username));
 			}
-			player.addChatMessage(
-					new ChatComponentText(String.format("You %s player %s", freeze ? "froze" : "unfroze", username)));
-			PacketDispatcher.sendTo(new FreezePlayerMessage(freeze),
-					MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(username));
 		}
 	}
 

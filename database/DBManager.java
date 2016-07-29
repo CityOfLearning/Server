@@ -546,7 +546,7 @@ public class DBManager {
 					return reply;
 				}
 
-				DYNServerMod.logger.error("No ccol id found for user id");
+				DYNServerMod.logger.error("No ccol id found for user id: " + user_id);
 				return null;
 
 			} catch (SQLException e) {
@@ -603,7 +603,7 @@ public class DBManager {
 					}
 				}
 
-				DYNServerMod.logger.error("No name found for user id");
+				DYNServerMod.logger.error("No name found for user id: " + user_id);
 				return "";
 
 			} catch (SQLException e) {
@@ -655,7 +655,7 @@ public class DBManager {
 					return UUID.fromString(rs.getString("user_id"));
 				}
 
-				DYNServerMod.logger.error("No user found for CCOL account");
+				DYNServerMod.logger.error("No user found for CCOL account: " + ccol_id);
 				return null;
 
 			} catch (SQLException e) {
