@@ -4,9 +4,11 @@ import java.io.IOException;
 
 import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
+import com.forgeessentials.api.UserIdent;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -29,10 +31,9 @@ public class RemoveEffectsMessage extends AbstractServerMessage<RemoveEffectsMes
 	public void process(EntityPlayer player, Side side) {
 		// using the message instance gives access to 'this.id'
 		if (side.isServer()) {
-			for (EntityPlayerMP p : ServerMod.proxy.getServerUsers()) {
-				if (p.getDisplayNameString().equals(player_name)) {
-					p.curePotionEffects(new ItemStack(new ItemBucketMilk()));
-				}
+			EntityPlayerMP student = UserIdent.getPlayerByUsername(player_name);
+			if (student != null) {
+				student.curePotionEffects(new ItemStack(Items.milk_bucket));
 			}
 		}
 	}

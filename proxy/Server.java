@@ -78,7 +78,7 @@ public class Server implements Proxy {
 
 		if (!DYNServerMod.frozenPlayers.contains(event.player)) {
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
-					"/p user " + event.player + " group remove _FROZEN_");
+					"/p user " + event.player.getDisplayNameString() + " group remove _FROZEN_");
 		}
 
 		if (status == PlayerLevel.ADMIN) {
