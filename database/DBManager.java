@@ -701,6 +701,31 @@ public class DBManager {
 		}
 		return null;
 	}
+	
+	public static List<String> getWorldsNeedingRefresh() {
+		if (initialized) {
+			try {
+				List<String> worlds = new ArrayList<String>();
+				String sql = "select world_name from worlds where flag_refresh='true'";
+
+				ResultSet rs;
+
+				rs = stmt.executeQuery(sql);
+
+				while(rs.next()) {
+					worlds.add(rs.getString("world_name"));
+				}
+				return worlds;
+
+			} catch (SQLException e) {
+				DYNServerMod.logger.error("Could not execute database request");
+				e.printStackTrace();
+			}
+		} else {
+			DYNServerMod.logger.error("Database Manager not initialized");
+		}
+		return Collections.emptyList();
+	}
 
 	public static void init(String url, String username, String password) {
 		try {
