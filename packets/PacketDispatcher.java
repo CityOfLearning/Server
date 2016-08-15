@@ -10,7 +10,8 @@ import com.dyn.server.packets.client.PlotNamesMessage;
 import com.dyn.server.packets.client.ReturnFlagMessage;
 import com.dyn.server.packets.client.ServerUserlistMessage;
 import com.dyn.server.packets.client.SyncAchievementsMessage;
-import com.dyn.server.packets.client.SyncClientNamesMessage;
+import com.dyn.server.packets.client.SyncNamesMessage;
+import com.dyn.server.packets.client.SyncSkinsMessage;
 import com.dyn.server.packets.client.WorldNamesMessage;
 import com.dyn.server.packets.client.WorldZonesMessage;
 import com.dyn.server.packets.client.ZonePermissionsMessage;
@@ -32,7 +33,8 @@ import com.dyn.server.packets.server.RequestWorldZonesMessage;
 import com.dyn.server.packets.server.RequestZonePermissionsMessage;
 import com.dyn.server.packets.server.ServerCommandMessage;
 import com.dyn.server.packets.server.StudentCommandBlockMessage;
-import com.dyn.server.packets.server.SyncNamesMessage;
+import com.dyn.server.packets.server.SyncNamesServerMessage;
+import com.dyn.server.packets.server.SyncSkinsServerMessage;
 import com.dyn.server.reference.Reference;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -117,9 +119,11 @@ public class PacketDispatcher {
 		registerMessage(ReturnFlagMessage.class);
 		registerMessage(ServerUserlistMessage.class);
 		registerMessage(SyncAchievementsMessage.class);
-		registerMessage(SyncClientNamesMessage.class);
 		registerMessage(GroupPermissionsMessage.class);
 		registerMessage(ZonePermissionsMessage.class);
+		// Packets ment for All players
+		registerMessage(SyncSkinsMessage.class);
+		registerMessage(SyncNamesMessage.class);
 
 		// Packets handled on SERVER
 		registerMessage(AwardAchievementMessage.class);
@@ -140,7 +144,8 @@ public class PacketDispatcher {
 		registerMessage(RequestVerificationMessage.class);
 		registerMessage(ServerCommandMessage.class);
 		registerMessage(StudentCommandBlockMessage.class);
-		registerMessage(SyncNamesMessage.class);
+		registerMessage(SyncSkinsServerMessage.class);
+		registerMessage(SyncNamesServerMessage.class);
 
 	}
 

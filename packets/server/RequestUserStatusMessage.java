@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class RequestUserStatusMessage extends AbstractServerMessage<RequestUserStatusMessage> {
 
-	//better to be empty than null...
+	// better to be empty than null...
 	private String username = "";
 
 	// The basic, no-argument constructor MUST be included for
@@ -25,7 +25,7 @@ public class RequestUserStatusMessage extends AbstractServerMessage<RequestUserS
 	}
 
 	public RequestUserStatusMessage(String username) {
-		if(username != null){
+		if (username != null) {
 			this.username = username;
 		}
 	}

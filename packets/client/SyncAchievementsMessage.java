@@ -94,7 +94,7 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 										}
 										description += r.getRequirementEntityName();
 										AchievementsMod.proxy.getNotificationsManager()
-												.addNotification("Requirement Met:", description);
+												.addRequirementNotification("Requirement Met:", description);
 									}
 								}
 							}
@@ -115,7 +115,7 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 										}
 										description += r.getRequirementEntityName();
 										AchievementsMod.proxy.getNotificationsManager()
-												.addNotification("Requirement Met:", description);
+												.addRequirementNotification("Requirement Met:", description);
 									}
 								}
 							}

@@ -37,7 +37,7 @@ public class RequestZonePermissionsMessage extends AbstractServerMessage<Request
 	public RequestZonePermissionsMessage(int zone) {
 		this(zone, "_ALL_");
 	}
-	
+
 	public RequestZonePermissionsMessage(int zone, String group) {
 		zoneName = zone;
 		groupName = group;

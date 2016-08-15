@@ -144,14 +144,14 @@ public class DBManager {
 								reqSubTypes.addProperty("amount", rs.getInt("amount"));
 								reqSubTypes.addProperty("item_id", rs.getInt("item_id"));
 								reqSubTypes.addProperty("sub_id", rs.getInt("item_sub_id"));
-								if(rs.getObject("zone_ids") != null && rs.getString("zone_ids").length()>0){
+								if ((rs.getObject("zone_ids") != null) && (rs.getString("zone_ids").length() > 0)) {
 									JsonArray jArr = new JsonArray();
-									for(String ids : rs.getString("zone_ids").split(Pattern.quote(","))){
+									for (String ids : rs.getString("zone_ids").split(Pattern.quote(","))) {
 										jArr.add(new JsonPrimitive(ids));
 									}
 									reqSubTypes.add("zones", jArr);
 								}
-									
+
 								reqTypes.add(reqSubTypes);
 							}
 							req.add("craft_requirements", reqTypes);
@@ -169,9 +169,9 @@ public class DBManager {
 								reqSubTypes.addProperty("amount", rs.getInt("amount"));
 								reqSubTypes.addProperty("item_id", rs.getInt("item_id"));
 								reqSubTypes.addProperty("sub_id", rs.getInt("item_sub_id"));
-								if(rs.getObject("zone_ids") != null && rs.getString("zone_ids").length()>0){
+								if ((rs.getObject("zone_ids") != null) && (rs.getString("zone_ids").length() > 0)) {
 									JsonArray jArr = new JsonArray();
-									for(String ids : rs.getString("zone_ids").split(Pattern.quote(","))){
+									for (String ids : rs.getString("zone_ids").split(Pattern.quote(","))) {
 										jArr.add(new JsonPrimitive(ids));
 									}
 									reqSubTypes.add("zones", jArr);
@@ -193,9 +193,9 @@ public class DBManager {
 								reqSubTypes.addProperty("amount", rs.getInt("amount"));
 								reqSubTypes.addProperty("item_id", rs.getInt("item_id"));
 								reqSubTypes.addProperty("sub_id", rs.getInt("item_sub_id"));
-								if(rs.getObject("zone_ids") != null && rs.getString("zone_ids").length()>0){
+								if ((rs.getObject("zone_ids") != null) && (rs.getString("zone_ids").length() > 0)) {
 									JsonArray jArr = new JsonArray();
-									for(String ids : rs.getString("zone_ids").split(Pattern.quote(","))){
+									for (String ids : rs.getString("zone_ids").split(Pattern.quote(","))) {
 										jArr.add(new JsonPrimitive(ids));
 									}
 									reqSubTypes.add("zones", jArr);
@@ -216,9 +216,9 @@ public class DBManager {
 								reqSubTypes.addProperty("id", rs.getInt("req_id"));
 								reqSubTypes.addProperty("entity", rs.getString("entity"));
 								reqSubTypes.addProperty("amount", rs.getInt("amount"));
-								if(rs.getObject("zone_ids") != null && rs.getString("zone_ids").length()>0){
+								if ((rs.getObject("zone_ids") != null) && (rs.getString("zone_ids").length() > 0)) {
 									JsonArray jArr = new JsonArray();
-									for(String ids : rs.getString("zone_ids").split(Pattern.quote(","))){
+									for (String ids : rs.getString("zone_ids").split(Pattern.quote(","))) {
 										jArr.add(new JsonPrimitive(ids));
 									}
 									reqSubTypes.add("zones", jArr);
@@ -241,9 +241,9 @@ public class DBManager {
 								reqSubTypes.addProperty("amount", rs.getInt("amount"));
 								reqSubTypes.addProperty("item_id", rs.getInt("item_id"));
 								reqSubTypes.addProperty("sub_id", rs.getInt("item_sub_id"));
-								if(rs.getObject("zone_ids") != null && rs.getString("zone_ids").length()>0){
+								if ((rs.getObject("zone_ids") != null) && (rs.getString("zone_ids").length() > 0)) {
 									JsonArray jArr = new JsonArray();
-									for(String ids : rs.getString("zone_ids").split(Pattern.quote(","))){
+									for (String ids : rs.getString("zone_ids").split(Pattern.quote(","))) {
 										jArr.add(new JsonPrimitive(ids));
 									}
 									reqSubTypes.add("zones", jArr);
@@ -266,9 +266,9 @@ public class DBManager {
 								reqSubTypes.addProperty("amount", rs.getInt("amount"));
 								reqSubTypes.addProperty("item_id", rs.getInt("item_id"));
 								reqSubTypes.addProperty("sub_id", rs.getInt("item_sub_id"));
-								if(rs.getObject("zone_ids") != null && rs.getString("zone_ids").length()>0){
+								if ((rs.getObject("zone_ids") != null) && (rs.getString("zone_ids").length() > 0)) {
 									JsonArray jArr = new JsonArray();
-									for(String ids : rs.getString("zone_ids").split(Pattern.quote(","))){
+									for (String ids : rs.getString("zone_ids").split(Pattern.quote(","))) {
 										jArr.add(new JsonPrimitive(ids));
 									}
 									reqSubTypes.add("zones", jArr);
@@ -291,9 +291,9 @@ public class DBManager {
 								reqSubTypes.addProperty("amount", rs.getInt("amount"));
 								reqSubTypes.addProperty("item_id", rs.getInt("item_id"));
 								reqSubTypes.addProperty("sub_id", rs.getInt("item_sub_id"));
-								if(rs.getObject("zone_ids") != null && rs.getString("zone_ids").length()>0){
+								if ((rs.getObject("zone_ids") != null) && (rs.getString("zone_ids").length() > 0)) {
 									JsonArray jArr = new JsonArray();
-									for(String ids : rs.getString("zone_ids").split(Pattern.quote(","))){
+									for (String ids : rs.getString("zone_ids").split(Pattern.quote(","))) {
 										jArr.add(new JsonPrimitive(ids));
 									}
 									reqSubTypes.add("zones", jArr);
@@ -322,7 +322,7 @@ public class DBManager {
 								reqSubTypes.addProperty("x", rs.getInt("loc_x"));
 								reqSubTypes.addProperty("y", rs.getInt("loc_y"));
 								reqSubTypes.addProperty("z", rs.getInt("loc_z"));
-								if (rs.getInt("loc_r") > 0) { 
+								if (rs.getInt("loc_r") > 0) {
 									// null values become 0
 									reqSubTypes.addProperty("radius", rs.getInt("loc_r"));
 								} else {
@@ -616,6 +616,32 @@ public class DBManager {
 		return "";
 	}
 
+	public static String getPlayerSkin(String player) {
+		if (initialized) {
+			try {
+				String sql = "select skin_texture from mc_account where mc_name='" + player + "'";
+
+				ResultSet rs;
+
+				rs = stmt.executeQuery(sql);
+
+				if (rs.next()) {
+					return rs.getString("skin_texture");
+				}
+
+				DYNServerMod.logger.error("No skin texture found for player");
+				return "";
+
+			} catch (SQLException e) {
+				DYNServerMod.logger.error("Could not execute database request");
+				e.printStackTrace();
+			}
+		} else {
+			DYNServerMod.logger.error("Database Manager not initialized");
+		}
+		return "";
+	}
+
 	public static String getPlayerStatus(String username) {
 		if (initialized) {
 			try {
@@ -701,7 +727,7 @@ public class DBManager {
 		}
 		return null;
 	}
-	
+
 	public static List<String> getWorldsNeedingRefresh() {
 		if (initialized) {
 			try {
@@ -712,7 +738,7 @@ public class DBManager {
 
 				rs = stmt.executeQuery(sql);
 
-				while(rs.next()) {
+				while (rs.next()) {
 					worlds.add(rs.getString("world_name"));
 				}
 				return worlds;
@@ -755,6 +781,21 @@ public class DBManager {
 		} catch (SQLException e) {
 			DYNServerMod.logger.error("Failed to initialize SQL connection to database");
 			e.printStackTrace();
+		}
+	}
+
+	public static void setPlayerSkin(String player, String skin) {
+		if (initialized) {
+			try {
+				// even though the mc_name isnt the primary key its still
+				// unique, only its mutable
+				stmt.execute("update mc_account set skin_texture='" + skin + "' where mc_name='" + player + "'");
+			} catch (SQLException e) {
+				DYNServerMod.logger.error("Could not execute database request");
+				e.printStackTrace();
+			}
+		} else {
+			DYNServerMod.logger.error("Database Manager not initialized");
 		}
 	}
 

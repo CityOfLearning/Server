@@ -2,14 +2,12 @@ package com.dyn.server.packets.server;
 
 import java.io.IOException;
 
-import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 import com.forgeessentials.api.UserIdent;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;

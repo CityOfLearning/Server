@@ -2,14 +2,14 @@ package com.dyn.server.packets.client;
 
 import java.io.IOException;
 
-import com.dyn.names.manager.NamesManager;
+import com.dyn.render.manager.NamesManager;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class SyncClientNamesMessage extends AbstractClientMessage<SyncClientNamesMessage> {
+public class SyncNamesMessage extends AbstractClientMessage<SyncNamesMessage> {
 
 	// the info needed to increment a requirement
 	private String dynName;
@@ -20,11 +20,11 @@ public class SyncClientNamesMessage extends AbstractClientMessage<SyncClientName
 
 	// The basic, no-argument constructor MUST be included for
 	// automated handling
-	public SyncClientNamesMessage() {
+	public SyncNamesMessage() {
 	}
 
 	// We need to initialize our data, so provide a suitable constructor:
-	public SyncClientNamesMessage(String dyn_name, String mc_name) {
+	public SyncNamesMessage(String dyn_name, String mc_name) {
 		dynName = dyn_name;
 		playerName = mc_name;
 	}
@@ -32,7 +32,7 @@ public class SyncClientNamesMessage extends AbstractClientMessage<SyncClientName
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
-			NamesManager.addUsername(playerName, dynName);
+			NamesManager.setUsername(playerName, dynName);
 		}
 	}
 
