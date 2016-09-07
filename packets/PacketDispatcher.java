@@ -1,7 +1,6 @@
 package com.dyn.server.packets;
 
 import com.dyn.server.packets.client.AchievementProgressMessage;
-import com.dyn.server.packets.client.CheckDynUsernameMessage;
 import com.dyn.server.packets.client.FreezePlayerMessage;
 import com.dyn.server.packets.client.GroupNamesMessage;
 import com.dyn.server.packets.client.GroupPermissionsMessage;
@@ -109,7 +108,6 @@ public class PacketDispatcher {
 	public static void registerPackets() {
 		// Packets handled on CLIENT
 		registerMessage(AchievementProgressMessage.class);
-		registerMessage(CheckDynUsernameMessage.class);
 		registerMessage(FreezePlayerMessage.class);
 		registerMessage(PlayerStatusMessage.class);
 		registerMessage(PlotNamesMessage.class);

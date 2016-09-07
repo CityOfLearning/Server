@@ -2,16 +2,17 @@ package com.dyn.server.packets.client;
 
 import java.io.IOException;
 
-import com.dyn.achievements.AchievementsMod;
+import com.dyn.DYNServerMod;
 import com.dyn.achievements.achievement.AchievementPlus;
 import com.dyn.achievements.achievement.RequirementType;
 import com.dyn.achievements.achievement.Requirements.BaseRequirement;
 import com.dyn.achievements.handlers.AchievementManager;
-import com.dyn.login.LoginGUI;
+import com.dyn.render.manager.NotificationsManager;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.server.AwardAchievementMessage;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -93,15 +94,16 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 											description += r.getTotalNeeded() + " ";
 										}
 										description += r.getRequirementEntityName();
-										AchievementsMod.proxy.getNotificationsManager()
-												.addRequirementNotification("Requirement Met:", description);
+										NotificationsManager.addRequirementNotification("Requirement Met:",
+												description);
 									}
 								}
 							}
 						}
 						if (a.meetsRequirements()) {
-							PacketDispatcher
-									.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username));
+							PacketDispatcher.sendToServer(
+									new AwardAchievementMessage(a.getId(), DYNServerMod.CcolPlayerInfo.getCCOLid(),
+											Minecraft.getMinecraft().thePlayer.getName()));
 							a.setAwarded();
 						}
 					} else if (a.getParent().isAwarded()) {
@@ -114,22 +116,22 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 											description += r.getTotalNeeded() + " ";
 										}
 										description += r.getRequirementEntityName();
-										AchievementsMod.proxy.getNotificationsManager()
-												.addRequirementNotification("Requirement Met:", description);
+										NotificationsManager.addRequirementNotification("Requirement Met:",
+												description);
 									}
 								}
 							}
 						}
 						if (a.meetsRequirements()) {
-							PacketDispatcher
-									.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username));
+							PacketDispatcher.sendToServer(
+									new AwardAchievementMessage(a.getId(), DYNServerMod.CcolPlayerInfo.getCCOLid(),
+											Minecraft.getMinecraft().thePlayer.getName()));
 							a.setAwarded();
 						}
 					}
 				} else {
-					// System.out.println("Awarding Mentor Badge to " +
-					// LoginGUI.DYN_Username);
-					PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(), LoginGUI.DYN_Username));
+					PacketDispatcher.sendToServer(new AwardAchievementMessage(a.getId(),
+							DYNServerMod.CcolPlayerInfo.getCCOLid(), Minecraft.getMinecraft().thePlayer.getName()));
 					a.setAwarded();
 				}
 			}

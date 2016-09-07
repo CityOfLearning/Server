@@ -1,20 +1,19 @@
 package com.dyn.server.packets.server;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import com.dyn.achievements.handlers.AchievementManager;
-import com.dyn.login.LoginGUI;
-import com.dyn.server.ServerMod;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class AwardAchievementMessage extends AbstractServerMessage<AwardAchievementMessage> {
 	private int id;
-	private String uuid;
+	private UUID fake_uuid = UUID.fromString("00000000-0000-0000-0000-000000000000");
+	private UUID ccol_uuid;
 	private String player_name;
 
 	// The basic, no-argument constructor MUST be included to use the new
@@ -26,34 +25,24 @@ public class AwardAchievementMessage extends AbstractServerMessage<AwardAchievem
 	// allows
 	// for them to be initialized, and use that constructor when sending the
 	// packet
-	public AwardAchievementMessage(int id, String uuid) {
-		this.id = id;
-		this.uuid = uuid;
-		player_name = "";
-	}
 
-	public AwardAchievementMessage(int id, String uuid, String username) {
+	public AwardAchievementMessage(int id, UUID uuid, String username) {
 		this.id = id;
-		this.uuid = uuid;
+		if (uuid != null) {
+			ccol_uuid = uuid;
+		} else {
+			ccol_uuid = fake_uuid;
+		}
 		player_name = username;
 	}
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
-		// using the message instance gives access to 'this.id'
 		if (side.isServer()) {
-			LoginGUI.DYN_Username = uuid; // the UI is client side so we
-											// set this each time server
-											// side when awarding an
-											// achievement
-			if (player_name.isEmpty()) {
-				AchievementManager.findAchievementById(id).awardAchievement(player);
+			if (ccol_uuid != fake_uuid) {
+				AchievementManager.findAchievementById(id).awardAchievement(player, ccol_uuid);
 			} else {
-				for (EntityPlayerMP p : ServerMod.proxy.getServerUsers()) {
-					if (p.getDisplayNameString().equals(player_name)) {
-						AchievementManager.findAchievementById(id).awardAchievement(p);
-					}
-				}
+				AchievementManager.findAchievementById(id).awardAchievement(player, null);
 			}
 		}
 	}
@@ -61,16 +50,17 @@ public class AwardAchievementMessage extends AbstractServerMessage<AwardAchievem
 	@Override
 	protected void read(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataInputStream
-		id = buffer.readInt();
-		uuid = buffer.readStringFromBuffer(buffer.readableBytes());
 		player_name = buffer.readStringFromBuffer(buffer.readableBytes());
+		id = buffer.readInt();
+		ccol_uuid = buffer.readUuid();
+
 	}
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataOutputStream
 		buffer.writeInt(id);
-		buffer.writeString(uuid);
+		buffer.writeUuid(ccol_uuid);
 		buffer.writeString(player_name);
 	}
 }

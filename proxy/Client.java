@@ -3,20 +3,12 @@ package com.dyn.server.proxy;
 import java.util.List;
 
 import com.dyn.DYNServerMod;
-import com.dyn.betterachievements.gui.GuiBetterAchievements;
-import com.dyn.betterachievements.handler.GuiOpenHandler;
-import com.dyn.utils.PlayerLevel;
 import com.forgeessentials.commons.network.Packet1SelectionUpdate;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiCommandBlock;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IThreadListener;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
@@ -60,28 +52,7 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 
 	@Override
 	public void init() {
-		MinecraftForge.EVENT_BUS.register(this);
-	}
 
-	@SubscribeEvent
-	public void onGuiOpen(GuiOpenEvent event) {
-		// this seems weird to be placed here but it will stop unintended
-		// command block manipulations
-		if ((event.gui instanceof GuiCommandBlock) && !(DYNServerMod.status == PlayerLevel.ADMIN)) {
-			event.setCanceled(true);
-			return;
-		}
-
-		if (event.gui instanceof GuiAchievements) {
-			event.setCanceled(true);
-			try {
-				Minecraft.getMinecraft().displayGuiScreen(
-						new GuiBetterAchievements((GuiScreen) GuiOpenHandler.prevScreen.get(event.gui),
-								(Integer) GuiOpenHandler.currentPage.get(event.gui) + 1));
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
-		}
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -33,7 +34,7 @@ public class PostBadge extends Thread {
 
 	public static JsonElement jsonResponse;
 	public static String response;
-	private String UUID;
+	private String CCOL_UUID;
 	private String secretKey;
 	private String orgKey;
 	private int badgeID;
@@ -44,7 +45,7 @@ public class PostBadge extends Thread {
 		if (uuid.isEmpty() || secret.isEmpty() || key.isEmpty()) {
 			return;
 		}
-		UUID = uuid;
+		CCOL_UUID = uuid;
 		secretKey = secret;
 		orgKey = key;
 		badgeID = badgeId;
@@ -74,12 +75,16 @@ public class PostBadge extends Thread {
 			token.setSubject("issued_badge");
 			JsonObject sPayload = new JsonObject();
 			sPayload.addProperty("badge_id", badgeID);
-			if (UUID.contains("@")) {
+			if (CCOL_UUID.contains("@")) {
 				sPayload.addProperty("user_identifier_type", 2);
 			} else {
-				sPayload.addProperty("user_identifier_type", 1);
+				try {
+					UUID.fromString(CCOL_UUID);
+				} catch (IllegalArgumentException iae) {
+					sPayload.addProperty("user_identifier_type", 1);
+				}
 			}
-			sPayload.addProperty("recipient", UUID);
+			sPayload.addProperty("recipient", CCOL_UUID);
 			token.addJsonObject("payload", sPayload);
 
 			HttpPost postReq = new HttpPost("http://chicago.col-engine.com/partner_organizations/api.json");
