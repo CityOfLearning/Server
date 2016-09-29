@@ -8,6 +8,7 @@ import com.dyn.server.commands.CommandFreeze;
 import com.dyn.server.database.DBManager;
 import com.dyn.server.packets.PacketDispatcher;
 import com.dyn.server.packets.client.ServerUserlistMessage;
+import com.dyn.utils.CCOLPlayerInfo;
 import com.dyn.utils.PlayerLevel;
 
 import net.minecraft.command.CommandHandler;
@@ -90,19 +91,35 @@ public class Server implements Proxy {
 				String.format("/nick %s %s", event.player.getDisplayNameString(),
 						DBManager.getDisplayNameFromMCUsername(event.player.getDisplayNameString())));
 
-		// this has to do with verification but we are not doing that till later
-		// PacketDispatcher.sendTo(
-		// new
-		// CheckDynUsernameMessage(NamesManager.getDYNUsername(event.player.getName()),
-		// DYNServerMod.frozenPlayers.contains(event.player.getDisplayNameString())),
-		// (EntityPlayerMP) event.player);
 		AchievementManager.setupPlayerAchievements(event.player);
+
+		DYNServerMod.CcolPlayerInfo = new CCOLPlayerInfo(event.player.getName());
+		if (DYNServerMod.CcolPlayerInfo != null && DYNServerMod.CcolPlayerInfo.getCCOLid() != null) {
+			System.out.print("parsing ccol player data");
+			if (!CCOLPlayerInfo.isReturningCcolUser(DYNServerMod.CcolPlayerInfo)) {
+				CCOLPlayerInfo.writeCCOLInfoToJson(DYNServerMod.CcolPlayerInfo);
+			} else {
+				CCOLPlayerInfo.readCCOLInfo(DYNServerMod.CcolPlayerInfo, true);
+			}
+		} else {
+			System.out.print("parsing player data");
+			if (!CCOLPlayerInfo.isReturningPlayer(event.player)) {
+				CCOLPlayerInfo.writePlayerInfoToJson(event.player);
+			} else {
+				CCOLPlayerInfo.readPlayerInfo(event.player, true);
+			}
+		}
+		System.out.print("finished parsing");
+	}
+
+	@SubscribeEvent
+	public void logoutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
+		CCOLPlayerInfo.writeDataToJson(event.player, new CCOLPlayerInfo(event.player.getName()));
 	}
 
 	@Override
 	public void preInit() {
-		// TODO Auto-generated method stub
-
+		CCOLPlayerInfo.setCCOLDataFolder(MinecraftServer.getServer().getDataDirectory());
 	}
 
 	/**

@@ -9,20 +9,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IThreadListener;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IMessage> {
-
-	@SubscribeEvent
-	public void connectionClosed(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
-		// let's close the client when we disconnect
-		FMLCommonHandler.instance().exitJava(0, false);
-	}
 
 	@Override
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
@@ -47,6 +38,7 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 
 	@Override
 	public IThreadListener getThreadFromContext(MessageContext ctx) {
+		// this causes null pointers in single player...
 		return (ctx.side.isClient() ? Minecraft.getMinecraft() : null);
 	}
 
