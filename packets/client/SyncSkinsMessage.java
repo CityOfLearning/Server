@@ -32,7 +32,11 @@ public class SyncSkinsMessage extends AbstractClientMessage<SyncSkinsMessage> {
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
-			SkinManager.setSkinTexture(playerName, skin);
+			if (skin.equals("reset")) {
+				SkinManager.removeSkinTexture(playerName);
+			} else {
+				SkinManager.setSkinTexture(playerName, skin);
+			}
 		}
 	}
 
