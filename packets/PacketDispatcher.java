@@ -11,6 +11,7 @@ import com.dyn.server.packets.client.ServerUserlistMessage;
 import com.dyn.server.packets.client.SyncAchievementsMessage;
 import com.dyn.server.packets.client.SyncNamesMessage;
 import com.dyn.server.packets.client.SyncSkinsMessage;
+import com.dyn.server.packets.client.WarpNamesMessage;
 import com.dyn.server.packets.client.WorldNamesMessage;
 import com.dyn.server.packets.client.WorldZonesMessage;
 import com.dyn.server.packets.client.ZonePermissionsMessage;
@@ -27,6 +28,7 @@ import com.dyn.server.packets.server.RequestUserAchievementsProgressMessage;
 import com.dyn.server.packets.server.RequestUserStatusMessage;
 import com.dyn.server.packets.server.RequestUserlistMessage;
 import com.dyn.server.packets.server.RequestVerificationMessage;
+import com.dyn.server.packets.server.RequestWarpListMessage;
 import com.dyn.server.packets.server.RequestWorldListMessage;
 import com.dyn.server.packets.server.RequestWorldZonesMessage;
 import com.dyn.server.packets.server.RequestZonePermissionsMessage;
@@ -34,6 +36,7 @@ import com.dyn.server.packets.server.ServerCommandMessage;
 import com.dyn.server.packets.server.StudentCommandBlockMessage;
 import com.dyn.server.packets.server.SyncNamesServerMessage;
 import com.dyn.server.packets.server.SyncSkinsServerMessage;
+import com.dyn.server.packets.server.WarpMentorMessage;
 import com.dyn.server.reference.Reference;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -113,6 +116,7 @@ public class PacketDispatcher {
 		registerMessage(PlotNamesMessage.class);
 		registerMessage(GroupNamesMessage.class);
 		registerMessage(WorldNamesMessage.class);
+		registerMessage(WarpNamesMessage.class);
 		registerMessage(WorldZonesMessage.class);
 		registerMessage(ReturnFlagMessage.class);
 		registerMessage(ServerUserlistMessage.class);
@@ -133,6 +137,7 @@ public class PacketDispatcher {
 		registerMessage(RequestPlotListMessage.class);
 		registerMessage(RequestGroupListMessage.class);
 		registerMessage(RequestWorldListMessage.class);
+		registerMessage(RequestWarpListMessage.class);
 		registerMessage(RequestWorldZonesMessage.class);
 		registerMessage(RequestGroupPermissionsMessage.class);
 		registerMessage(RequestZonePermissionsMessage.class);
@@ -144,6 +149,7 @@ public class PacketDispatcher {
 		registerMessage(StudentCommandBlockMessage.class);
 		registerMessage(SyncSkinsServerMessage.class);
 		registerMessage(SyncNamesServerMessage.class);
+		registerMessage(WarpMentorMessage.class);
 
 	}
 
