@@ -21,8 +21,10 @@ public class ServerUserlistMessage extends AbstractClientMessage<ServerUserlistM
 
 	// We need to initialize our data, so provide a suitable constructor:
 	public ServerUserlistMessage(String[] users) {
-		for (String s : users) {
-			data += " " + s;
+		if (users != null) {
+			for (String s : users) {
+				data += " " + s;
+			}
 		}
 	}
 
