@@ -29,5 +29,7 @@ public class ServerMod {
 		MetaData.init(event.getModMetadata());
 
 		PacketDispatcher.registerPackets();
+		
+		proxy.preInit();
 	}
 }
