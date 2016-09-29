@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.dyn.DYNServerMod;
 import com.dyn.item.blocks.cmdblock.StudentCommandBlockLogic;
-import com.dyn.item.tileentity.TileEntityStudentCommandBlock;
+import com.dyn.item.blocks.cmdblock.tileentity.TileEntityStudentCommandBlock;
 import com.dyn.server.packets.AbstractMessage.AbstractServerMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
