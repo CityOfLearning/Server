@@ -94,7 +94,7 @@ public class Server implements Proxy {
 		AchievementManager.setupPlayerAchievements(event.player);
 
 		DYNServerMod.CcolPlayerInfo = new CCOLPlayerInfo(event.player.getName());
-		if (DYNServerMod.CcolPlayerInfo != null && DYNServerMod.CcolPlayerInfo.getCCOLid() != null) {
+		if ((DYNServerMod.CcolPlayerInfo != null) && (DYNServerMod.CcolPlayerInfo.getCCOLid() != null)) {
 			System.out.print("parsing ccol player data");
 			if (!CCOLPlayerInfo.isReturningCcolUser(DYNServerMod.CcolPlayerInfo)) {
 				CCOLPlayerInfo.writeCCOLInfoToJson(DYNServerMod.CcolPlayerInfo);
