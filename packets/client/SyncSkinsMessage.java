@@ -2,8 +2,8 @@ package com.dyn.server.packets.client;
 
 import java.io.IOException;
 
-import com.dyn.render.manager.SkinManager;
 import com.dyn.server.packets.AbstractMessage.AbstractClientMessage;
+import com.rabbit.gui.utils.SkinManager;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
