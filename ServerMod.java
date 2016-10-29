@@ -1,6 +1,6 @@
 package com.dyn.server;
 
-import com.dyn.server.packets.PacketDispatcher;
+import com.dyn.server.network.NetworkDispatcher;
 import com.dyn.server.proxy.Proxy;
 import com.dyn.server.reference.MetaData;
 import com.dyn.server.reference.Reference;
@@ -28,7 +28,8 @@ public class ServerMod {
 	public void preInit(FMLPreInitializationEvent event) {
 		MetaData.init(event.getModMetadata());
 
-		PacketDispatcher.registerPackets();
+		NetworkDispatcher.registerPackets();
+		NetworkDispatcher.registerMessages();
 
 		proxy.preInit();
 	}

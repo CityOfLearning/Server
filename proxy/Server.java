@@ -6,8 +6,8 @@ import com.dyn.DYNServerMod;
 import com.dyn.achievements.handlers.AchievementManager;
 import com.dyn.server.commands.CommandFreeze;
 import com.dyn.server.database.DBManager;
-import com.dyn.server.packets.PacketDispatcher;
-import com.dyn.server.packets.client.ServerUserlistMessage;
+import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.packets.client.ServerUserlistMessage;
 import com.dyn.utils.CCOLPlayerInfo;
 import com.dyn.utils.PlayerLevel;
 
@@ -17,11 +17,17 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class Server implements Proxy {
+
+	@Override
+	public void addScheduledTask(Runnable runnable) {
+		FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(runnable);
+	}
 
 	/**
 	 * Returns a side-appropriate EntityPlayer for use during message handling
@@ -83,7 +89,7 @@ public class Server implements Proxy {
 		}
 
 		if (status == PlayerLevel.ADMIN) {
-			PacketDispatcher.sendTo(new ServerUserlistMessage(MinecraftServer.getServer().getAllUsernames()),
+			NetworkDispatcher.sendTo(new ServerUserlistMessage(MinecraftServer.getServer().getAllUsernames()),
 					(EntityPlayerMP) event.player);
 		}
 
@@ -95,21 +101,18 @@ public class Server implements Proxy {
 
 		DYNServerMod.CcolPlayerInfo = new CCOLPlayerInfo(event.player.getName());
 		if ((DYNServerMod.CcolPlayerInfo != null) && (DYNServerMod.CcolPlayerInfo.getCCOLid() != null)) {
-			System.out.print("parsing ccol player data");
 			if (!CCOLPlayerInfo.isReturningCcolUser(DYNServerMod.CcolPlayerInfo)) {
 				CCOLPlayerInfo.writeCCOLInfoToJson(DYNServerMod.CcolPlayerInfo);
 			} else {
 				CCOLPlayerInfo.readCCOLInfo(DYNServerMod.CcolPlayerInfo, true);
 			}
 		} else {
-			System.out.print("parsing player data");
 			if (!CCOLPlayerInfo.isReturningPlayer(event.player)) {
 				CCOLPlayerInfo.writePlayerInfoToJson(event.player);
 			} else {
 				CCOLPlayerInfo.readPlayerInfo(event.player, true);
 			}
 		}
-		System.out.print("finished parsing");
 	}
 
 	@SubscribeEvent

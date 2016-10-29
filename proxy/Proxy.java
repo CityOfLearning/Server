@@ -9,6 +9,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public interface Proxy {
 
+	public void addScheduledTask(Runnable runnable);
+
 	/**
 	 * Returns a side-appropriate EntityPlayer for use during message handling
 	 */

@@ -16,6 +16,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IMessage> {
 
 	@Override
+	public void addScheduledTask(Runnable runnable) {
+		Minecraft.getMinecraft().addScheduledTask(runnable);
+	}
+
+	@Override
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
 		// Note that if you simply return 'Minecraft.getMinecraft().thePlayer',
 		// your packets will not work as expected because you will be getting a
