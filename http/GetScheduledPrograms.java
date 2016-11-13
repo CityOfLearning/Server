@@ -80,7 +80,9 @@ public class GetScheduledPrograms extends Thread {
 				response = EntityUtils.toString(entity);
 				JsonParser jParse = new JsonParser();
 				jsonResponse = jParse.parse(response);
-				responseReceived.setFlag(true);
+				if (jsonResponse.getAsJsonObject().get("status").getAsInt() < 204) {
+					responseReceived.setFlag(true);
+				}
 			}
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
