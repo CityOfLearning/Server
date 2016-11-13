@@ -2,7 +2,7 @@ package com.dyn.server.network.packets.server;
 
 import java.io.IOException;
 
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.SyncSkinsMessage;
 
@@ -33,7 +33,7 @@ public class SyncSkinsServerMessage extends AbstractServerMessage<SyncSkinsServe
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
-			NetworkDispatcher.sendToAll(new SyncSkinsMessage(playerName, skin));
+			NetworkManager.sendToAll(new SyncSkinsMessage(playerName, skin));
 		}
 	}
 

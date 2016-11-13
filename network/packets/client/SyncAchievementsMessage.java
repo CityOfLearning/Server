@@ -8,7 +8,7 @@ import com.dyn.achievements.achievement.RequirementType;
 import com.dyn.achievements.achievement.Requirements.BaseRequirement;
 import com.dyn.achievements.handlers.AchievementManager;
 import com.dyn.render.manager.NotificationsManager;
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractClientMessage;
 import com.dyn.server.network.packets.server.AwardAchievementMessage;
 
@@ -101,7 +101,7 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 							}
 						}
 						if (a.meetsRequirements()) {
-							NetworkDispatcher.sendToServer(
+							NetworkManager.sendToServer(
 									new AwardAchievementMessage(a.getId(), DYNServerMod.CcolPlayerInfo.getCCOLid(),
 											Minecraft.getMinecraft().thePlayer.getName()));
 							a.setAwarded();
@@ -123,14 +123,14 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 							}
 						}
 						if (a.meetsRequirements()) {
-							NetworkDispatcher.sendToServer(
+							NetworkManager.sendToServer(
 									new AwardAchievementMessage(a.getId(), DYNServerMod.CcolPlayerInfo.getCCOLid(),
 											Minecraft.getMinecraft().thePlayer.getName()));
 							a.setAwarded();
 						}
 					}
 				} else {
-					NetworkDispatcher.sendToServer(new AwardAchievementMessage(a.getId(),
+					NetworkManager.sendToServer(new AwardAchievementMessage(a.getId(),
 							DYNServerMod.CcolPlayerInfo.getCCOLid(), Minecraft.getMinecraft().thePlayer.getName()));
 					a.setAwarded();
 				}

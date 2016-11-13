@@ -6,7 +6,7 @@ import com.dyn.DYNServerMod;
 import com.dyn.achievements.handlers.AchievementManager;
 import com.dyn.server.commands.CommandFreeze;
 import com.dyn.server.database.DBManager;
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.client.ServerUserlistMessage;
 import com.dyn.utils.CCOLPlayerInfo;
 import com.dyn.utils.PlayerLevel;
@@ -89,7 +89,7 @@ public class Server implements Proxy {
 		}
 
 		if (status == PlayerLevel.ADMIN) {
-			NetworkDispatcher.sendTo(new ServerUserlistMessage(MinecraftServer.getServer().getAllUsernames()),
+			NetworkManager.sendTo(new ServerUserlistMessage(MinecraftServer.getServer().getAllUsernames()),
 					(EntityPlayerMP) event.player);
 		}
 

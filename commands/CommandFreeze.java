@@ -1,7 +1,7 @@
 package com.dyn.server.commands;
 
 import com.dyn.DYNServerMod;
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.client.FreezePlayerMessage;
 
 import net.minecraft.command.CommandBase;
@@ -37,7 +37,7 @@ public class CommandFreeze extends CommandBase {
 						// but lets let FE handle its business
 						MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
 								"/p user " + entityplayer.getDisplayNameString() + " group add _FROZEN_");
-						NetworkDispatcher.sendTo(new FreezePlayerMessage(true), (EntityPlayerMP) entityplayer);
+						NetworkManager.sendTo(new FreezePlayerMessage(true), (EntityPlayerMP) entityplayer);
 						entityplayer.capabilities.allowEdit = false;
 						notifyOperators(sender, this, "You %s player %s",
 								new Object[] { "froze", entityplayer.getDisplayNameString() });
@@ -55,7 +55,7 @@ public class CommandFreeze extends CommandBase {
 						DYNServerMod.frozenPlayers.remove(entityplayer.getDisplayNameString());
 						MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
 								"/p user " + entityplayer.getDisplayNameString() + " group remove _FROZEN_");
-						NetworkDispatcher.sendTo(new FreezePlayerMessage(false), (EntityPlayerMP) entityplayer);
+						NetworkManager.sendTo(new FreezePlayerMessage(false), (EntityPlayerMP) entityplayer);
 						entityplayer.capabilities.allowEdit = true;
 						notifyOperators(sender, this, "You %s player %s",
 								new Object[] { "unfroze", entityplayer.getDisplayNameString() });

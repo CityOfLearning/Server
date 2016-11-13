@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.GroupNamesMessage;
 import com.forgeessentials.api.APIRegistry;
@@ -31,7 +31,7 @@ public class RequestGroupListMessage extends AbstractServerMessage<RequestGroupL
 				groups.add(group);
 			}
 
-			NetworkDispatcher.sendTo(new GroupNamesMessage(groups), (EntityPlayerMP) player);
+			NetworkManager.sendTo(new GroupNamesMessage(groups), (EntityPlayerMP) player);
 		}
 	}
 

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import com.dyn.DYNServerMod;
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.ZonePermissionsMessage;
 import com.forgeessentials.api.APIRegistry;
@@ -71,7 +71,7 @@ public class RequestZonePermissionsMessage extends AbstractServerMessage<Request
 				for (String perms : permissions) {
 					DYNServerMod.logger.info(perms);
 				}
-				NetworkDispatcher.sendTo(new ZonePermissionsMessage(permissions), (EntityPlayerMP) player);
+				NetworkManager.sendTo(new ZonePermissionsMessage(permissions), (EntityPlayerMP) player);
 			}
 		}
 	}

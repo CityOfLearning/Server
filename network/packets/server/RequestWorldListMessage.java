@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.WorldNamesMessage;
 import com.forgeessentials.multiworld.ModuleMultiworld;
@@ -32,7 +32,7 @@ public class RequestWorldListMessage extends AbstractServerMessage<RequestWorldL
 				worlds.add(world.getDimensionId() + ": " + world.getName());
 			}
 
-			NetworkDispatcher.sendTo(new WorldNamesMessage(worlds), (EntityPlayerMP) player);
+			NetworkManager.sendTo(new WorldNamesMessage(worlds), (EntityPlayerMP) player);
 		}
 	}
 

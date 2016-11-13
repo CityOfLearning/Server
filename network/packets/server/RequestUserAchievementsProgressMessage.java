@@ -9,7 +9,7 @@ import com.dyn.achievements.achievement.RequirementType;
 import com.dyn.achievements.achievement.Requirements;
 import com.dyn.achievements.achievement.Requirements.BaseRequirement;
 import com.dyn.achievements.handlers.AchievementManager;
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.AchievementProgressMessage;
 
@@ -193,7 +193,7 @@ public class RequestUserAchievementsProgressMessage
 					achString = "";
 				}
 
-				NetworkDispatcher.sendTo(new AchievementProgressMessage(achData), (EntityPlayerMP) player);
+				NetworkManager.sendTo(new AchievementProgressMessage(achData), (EntityPlayerMP) player);
 			}
 		}
 	}

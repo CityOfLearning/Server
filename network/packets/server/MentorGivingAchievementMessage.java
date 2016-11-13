@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.dyn.achievements.achievement.RequirementType;
 import com.dyn.server.ServerMod;
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.SyncAchievementsMessage;
 
@@ -37,7 +37,7 @@ public class MentorGivingAchievementMessage extends AbstractServerMessage<Mentor
 		if (side.isServer()) {
 			for (EntityPlayerMP p : ServerMod.proxy.getServerUsers()) {
 				if (p.getDisplayNameString().equals(player_name)) {
-					NetworkDispatcher.sendTo(
+					NetworkManager.sendTo(
 							new SyncAchievementsMessage("" + ach_id + " " + RequirementType.MENTOR + " 0", true), p);
 				}
 			}

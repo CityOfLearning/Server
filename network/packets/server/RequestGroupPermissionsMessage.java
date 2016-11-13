@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.GroupPermissionsMessage;
 import com.forgeessentials.api.permissions.FEPermissions;
@@ -53,7 +53,7 @@ public class RequestGroupPermissionsMessage extends AbstractServerMessage<Reques
 					}
 				}
 			}
-			NetworkDispatcher.sendTo(new GroupPermissionsMessage(permissions), (EntityPlayerMP) player);
+			NetworkManager.sendTo(new GroupPermissionsMessage(permissions), (EntityPlayerMP) player);
 		}
 	}
 

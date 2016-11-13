@@ -3,7 +3,7 @@ package com.dyn.server.network.packets.server;
 import java.io.IOException;
 
 import com.dyn.DYNServerMod;
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.FreezePlayerMessage;
 
@@ -45,7 +45,7 @@ public class RequestFreezePlayerMessage extends AbstractServerMessage<RequestFre
 
 				player.addChatMessage(new ChatComponentText(
 						String.format("You %s player %s", freeze ? "froze" : "unfroze", username)));
-				NetworkDispatcher.sendTo(new FreezePlayerMessage(freeze),
+				NetworkManager.sendTo(new FreezePlayerMessage(freeze),
 						MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(username));
 			}
 		}

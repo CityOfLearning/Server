@@ -3,7 +3,7 @@ package com.dyn.server.network.packets.server;
 import java.io.IOException;
 
 import com.dyn.server.ServerMod;
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.ServerUserlistMessage;
 
@@ -24,7 +24,7 @@ public class RequestUserlistMessage extends AbstractServerMessage<RequestUserlis
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
-			NetworkDispatcher.sendTo(new ServerUserlistMessage(ServerMod.proxy.getServerUserlist()),
+			NetworkManager.sendTo(new ServerUserlistMessage(ServerMod.proxy.getServerUserlist()),
 					(EntityPlayerMP) player);
 		}
 	}

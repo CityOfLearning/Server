@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.PlotNamesMessage;
 import com.forgeessentials.commons.selections.WorldPoint;
@@ -67,7 +67,7 @@ public class RequestPlotListMessage extends AbstractServerMessage<RequestPlotLis
 						plot.getCenter().toString()));
 			}
 
-			NetworkDispatcher.sendTo(new PlotNamesMessage(sPlots), (EntityPlayerMP) player);
+			NetworkManager.sendTo(new PlotNamesMessage(sPlots), (EntityPlayerMP) player);
 		}
 	}
 

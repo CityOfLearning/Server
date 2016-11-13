@@ -3,7 +3,7 @@ package com.dyn.server.network.packets.server;
 import java.io.IOException;
 
 import com.dyn.DYNServerMod;
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.PlayerStatusMessage;
 import com.forgeessentials.api.UserIdent;
@@ -35,7 +35,7 @@ public class RequestUserStatusMessage extends AbstractServerMessage<RequestUserS
 		if (side.isServer()) {
 			EntityPlayerMP student = UserIdent.getPlayerByUsername(username);
 			if (student != null) {
-				NetworkDispatcher.sendTo(new PlayerStatusMessage(DYNServerMod.frozenPlayers.contains(username),
+				NetworkManager.sendTo(new PlayerStatusMessage(DYNServerMod.frozenPlayers.contains(username),
 						PlayerUtil.getPersistedTag(student, true).getBoolean("mute"),
 						student.capabilities.isCreativeMode), (EntityPlayerMP) player);
 			}
