@@ -30,7 +30,7 @@ public class WorldNamesMessage extends AbstractClientMessage<WorldNamesMessage> 
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
-		if (side.isClient()) {
+		if (side.isClient() && !data.isEmpty()) {
 			DYNServerMod.worlds.clear();
 			for (String s : data.split(Pattern.quote("|"))) {
 				String[] dimWorld = s.split(Pattern.quote(":"));

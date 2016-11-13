@@ -33,7 +33,7 @@ public class WorldZonesMessage extends AbstractClientMessage<WorldZonesMessage> 
 		// we have to split a lot here, the pipe character is each achievement
 		// tabs are titles and new lines are the items within each requirement
 		// set
-		if (side.isClient()) {
+		if (side.isClient() && !data.isEmpty()) {
 			AdminUI.zones.clear();
 			for (String s : data.split(Pattern.quote("|"))) {
 				String[] subStr = s.split(Pattern.quote("^"));

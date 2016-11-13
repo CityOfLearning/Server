@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.DYNServerMod;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.WorldZonesMessage;
 import com.forgeessentials.api.APIRegistry;
@@ -34,18 +35,19 @@ public class RequestWorldZonesMessage extends AbstractServerMessage<RequestWorld
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
-
+			DYNServerMod.logger.info(worldName);
 			List<String> zones = new ArrayList<String>();
 
 			Multiworld multiworld = ModuleMultiworld.getMultiworldManager().getMultiworld(worldName);
 			WorldServer world = multiworld != null ? multiworld.getWorldServer()
 					: APIRegistry.namedWorldHandler.getWorld(worldName);
-			for (AreaZone zone : APIRegistry.perms.getServerZone().getWorldZone(world.provider.getDimensionId())
-					.getAreaZones()) {
-				zones.add(zone.getId() + "^" + zone.getName());
+			if (world != null) {
+				for (AreaZone zone : APIRegistry.perms.getServerZone().getWorldZone(world.provider.getDimensionId())
+						.getAreaZones()) {
+					zones.add(zone.getId() + "^" + zone.getName());
+				}
+				NetworkManager.sendTo(new WorldZonesMessage(zones), (EntityPlayerMP) player);
 			}
-
-			NetworkDispatcher.sendTo(new WorldZonesMessage(zones), (EntityPlayerMP) player);
 		}
 	}
 
