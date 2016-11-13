@@ -28,7 +28,7 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 		// Sounds absurd, but it's true.
 
 		// Solution is to double-check side before returning the player:
-		return (ctx.side.isClient() ? Minecraft.getMinecraft().thePlayer : null);
+		return ctx.side.isClient() ? Minecraft.getMinecraft().thePlayer : ctx.getServerHandler().playerEntity;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 	@Override
 	public IThreadListener getThreadFromContext(MessageContext ctx) {
 		// this causes null pointers in single player...
-		return (ctx.side.isClient() ? Minecraft.getMinecraft() : null);
+		return Minecraft.getMinecraft();
 	}
 
 	@Override
