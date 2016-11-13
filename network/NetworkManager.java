@@ -1,22 +1,15 @@
 package com.dyn.server.network;
 
-import com.dyn.server.network.handlers.HandlerActivateRobot;
-import com.dyn.server.network.handlers.HandlerDebugRobot;
-import com.dyn.server.network.handlers.HandlerDialogUpdate;
-import com.dyn.server.network.handlers.HandlerOpenRobotInventory;
-import com.dyn.server.network.handlers.HandlerRobotEchoCommand;
-import com.dyn.server.network.handlers.HandlerRunPythonScript;
-import com.dyn.server.network.handlers.HandlerRunRobotScript;
-import com.dyn.server.network.handlers.HandlerToggleRobotFollow;
 import com.dyn.server.network.messages.MessageActivateRobot;
 import com.dyn.server.network.messages.MessageDebugRobot;
 import com.dyn.server.network.messages.MessageDialogUpdate;
 import com.dyn.server.network.messages.MessageOpenRobotInventory;
-import com.dyn.server.network.messages.MessageRobotEchoCommand;
 import com.dyn.server.network.messages.MessageRunPythonScript;
 import com.dyn.server.network.messages.MessageRunRobotScript;
 import com.dyn.server.network.messages.MessageToggleRobotFollow;
 import com.dyn.server.network.packets.AbstractMessage;
+import com.dyn.server.network.packets.bidirectional.MentorRequstScriptMessage;
+import com.dyn.server.network.packets.bidirectional.RequestStudentScriptMessage;
 import com.dyn.server.network.packets.client.AchievementProgressMessage;
 import com.dyn.server.network.packets.client.FreezePlayerMessage;
 import com.dyn.server.network.packets.client.GroupNamesMessage;
@@ -24,6 +17,7 @@ import com.dyn.server.network.packets.client.GroupPermissionsMessage;
 import com.dyn.server.network.packets.client.PlayerStatusMessage;
 import com.dyn.server.network.packets.client.PlotNamesMessage;
 import com.dyn.server.network.packets.client.ReturnFlagMessage;
+import com.dyn.server.network.packets.client.RobotSpeakMessage;
 import com.dyn.server.network.packets.client.ServerUserlistMessage;
 import com.dyn.server.network.packets.client.SyncAchievementsMessage;
 import com.dyn.server.network.packets.client.SyncNamesMessage;
@@ -83,7 +77,7 @@ import net.minecraftforge.fml.relauncher.Side;
  * one which takes an EntityPlayer and one which takes coordinates.
  *
  */
-public class NetworkDispatcher {
+public class NetworkManager {
 	// a simple counter will allow us to get rid of 'magic' numbers used during
 	// packet registration
 	private static byte packetId = 0;
@@ -108,34 +102,34 @@ public class NetworkDispatcher {
 		// it's one less
 		// parameter to pass.
 		if (AbstractMessage.AbstractClientMessage.class.isAssignableFrom(clazz)) {
-			NetworkDispatcher.dispatcher.registerMessage(clazz, clazz, packetId++, Side.CLIENT);
+			NetworkManager.dispatcher.registerMessage(clazz, clazz, packetId++, Side.CLIENT);
 		} else if (AbstractMessage.AbstractServerMessage.class.isAssignableFrom(clazz)) {
-			NetworkDispatcher.dispatcher.registerMessage(clazz, clazz, packetId++, Side.SERVER);
+			NetworkManager.dispatcher.registerMessage(clazz, clazz, packetId++, Side.SERVER);
 		} else {
 			// hopefully you didn't forget to extend the right class, or you
 			// will get registered on both sides
-			NetworkDispatcher.dispatcher.registerMessage(clazz, clazz, packetId, Side.CLIENT);
-			NetworkDispatcher.dispatcher.registerMessage(clazz, clazz, packetId++, Side.SERVER);
+			NetworkManager.dispatcher.registerMessage(clazz, clazz, packetId, Side.CLIENT);
+			NetworkManager.dispatcher.registerMessage(clazz, clazz, packetId++, Side.SERVER);
 		}
 	}
 
 	// this is built so that message and handler can be separate classes
 	private static <T extends IMessage, U extends IMessageHandler<T, IMessage>> void registerMessage(
-			Class<U> handler_clazz, Class<T> message_clazz, Side side) {
+			Class<T> message_clazz, Class<U> handler_clazz, Side side) {
 		if (side != null) {
-			NetworkDispatcher.dispatcher.registerMessage(handler_clazz, message_clazz, packetId++, side);
+			NetworkManager.dispatcher.registerMessage(handler_clazz, message_clazz, packetId++, side);
 		}
 	}
 
 	public static void registerMessages() {
-		registerMessage(HandlerDialogUpdate.class, MessageDialogUpdate.class, Side.SERVER);
-		registerMessage(HandlerRunPythonScript.class, MessageRunPythonScript.class, Side.SERVER);
-		registerMessage(HandlerRunRobotScript.class, MessageRunRobotScript.class, Side.SERVER);
-		registerMessage(HandlerRobotEchoCommand.class, MessageRobotEchoCommand.class, Side.CLIENT);
-		registerMessage(HandlerActivateRobot.class, MessageActivateRobot.class, Side.SERVER);
-		registerMessage(HandlerToggleRobotFollow.class, MessageToggleRobotFollow.class, Side.SERVER);
-		registerMessage(HandlerDebugRobot.class, MessageDebugRobot.class, Side.SERVER);
-		registerMessage(HandlerOpenRobotInventory.class, MessageOpenRobotInventory.class, Side.SERVER);
+		// Server
+		registerMessage(MessageDialogUpdate.class, MessageDialogUpdate.Handler.class, Side.SERVER);
+		registerMessage(MessageRunPythonScript.class, MessageRunPythonScript.Handler.class, Side.SERVER);
+		registerMessage(MessageRunRobotScript.class, MessageRunRobotScript.Handler.class, Side.SERVER);
+		registerMessage(MessageActivateRobot.class, MessageActivateRobot.Handler.class, Side.SERVER);
+		registerMessage(MessageToggleRobotFollow.class, MessageToggleRobotFollow.Handler.class, Side.SERVER);
+		registerMessage(MessageDebugRobot.class, MessageDebugRobot.Handler.class, Side.SERVER);
+		registerMessage(MessageOpenRobotInventory.class, MessageOpenRobotInventory.Handler.class, Side.SERVER);
 	}
 	// ========================================================//
 	// The following methods are the 'wrapper' methods; again,
@@ -161,7 +155,7 @@ public class NetworkDispatcher {
 		registerMessage(SyncAchievementsMessage.class);
 		registerMessage(GroupPermissionsMessage.class);
 		registerMessage(ZonePermissionsMessage.class);
-		// Packets ment for All players
+		// Packets meant for All players
 		registerMessage(SyncSkinsMessage.class);
 		registerMessage(SyncNamesMessage.class);
 
@@ -182,11 +176,16 @@ public class NetworkDispatcher {
 		registerMessage(RequestUserlistMessage.class);
 		registerMessage(RequestUserStatusMessage.class);
 		registerMessage(RequestVerificationMessage.class);
+		registerMessage(RobotSpeakMessage.class);
 		registerMessage(ServerCommandMessage.class);
 		registerMessage(StopServerPythonScriptMessage.class);
 		registerMessage(StudentCommandBlockMessage.class);
 		registerMessage(SyncSkinsServerMessage.class);
 		registerMessage(SyncNamesServerMessage.class);
+		
+		// Bidirectional Packets
+		registerMessage(RequestStudentScriptMessage.class);
+		registerMessage(MentorRequstScriptMessage.class);
 	}
 
 	/**
@@ -194,7 +193,7 @@ public class NetworkDispatcher {
 	 * {@link SimpleNetworkWrapper#sendTo(IMessage, EntityPlayerMP)}
 	 */
 	public static void sendTo(IMessage message, EntityPlayerMP player) {
-		NetworkDispatcher.dispatcher.sendTo(message, player);
+		NetworkManager.dispatcher.sendTo(message, player);
 	}
 
 	/**
@@ -202,7 +201,7 @@ public class NetworkDispatcher {
 	 * {@link SimpleNetworkWrapper#sendToAll(IMessage)}
 	 */
 	public static void sendToAll(IMessage message) {
-		NetworkDispatcher.dispatcher.sendToAll(message);
+		NetworkManager.dispatcher.sendToAll(message);
 	}
 
 	/**
@@ -211,7 +210,7 @@ public class NetworkDispatcher {
 	 * {@link SimpleNetworkWrapper#sendToAllAround(IMessage, NetworkRegistry.TargetPoint)}
 	 */
 	public static void sendToAllAround(IMessage message, EntityPlayer player, double range) {
-		NetworkDispatcher.sendToAllAround(message, player.worldObj.provider.getDimensionId(), player.posX, player.posY,
+		NetworkManager.sendToAllAround(message, player.worldObj.provider.getDimensionId(), player.posX, player.posY,
 				player.posZ, range);
 	}
 
@@ -221,7 +220,7 @@ public class NetworkDispatcher {
 	 * {@link SimpleNetworkWrapper#sendToAllAround(IMessage, NetworkRegistry.TargetPoint)}
 	 */
 	public static void sendToAllAround(IMessage message, int dimension, double x, double y, double z, double range) {
-		NetworkDispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(dimension, x, y, z, range));
+		NetworkManager.sendToAllAround(message, new NetworkRegistry.TargetPoint(dimension, x, y, z, range));
 	}
 
 	/**
@@ -229,7 +228,7 @@ public class NetworkDispatcher {
 	 * {@link SimpleNetworkWrapper#sendToAllAround(IMessage, NetworkRegistry.TargetPoint)}
 	 */
 	public static void sendToAllAround(IMessage message, NetworkRegistry.TargetPoint point) {
-		NetworkDispatcher.dispatcher.sendToAllAround(message, point);
+		NetworkManager.dispatcher.sendToAllAround(message, point);
 	}
 
 	/**
@@ -237,7 +236,7 @@ public class NetworkDispatcher {
 	 * {@link SimpleNetworkWrapper#sendToDimension(IMessage, int)}
 	 */
 	public static void sendToDimension(IMessage message, int dimensionId) {
-		NetworkDispatcher.dispatcher.sendToDimension(message, dimensionId);
+		NetworkManager.dispatcher.sendToDimension(message, dimensionId);
 	}
 
 	/**
@@ -245,6 +244,6 @@ public class NetworkDispatcher {
 	 * {@link SimpleNetworkWrapper#sendToServer(IMessage)}
 	 */
 	public static void sendToServer(IMessage message) {
-		NetworkDispatcher.dispatcher.sendToServer(message);
+		NetworkManager.dispatcher.sendToServer(message);
 	}
 }

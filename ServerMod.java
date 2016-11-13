@@ -1,9 +1,10 @@
 package com.dyn.server;
 
-import com.dyn.server.network.NetworkDispatcher;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.server.proxy.Proxy;
 import com.dyn.server.reference.MetaData;
 import com.dyn.server.reference.Reference;
+import com.dyn.utils.BooleanListener;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -12,7 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:dyn")
 public class ServerMod {
-
+	
 	@Mod.Instance(Reference.MOD_ID)
 	public static ServerMod instance;
 
@@ -28,8 +29,8 @@ public class ServerMod {
 	public void preInit(FMLPreInitializationEvent event) {
 		MetaData.init(event.getModMetadata());
 
-		NetworkDispatcher.registerPackets();
-		NetworkDispatcher.registerMessages();
+		NetworkManager.registerPackets();
+		NetworkManager.registerMessages();
 
 		proxy.preInit();
 	}
