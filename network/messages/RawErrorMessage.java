@@ -1,5 +1,7 @@
 package com.dyn.server.network.messages;
 
+import com.dyn.render.RenderMod;
+import com.dyn.robot.RobotMod;
 import com.dyn.server.ServerMod;
 
 import io.netty.buffer.ByteBuf;
@@ -14,7 +16,9 @@ public class RawErrorMessage implements IMessage {
 		@Override
 		public IMessage onMessage(RawErrorMessage message, MessageContext ctx) {
 			ServerMod.proxy.addScheduledTask(() -> {
-
+				//the respective proxies should check if it can validly handle the error
+				RobotMod.proxy.handleErrorMessage(message.getError(), message.getCode(), message.getLine());
+				RenderMod.proxy.handleErrorMessage(message.getError(), message.getCode(), message.getLine());
 			});
 			return null;
 		}
