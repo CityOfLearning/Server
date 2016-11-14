@@ -4,18 +4,24 @@ import java.util.List;
 
 import com.dyn.DYNServerMod;
 import com.dyn.achievements.handlers.AchievementManager;
+import com.dyn.robot.RobotMod;
+import com.dyn.robot.entity.EntityRobot;
 import com.dyn.server.commands.CommandFreeze;
 import com.dyn.server.database.DBManager;
 import com.dyn.server.network.NetworkManager;
+import com.dyn.server.network.messages.RawErrorMessage;
 import com.dyn.server.network.packets.client.ServerUserlistMessage;
 import com.dyn.utils.CCOLPlayerInfo;
 import com.dyn.utils.PlayerLevel;
 
+import mobi.omegacentauri.raspberryjammod.RaspberryJamMod;
+import mobi.omegacentauri.raspberryjammod.network.CodeEvent;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IThreadListener;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -27,6 +33,12 @@ public class Server implements Proxy {
 	@Override
 	public void addScheduledTask(Runnable runnable) {
 		FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(runnable);
+	}
+
+	@SubscribeEvent
+	public void codeError(CodeEvent.ErrorEvent event) {
+		NetworkManager.sendTo(new RawErrorMessage(event.getCode(), event.getError(), event.getLine()),
+				(EntityPlayerMP) event.getPlayer());
 	}
 
 	/**
@@ -58,6 +70,7 @@ public class Server implements Proxy {
 
 	@Override
 	public void init() {
+		RaspberryJamMod.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(this);
 		((CommandHandler) MinecraftServer.getServer().getCommandManager()).registerCommand(new CommandFreeze());
 	}
@@ -132,6 +145,18 @@ public class Server implements Proxy {
 	public void renderGUI() {
 		// Actions on render GUI for the server (logging)
 
+	}
+
+	// should be fine from server side
+	@SubscribeEvent
+	public void socketClose(CodeEvent.SocketCloseEvent event) {
+		if (RobotMod.robotid2player.inverse().containsKey(event.getPlayer())) {
+			World world = event.getPlayer().worldObj;
+			EntityRobot robot = (EntityRobot) world
+					.getEntityByID(RobotMod.robotid2player.inverse().get(event.getPlayer()));
+			DYNServerMod.logger.info("Stop Executing Code from Socket Message");
+			robot.stopExecutingCode();
+		}
 	}
 
 }

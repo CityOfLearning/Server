@@ -7,6 +7,7 @@ import com.dyn.server.network.messages.MessageOpenRobotInventory;
 import com.dyn.server.network.messages.MessageRunPythonScript;
 import com.dyn.server.network.messages.MessageRunRobotScript;
 import com.dyn.server.network.messages.MessageToggleRobotFollow;
+import com.dyn.server.network.messages.RawErrorMessage;
 import com.dyn.server.network.packets.AbstractMessage;
 import com.dyn.server.network.packets.bidirectional.MentorRequstScriptMessage;
 import com.dyn.server.network.packets.bidirectional.RequestStudentScriptMessage;
@@ -130,6 +131,8 @@ public class NetworkManager {
 		registerMessage(MessageToggleRobotFollow.class, MessageToggleRobotFollow.Handler.class, Side.SERVER);
 		registerMessage(MessageDebugRobot.class, MessageDebugRobot.Handler.class, Side.SERVER);
 		registerMessage(MessageOpenRobotInventory.class, MessageOpenRobotInventory.Handler.class, Side.SERVER);
+		
+		registerMessage(RawErrorMessage.class, RawErrorMessage.Handler.class, Side.CLIENT);
 	}
 	// ========================================================//
 	// The following methods are the 'wrapper' methods; again,
@@ -182,7 +185,7 @@ public class NetworkManager {
 		registerMessage(StudentCommandBlockMessage.class);
 		registerMessage(SyncSkinsServerMessage.class);
 		registerMessage(SyncNamesServerMessage.class);
-		
+
 		// Bidirectional Packets
 		registerMessage(RequestStudentScriptMessage.class);
 		registerMessage(MentorRequstScriptMessage.class);
