@@ -27,22 +27,31 @@ public class MessageDialogUpdate implements IMessage {
 				World world = ctx.getServerHandler().playerEntity.getEntityWorld();
 				TileEntity tileEntity = world.getTileEntity(message.getPos());
 				if (tileEntity instanceof DialogBlockTileEntity) {
-					((DialogBlockTileEntity) tileEntity).setData(message.getText(), message.getXRadius(),
-							message.getYRadius(), message.getZRadius());
+					((DialogBlockTileEntity) tileEntity).setData(message.getText(), message.getCorner1(),
+							message.getCorner2());
 					if (!message.getEntity().isEmpty()) {
 						System.out.println(message.getEntity());
-						if(message.getEntity().equals("DisplayHead")){
-							((DialogBlockTileEntity) tileEntity).setEntity(new DisplayEntityHead(tileEntity.getWorld()));
-						} else if(message.getEntity().equals("DisplayEntity")){
-							((DialogBlockTileEntity) tileEntity).setEntity(new DisplayEntity(tileEntity.getWorld()));
-						} else {
-							((DialogBlockTileEntity) tileEntity).setEntity((EntityLivingBase) EntityList
-								.createEntityByName(message.getEntity(), tileEntity.getWorld()));
+						try {
+							int id = Integer.parseInt(message.getEntity());
+							((DialogBlockTileEntity) tileEntity).setEntity(
+									(EntityLivingBase) EntityList.createEntityByID(id, tileEntity.getWorld()), id);
+						} catch (NumberFormatException nfe) {
+							if (message.getEntity().equals("DisplayHead")) {
+								((DialogBlockTileEntity) tileEntity)
+										.setEntity(new DisplayEntityHead(tileEntity.getWorld()), 90);
+							} else if (message.getEntity().equals("DisplayEntity")) {
+								((DialogBlockTileEntity) tileEntity).setEntity(new DisplayEntity(tileEntity.getWorld()),
+										90);
+							} else {
+								((DialogBlockTileEntity) tileEntity).setEntity((EntityLivingBase) EntityList
+										.createEntityByName(message.getEntity(), tileEntity.getWorld()), 90);
+							}
 						}
-						
 					}
-					if(((DialogBlockTileEntity) tileEntity).getEntity() instanceof DisplayEntity && !message.getSkin().isEmpty()){
-						((DisplayEntity) ((DialogBlockTileEntity) tileEntity).getEntity()).setTexture(new ResourceLocation(message.getSkin()));
+					if (((DialogBlockTileEntity) tileEntity).getEntity() instanceof DisplayEntity
+							&& !message.getSkin().isEmpty()) {
+						((DisplayEntity) ((DialogBlockTileEntity) tileEntity).getEntity())
+								.setTexture(new ResourceLocation(message.getSkin()));
 					}
 					((DialogBlockTileEntity) tileEntity).markForUpdate();
 				}
@@ -53,10 +62,8 @@ public class MessageDialogUpdate implements IMessage {
 
 	private BlockPos pos;
 	private String text;
-	private int blockX;
-	private int blockY;
-
-	private int blockZ;
+	private BlockPos corner1;
+	private BlockPos corner2;
 	private String entity;
 	private String skin;
 
@@ -67,14 +74,14 @@ public class MessageDialogUpdate implements IMessage {
 		return skin;
 	}
 
-	public MessageDialogUpdate(String entity, String skin, BlockPos pos, String text, int xradius, int yradius, int zradius) {
+	public MessageDialogUpdate(String entity, String skin, BlockPos pos, String text, BlockPos corner1,
+			BlockPos corner2) {
 		this.entity = entity;
 		this.pos = pos;
 		this.text = text;
 		this.skin = skin;
-		blockX = xradius;
-		blockY = yradius;
-		blockZ = zradius;
+		this.corner1 = corner1;
+		this.corner2 = corner2;
 	}
 
 	@Override
@@ -82,9 +89,8 @@ public class MessageDialogUpdate implements IMessage {
 		entity = ByteBufUtils.readUTF8String(buf);
 		pos = BlockPos.fromLong(buf.readLong());
 		text = ByteBufUtils.readUTF8String(buf);
-		blockX = buf.readInt();
-		blockY = buf.readInt();
-		blockZ = buf.readInt();
+		corner1 = BlockPos.fromLong(buf.readLong());
+		corner2 = BlockPos.fromLong(buf.readLong());
 		skin = ByteBufUtils.readUTF8String(buf);
 	}
 
@@ -96,16 +102,12 @@ public class MessageDialogUpdate implements IMessage {
 		return text;
 	}
 
-	public int getXRadius() {
-		return blockX;
+	public BlockPos getCorner1() {
+		return corner1;
 	}
 
-	public int getYRadius() {
-		return blockY;
-	}
-
-	public int getZRadius() {
-		return blockZ;
+	public BlockPos getCorner2() {
+		return corner2;
 	}
 
 	public String getEntity() {
@@ -117,9 +119,8 @@ public class MessageDialogUpdate implements IMessage {
 		ByteBufUtils.writeUTF8String(buf, entity);
 		buf.writeLong(pos.toLong());
 		ByteBufUtils.writeUTF8String(buf, text);
-		buf.writeInt(blockX);
-		buf.writeInt(blockY);
-		buf.writeInt(blockZ);
+		buf.writeLong(corner1.toLong());
+		buf.writeLong(corner2.toLong());
 		ByteBufUtils.writeUTF8String(buf, skin);
 	}
 }
