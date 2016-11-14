@@ -6,7 +6,6 @@ import com.rabbit.gui.component.display.entity.DisplayEntity;
 import com.rabbit.gui.component.display.entity.DisplayEntityHead;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
@@ -48,7 +47,7 @@ public class MessageDialogUpdate implements IMessage {
 							}
 						}
 					}
-					if (((DialogBlockTileEntity) tileEntity).getEntity() instanceof DisplayEntity
+					if ((((DialogBlockTileEntity) tileEntity).getEntity() instanceof DisplayEntity)
 							&& !message.getSkin().isEmpty()) {
 						((DisplayEntity) ((DialogBlockTileEntity) tileEntity).getEntity())
 								.setTexture(new ResourceLocation(message.getSkin()));
@@ -68,10 +67,6 @@ public class MessageDialogUpdate implements IMessage {
 	private String skin;
 
 	public MessageDialogUpdate() {
-	}
-
-	public String getSkin() {
-		return skin;
 	}
 
 	public MessageDialogUpdate(String entity, String skin, BlockPos pos, String text, BlockPos corner1,
@@ -94,14 +89,6 @@ public class MessageDialogUpdate implements IMessage {
 		skin = ByteBufUtils.readUTF8String(buf);
 	}
 
-	public BlockPos getPos() {
-		return pos;
-	}
-
-	public String getText() {
-		return text;
-	}
-
 	public BlockPos getCorner1() {
 		return corner1;
 	}
@@ -112,6 +99,18 @@ public class MessageDialogUpdate implements IMessage {
 
 	public String getEntity() {
 		return entity;
+	}
+
+	public BlockPos getPos() {
+		return pos;
+	}
+
+	public String getSkin() {
+		return skin;
+	}
+
+	public String getText() {
+		return text;
 	}
 
 	@Override

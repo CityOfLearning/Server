@@ -2,7 +2,6 @@ package com.dyn.server.network.packets.bidirectional;
 
 import java.io.IOException;
 
-import com.dyn.DYNServerMod;
 import com.dyn.robot.RobotMod;
 import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage;
@@ -29,10 +28,9 @@ public class RequestStudentScriptMessage extends AbstractMessage<RequestStudentS
 		playerId = id;
 	}
 
-	
 	/****
-	 * from the client grab the current console text
-	 * on the server send the result back to the mentor who requested it
+	 * from the client grab the current console text on the server send the
+	 * result back to the mentor who requested it
 	 */
 	@Override
 	public void process(EntityPlayer player, Side side) {
