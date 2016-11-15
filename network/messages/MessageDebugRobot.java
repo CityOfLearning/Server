@@ -5,7 +5,6 @@ import com.dyn.robot.entity.EntityRobot;
 import com.dyn.server.ServerMod;
 
 import io.netty.buffer.ByteBuf;
-import mobi.omegacentauri.raspberryjammod.util.Location;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -88,8 +87,6 @@ public class MessageDebugRobot implements IMessage {
 							|| Block.isEqualTo(robot.worldObj.getBlockState(curLoc).getBlock(), Blocks.wooden_button)) {
 						interactBlock = curLoc;
 					} else {
-						// when using left right commands
-						// robot.rotationYaw = robot.rotationYawHead;
 						switch (robot.getHorizontalFacing()) {
 						case NORTH:
 							interactBlock = curLoc.north();
@@ -135,24 +132,22 @@ public class MessageDebugRobot implements IMessage {
 					}
 					// only place the block if the block is air
 					if (robot.worldObj.getBlockState(placeBlock).getBlock() == Blocks.air) {
-						Location pos = new Location(robot.worldObj, placeBlock.getX(), placeBlock.getY(),
-								placeBlock.getZ());
 						if (!robot.isInventoryEmpty()) {
 							for (int i = 0; i < robot.m_inventory.getSizeInventory(); i++) {
 								ItemStack slot = robot.m_inventory.getStackInSlot(i);
 								if (slot != null) {
 									Block inventoryBlock = Block.getBlockFromItem(slot.getItem());
 									if ((inventoryBlock != null)
-											&& inventoryBlock.canPlaceBlockAt(robot.worldObj, pos)) {
+											&& inventoryBlock.canPlaceBlockAt(robot.worldObj, placeBlock)) {
 										robot.m_inventory.decrStackSize(i, 1);
-										pos.getWorld().setBlockState(pos, inventoryBlock.getBlockState().getBaseState(),
+										robot.worldObj.setBlockState(placeBlock, inventoryBlock.getBlockState().getBaseState(),
 												3);
 										break;
 									}
 								}
 							}
 						} else {
-							pos.getWorld().setBlockState(pos, Blocks.dirt.getDefaultState(), 3);
+							robot.worldObj.setBlockState(placeBlock, Blocks.dirt.getDefaultState(), 3);
 						}
 					}
 					break;
