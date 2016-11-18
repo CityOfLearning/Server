@@ -6,6 +6,7 @@ import com.dyn.robot.RobotMod;
 import com.dyn.robot.entity.DynRobotEntity;
 import com.dyn.robot.entity.EntityRobot;
 import com.dyn.server.ServerMod;
+import com.forgeessentials.chat.Censor;
 import com.forgeessentials.multiworld.ModuleMultiworld;
 
 import io.netty.buffer.ByteBuf;
@@ -36,7 +37,7 @@ public class MessageActivateRobot implements IMessage {
 							message.getPosition().getX() + 0.5, message.getPosition().getY(),
 							message.getPosition().getZ() + 0.5);
 					new_robot.setOwner(ctx.getServerHandler().playerEntity);
-					new_robot.setRobotName(message.getName());
+					new_robot.setRobotName(Censor.filter(message.getName()));
 				} else {
 					List<EntityRobot> robots = ctx.getServerHandler().playerEntity.worldObj.getEntitiesWithinAABB(
 							EntityRobot.class,
