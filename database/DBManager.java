@@ -758,7 +758,7 @@ public class DBManager {
 			// Dynamically load driver at runtime.
 			// Redshift JDBC 4.1 driver: com.amazon.redshift.jdbc41.Driver
 			// Redshift JDBC 4 driver: com.amazon.redshift.jdbc4.Driver
-			Class.forName("com.amazon.redshift.jdbc41.Driver");
+			Class.forName("com.amazon.redshift.jdbc42.Driver");
 
 			// Open a connection and define properties.
 			DYNServerMod.logger.info("Connecting to database...");
