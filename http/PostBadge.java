@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.dyn.DYNServerMod;
 import com.dyn.achievements.achievement.AchievementPlus;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -131,7 +132,7 @@ public class PostBadge extends Thread {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			DYNServerMod.logger.error("Could not get complete Badge post request", e);
 		}
 	}
 }

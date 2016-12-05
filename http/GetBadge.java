@@ -12,6 +12,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 
+import com.dyn.DYNServerMod;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -82,7 +83,7 @@ public class GetBadge extends Thread {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			DYNServerMod.logger.error("Could not get Badge", e);
 		}
 	}
 }

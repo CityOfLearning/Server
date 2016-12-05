@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import com.dyn.DYNServerMod;
 import com.dyn.utils.BooleanListener;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -81,23 +82,20 @@ public class GetProgramRoster extends Thread {
 
 			if (entity != null) {
 				response = EntityUtils.toString(entity);
+				System.out.println(response);
 				JsonParser jParse = new JsonParser();
 				jsonResponse = jParse.parse(response);
 
 				responseReceived.setFlag(true);
 			}
 		} catch (InvalidKeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DYNServerMod.logger.error("Key is invalid", e);
 		} catch (SignatureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DYNServerMod.logger.error("Signature is invalid", e);
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DYNServerMod.logger.error("HTTP Protocol error", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DYNServerMod.logger.error("Failed parsing JSON file", e);
 		}
 	}
 }

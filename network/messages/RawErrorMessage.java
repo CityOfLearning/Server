@@ -16,7 +16,8 @@ public class RawErrorMessage implements IMessage {
 		@Override
 		public IMessage onMessage(RawErrorMessage message, MessageContext ctx) {
 			ServerMod.proxy.addScheduledTask(() -> {
-				//the respective proxies should check if it can validly handle the error
+				// the respective proxies should check if it can validly handle
+				// the error
 				RobotMod.proxy.handleErrorMessage(message.getError(), message.getCode(), message.getLine());
 				RenderMod.proxy.handleErrorMessage(message.getError(), message.getCode(), message.getLine());
 			});

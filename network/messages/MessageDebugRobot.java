@@ -140,8 +140,8 @@ public class MessageDebugRobot implements IMessage {
 									if ((inventoryBlock != null)
 											&& inventoryBlock.canPlaceBlockAt(robot.worldObj, placeBlock)) {
 										robot.m_inventory.decrStackSize(i, 1);
-										robot.worldObj.setBlockState(placeBlock, inventoryBlock.getBlockState().getBaseState(),
-												3);
+										robot.worldObj.setBlockState(placeBlock,
+												inventoryBlock.getBlockState().getBaseState(), 3);
 										break;
 									}
 								}
