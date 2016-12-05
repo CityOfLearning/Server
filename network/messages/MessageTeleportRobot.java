@@ -21,8 +21,13 @@ public class MessageTeleportRobot implements IMessage {
 				World world = player.worldObj;
 				EntityRobot robot = (EntityRobot) world.getEntityByID(message.getEntityId());
 				BlockPos pos = player.getPosition();
-				robot.travelToDimension(player.dimension);
-				robot.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
+				if (robot.dimension != player.dimension) {
+					robot.travelToDimension(player.dimension);
+				}
+				robot.setPosition(pos.getX(), pos.getY(), pos.getZ());
+//				robot.setPositionAndRotation2(x, y, z, yaw, pitch, posRotationIncrements, p_180426_10_);
+				robot.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), robot.rotationYaw, robot.rotationPitch);
+				robot.getNavigator().clearPathEntity();
 			});
 			return null;
 		}
