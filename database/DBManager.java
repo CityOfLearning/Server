@@ -30,6 +30,7 @@ public class DBManager {
 
 	public static boolean checkLicenseActive(String licenseKey) {
 		if (initialized) {
+			DYNServerMod.logger.info("Checking if licence is active");
 			try {
 				String sql = "select * from mc_user_license where license_key='" + licenseKey + "'";
 
@@ -38,13 +39,14 @@ public class DBManager {
 				rs = stmt.executeQuery(sql);
 
 				if (rs.next()) {
-
-					if (rs.getDate("start_dt").before(new Date(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)))) {
+					if (rs.getDate("start_dt")
+							.compareTo(new Date(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) * 1000)) > 0) {
 						DYNServerMod.logger.error("License is not active yet");
 						return false;
 					}
 
-					if (rs.getDate("end_dt").before(new Date(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)))) {
+					if (rs.getDate("end_dt")
+							.compareTo(new Date(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) * 1000)) < 0) {
 						DYNServerMod.logger.error("License is expired");
 						return false;
 					}
@@ -55,8 +57,7 @@ public class DBManager {
 				return false;
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -66,6 +67,7 @@ public class DBManager {
 
 	public static JsonObject getAchievementDBAsJson() {
 		if (initialized) {
+			DYNServerMod.logger.info("Grabbing Achievements from Database");
 			try {
 				JsonObject reply = new JsonObject();
 				String sql = "select ach_id from achievements";
@@ -94,6 +96,7 @@ public class DBManager {
 					// build the achievement body first
 
 					achievement.addProperty("name", rs.getString("name"));
+					DYNServerMod.logger.info("Adding Achievement: " + rs.getString("name"));
 					achievement.addProperty("desc", rs.getString("description"));
 					achievement.addProperty("ach_id", id);
 					achievement.addProperty("map_id", rs.getInt("map_id"));
@@ -346,8 +349,7 @@ public class DBManager {
 				return reply;
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -357,6 +359,7 @@ public class DBManager {
 
 	public static JsonObject getAchievementMapDBAsJson() {
 		if (initialized) {
+			DYNServerMod.logger.info("Creadting Achievement Mappings");
 			try {
 				JsonObject reply = new JsonObject();
 				String sql = "select map_id from achievement_maps";
@@ -398,8 +401,7 @@ public class DBManager {
 				return reply;
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -410,6 +412,7 @@ public class DBManager {
 	// this can be a null value
 	public static UUID getCCOLId(UUID user_id) {
 		if (initialized) {
+			DYNServerMod.logger.info("Checking for City of Learning ID");
 			try {
 				String sql = "select ccol_id from users where user_id='" + user_id + "'";
 
@@ -427,8 +430,7 @@ public class DBManager {
 				return null;
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -438,6 +440,7 @@ public class DBManager {
 
 	public static String getDisplayName(UUID user_id) {
 		if (initialized) {
+			DYNServerMod.logger.info("Checking if display name exists");
 			try {
 				String sql = "select display_name from users where user_id='" + user_id + "'";
 
@@ -453,8 +456,7 @@ public class DBManager {
 				return "";
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -468,6 +470,7 @@ public class DBManager {
 
 	public static int getIdFromLicenseKey(String licenseKey) {
 		if (initialized) {
+			DYNServerMod.logger.info("Finding User ID from key");
 			if (checkLicenseActive(licenseKey)) {
 				try {
 
@@ -485,8 +488,7 @@ public class DBManager {
 					return -1;
 
 				} catch (SQLException e) {
-					DYNServerMod.logger.error("Could not execute database request");
-					e.printStackTrace();
+					DYNServerMod.logger.error("Could not execute database request", e);
 				}
 			}
 		} else {
@@ -498,6 +500,7 @@ public class DBManager {
 	// this can be a null value
 	public static JsonObject getInfoFromCCOLAccount(UUID ccol_id) {
 		if (initialized) {
+			DYNServerMod.logger.info("Grabbing City of Learning Account Information");
 			try {
 				JsonObject reply = new JsonObject();
 				String sql = "select * from ccol_account where ccol_id='" + ccol_id + "'";
@@ -517,8 +520,7 @@ public class DBManager {
 				return null;
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -529,6 +531,7 @@ public class DBManager {
 	// this can be a null value
 	public static JsonObject getInfoFromUserAccount(UUID user_id) {
 		if (initialized) {
+			DYNServerMod.logger.info("Accessing User Account Information");
 			try {
 				JsonObject reply = new JsonObject();
 				String sql = "select * from users where user_id='" + user_id + "'";
@@ -550,8 +553,7 @@ public class DBManager {
 				return null;
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -561,6 +563,7 @@ public class DBManager {
 
 	public static String getLicenceFromUsernameAndPassword(String username, String password) {
 		if (initialized) {
+			DYNServerMod.logger.info("Checking Licence");
 			try {
 				String sql = "select license_key from mc_license where username='" + username + "' and password='"
 						+ password + "'";
@@ -577,8 +580,7 @@ public class DBManager {
 				return "";
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -588,6 +590,7 @@ public class DBManager {
 
 	public static String getMCUsernameFromUserId(UUID user_id) {
 		if (initialized) {
+			DYNServerMod.logger.info("Getting Minecraft Username from User Id");
 			try {
 				String sql = "select mc_account_id from user_registrations where user_id='" + user_id + "'";
 
@@ -607,8 +610,7 @@ public class DBManager {
 				return "";
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -618,6 +620,7 @@ public class DBManager {
 
 	public static String getPlayerSkin(String player) {
 		if (initialized) {
+			DYNServerMod.logger.info("Checking Database for Player Skin file");
 			try {
 				String sql = "select skin_texture from mc_account where mc_name='" + player + "'";
 
@@ -633,8 +636,7 @@ public class DBManager {
 				return "";
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -644,6 +646,7 @@ public class DBManager {
 
 	public static String getPlayerStatus(String username) {
 		if (initialized) {
+			DYNServerMod.logger.info("Checking Player Access Level");
 			try {
 				String sql = "select license_type from mc_account where mc_name='" + username + "'";
 
@@ -659,8 +662,7 @@ public class DBManager {
 				return "";
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -670,6 +672,7 @@ public class DBManager {
 
 	public static UUID getUserIdFromCCOLId(UUID ccol_id) {
 		if (initialized) {
+			DYNServerMod.logger.info("Finding matching User Id from City of Learning Id");
 			try {
 				String sql = "select user_id from users where ccol_id='" + ccol_id + "'";
 
@@ -685,8 +688,7 @@ public class DBManager {
 				return null;
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -696,6 +698,7 @@ public class DBManager {
 
 	public static UUID getUserIDFromMCUsername(String username) {
 		if (initialized) {
+			DYNServerMod.logger.info("Grabbing User Id from Minecraft Username");
 			try {
 				// get accoutnt id, then check the registration and dates, then
 				// user info
@@ -719,8 +722,7 @@ public class DBManager {
 				return null;
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -730,6 +732,7 @@ public class DBManager {
 
 	public static List<String> getWorldsNeedingRefresh() {
 		if (initialized) {
+			DYNServerMod.logger.info("Checking if World needs to be refreshed");
 			try {
 				List<String> worlds = new ArrayList<String>();
 				String sql = "select world_name from worlds where flag_refresh='true'";
@@ -744,8 +747,7 @@ public class DBManager {
 				return worlds;
 
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
@@ -776,23 +778,21 @@ public class DBManager {
 			DYNServerMod.logger.info("Database Initialized");
 
 		} catch (ClassNotFoundException e) {
-			DYNServerMod.logger.error("Failed to load database class, jar may be missing");
-			e.printStackTrace();
+			DYNServerMod.logger.error("Failed to load database class, jar may be missing", e);
 		} catch (SQLException e) {
-			DYNServerMod.logger.error("Failed to initialize SQL connection to database");
-			e.printStackTrace();
+			DYNServerMod.logger.error("Failed to initialize SQL connection to database", e);
 		}
 	}
 
 	public static void setPlayerSkin(String player, String skin) {
 		if (initialized) {
+			DYNServerMod.logger.info("Setting Player Skin from Database");
 			try {
 				// even though the mc_name isnt the primary key its still
 				// unique, only its mutable
 				stmt.execute("update mc_account set skin_texture='" + skin + "' where mc_name='" + player + "'");
 			} catch (SQLException e) {
-				DYNServerMod.logger.error("Could not execute database request");
-				e.printStackTrace();
+				DYNServerMod.logger.error("Could not execute database request", e);
 			}
 		} else {
 			DYNServerMod.logger.error("Database Manager not initialized");
