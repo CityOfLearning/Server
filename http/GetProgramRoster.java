@@ -82,7 +82,6 @@ public class GetProgramRoster extends Thread {
 
 			if (entity != null) {
 				response = EntityUtils.toString(entity);
-				System.out.println(response);
 				JsonParser jParse = new JsonParser();
 				jsonResponse = jParse.parse(response);
 

@@ -29,7 +29,6 @@ public class MessageDialogUpdate implements IMessage {
 					((DialogBlockTileEntity) tileEntity).setData(message.getText(), message.getCorner1(),
 							message.getCorner2());
 					if (!message.getEntity().isEmpty()) {
-						System.out.println(message.getEntity());
 						try {
 							int id = Integer.parseInt(message.getEntity());
 							((DialogBlockTileEntity) tileEntity).setEntity(
