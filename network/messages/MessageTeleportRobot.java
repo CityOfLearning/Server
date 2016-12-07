@@ -20,13 +20,16 @@ public class MessageTeleportRobot implements IMessage {
 				EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 				World world = player.worldObj;
 				EntityRobot robot = (EntityRobot) world.getEntityByID(message.getEntityId());
-				BlockPos pos = player.getPosition();
+				BlockPos pos = player.getPosition().offset(player.getHorizontalFacing());
 				if (robot.dimension != player.dimension) {
 					robot.travelToDimension(player.dimension);
 				}
+				robot.posX = pos.getX();
+				robot.posY = pos.getY();
+				robot.posZ = pos.getZ();
+				System.out.println(pos);
+				robot.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
 				robot.setPosition(pos.getX(), pos.getY(), pos.getZ());
-//				robot.setPositionAndRotation2(x, y, z, yaw, pitch, posRotationIncrements, p_180426_10_);
-				robot.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), robot.rotationYaw, robot.rotationPitch);
 				robot.getNavigator().clearPathEntity();
 			});
 			return null;
