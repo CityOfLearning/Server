@@ -7,12 +7,12 @@ import org.apache.commons.lang3.tuple.MutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 
 public class KeyManager {
-	private static Map<Integer, String> secretKey = new HashMap<Integer, String>();
-	private static Map<Integer, String> orgKey = new HashMap<Integer, String>();
-	private static Triple<String, String, String> ftpKey = new MutableTriple<String, String, String>();
+	private static Map<Integer, String> secretKey = new HashMap<>();
+	private static Map<Integer, String> orgKey = new HashMap<>();
+	private static Triple<String, String, String> ftpKey = new MutableTriple<>();
 
 	public static void addFtpKey(String url, String un, String pw) {
-		KeyManager.ftpKey = new MutableTriple<String, String, String>(url, un, pw);
+		KeyManager.ftpKey = new MutableTriple<>(url, un, pw);
 	}
 
 	public static Triple<String, String, String> getFtpKeys() {

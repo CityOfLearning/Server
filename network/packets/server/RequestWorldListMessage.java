@@ -26,7 +26,7 @@ public class RequestWorldListMessage extends AbstractServerMessage<RequestWorldL
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
 
-			List<String> worlds = new ArrayList<String>();
+			List<String> worlds = new ArrayList<>();
 
 			for (Multiworld world : ModuleMultiworld.getMultiworldManager().getWorlds()) {
 				worlds.add(world.getDimensionId() + ": " + world.getName());

@@ -35,7 +35,7 @@ public class RequestGroupPermissionsMessage extends AbstractServerMessage<Reques
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
 
-			List<String> permissions = new ArrayList<String>();
+			List<String> permissions = new ArrayList<>();
 
 			Map<Zone, Map<String, String>> groupPerms = ModulePermissions.permissionHelper
 					.enumGroupPermissions(groupName, false);

@@ -51,7 +51,7 @@ public class AchievementProgressMessage extends AbstractClientMessage<Achievemen
 				} else { // we need to parse the requirements
 					Requirements reqCopies = Requirements.getCopy(achievement.getRequirements());
 					String[] reqData = splitData[1].split("[$]");
-					List<BaseRequirement> baseCopies = new ArrayList<BaseRequirement>();
+					List<BaseRequirement> baseCopies = new ArrayList<>();
 					for (String req : reqData) {
 						if (req.startsWith("c")) {
 							req = req.substring(1, req.length());

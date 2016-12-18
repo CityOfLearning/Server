@@ -47,7 +47,7 @@ public class RequestZonePermissionsMessage extends AbstractServerMessage<Request
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
 			Zone zone = ModulePermissions.permissionHelper.getZoneById(zoneName);
-			List<String> permissions = new ArrayList<String>();
+			List<String> permissions = new ArrayList<>();
 			if (zone instanceof AreaZone) {
 				Zone rZone = zone.getParent();
 				while (!(rZone instanceof WorldZone) && !(rZone instanceof ServerZone)) {

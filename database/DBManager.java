@@ -76,7 +76,7 @@ public class DBManager {
 
 				rs = stmt.executeQuery(sql);
 
-				List<Integer> achievement_ids = new ArrayList<Integer>();
+				List<Integer> achievement_ids = new ArrayList<>();
 
 				while (rs.next()) {
 					achievement_ids.add(rs.getInt("ach_id"));
@@ -125,7 +125,7 @@ public class DBManager {
 
 					rs = stmt.executeQuery(sql);
 
-					List<String> types = new ArrayList<String>();
+					List<String> types = new ArrayList<>();
 
 					while (rs.next()) {
 						types.add(rs.getString("req_type"));
@@ -368,7 +368,7 @@ public class DBManager {
 
 				rs = stmt.executeQuery(sql);
 
-				List<Integer> map_ids = new ArrayList<Integer>();
+				List<Integer> map_ids = new ArrayList<>();
 
 				while (rs.next()) {
 					map_ids.add(rs.getInt("map_id"));
@@ -734,7 +734,7 @@ public class DBManager {
 		if (initialized) {
 			DYNServerMod.logger.info("Checking if World needs to be refreshed");
 			try {
-				List<String> worlds = new ArrayList<String>();
+				List<String> worlds = new ArrayList<>();
 				String sql = "select world_name from worlds where flag_refresh='true'";
 
 				ResultSet rs;

@@ -40,7 +40,7 @@ public class RequestPlotListMessage extends AbstractServerMessage<RequestPlotLis
 			}
 
 			final WorldPoint playerRef = new WorldPoint(player.getEntityWorld(), player.getPosition());
-			SortedSet<Plot> plots = new TreeSet<Plot>((a, b) -> {
+			SortedSet<Plot> plots = new TreeSet<>((a, b) -> {
 				if (a.getDimension() != playerRef.getDimension()) {
 					if (b.getDimension() == playerRef.getDimension()) {
 						return 1;
@@ -59,7 +59,7 @@ public class RequestPlotListMessage extends AbstractServerMessage<RequestPlotLis
 					plots.add(plot);
 				}
 			}
-			List<String> sPlots = new ArrayList<String>();
+			List<String> sPlots = new ArrayList<>();
 			int plotNum = 1;
 			for (Plot plot : plots) {
 				sPlots.add(String.format("#%d: \"%s\"", plotNum++,

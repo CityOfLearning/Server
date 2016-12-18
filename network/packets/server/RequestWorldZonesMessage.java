@@ -36,7 +36,7 @@ public class RequestWorldZonesMessage extends AbstractServerMessage<RequestWorld
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
 			DYNServerMod.logger.info(worldName);
-			List<String> zones = new ArrayList<String>();
+			List<String> zones = new ArrayList<>();
 
 			Multiworld multiworld = ModuleMultiworld.getMultiworldManager().getMultiworld(worldName);
 			WorldServer world = multiworld != null ? multiworld.getWorldServer()

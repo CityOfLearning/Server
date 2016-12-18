@@ -25,7 +25,7 @@ public class RequestGroupListMessage extends AbstractServerMessage<RequestGroupL
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
 
-			List<String> groups = new ArrayList<String>();
+			List<String> groups = new ArrayList<>();
 
 			for (String group : APIRegistry.perms.getServerZone().getGroups()) {
 				groups.add(group);

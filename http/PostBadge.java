@@ -93,7 +93,7 @@ public class PostBadge extends Thread {
 			postReq.setHeader("Accept", "application/json");
 			postReq.setHeader("Authorization", "JWT token=" + orgKey);
 
-			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+			List<NameValuePair> pairs = new ArrayList<>();
 			pairs.add(new BasicNameValuePair("jwt", token.serializeAndSign()));
 
 			postReq.setEntity(new UrlEncodedFormEntity(pairs));

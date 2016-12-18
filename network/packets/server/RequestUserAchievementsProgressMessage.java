@@ -45,7 +45,7 @@ public class RequestUserAchievementsProgressMessage
 
 			Map<String, Requirements> achProgress = AchievementManager.getPlayerAchievementProgress(username);
 			if (achProgress != null) {
-				List<String> achData = new ArrayList<String>();
+				List<String> achData = new ArrayList<>();
 				ServerConfigurationManager configMan = MinecraftServer.getServer().getConfigurationManager();
 				String achString = "";
 				for (String achKeys : achProgress.keySet()) {
