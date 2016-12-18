@@ -7,7 +7,6 @@ import com.dyn.robot.entity.DynRobotEntity;
 import com.dyn.robot.entity.EntityRobot;
 import com.dyn.server.ServerMod;
 import com.forgeessentials.chat.Censor;
-import com.forgeessentials.multiworld.ModuleMultiworld;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
@@ -16,7 +15,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -29,8 +28,7 @@ public class MessageActivateRobot implements IMessage {
 		public IMessage onMessage(final MessageActivateRobot message, final MessageContext ctx) {
 			ServerMod.proxy.addScheduledTask(() -> {
 				if (message.isActivating()) {
-					WorldServer world1 = ModuleMultiworld.getMultiworldManager()
-							.getWorld(ModuleMultiworld.getMultiworldManager().getWorldName(message.getDimension()));
+					World world1 = ctx.getServerHandler().playerEntity.worldObj;
 					world1.setBlockToAir(message.getPosition());
 					DynRobotEntity new_robot = (DynRobotEntity) ItemMonsterPlacer.spawnCreature(world1,
 							EntityList.classToStringMapping.get(DynRobotEntity.class),
@@ -49,8 +47,7 @@ public class MessageActivateRobot implements IMessage {
 							robot.setDead();
 						}
 					}
-					WorldServer world2 = ModuleMultiworld.getMultiworldManager()
-							.getWorld(ModuleMultiworld.getMultiworldManager().getWorldName(message.getDimension()));
+					World world2 = ctx.getServerHandler().playerEntity.worldObj;
 					world2.setBlockToAir(message.getPosition());
 					world2.setBlockState(message.getPosition(), safeGetStateFromMeta(RobotMod.dynRobot, 0), 3);
 				}
