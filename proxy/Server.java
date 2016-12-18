@@ -16,6 +16,7 @@ import com.dyn.utils.PlayerLevel;
 
 import mobi.omegacentauri.raspberryjammod.RaspberryJamMod;
 import mobi.omegacentauri.raspberryjammod.network.CodeEvent;
+import mobi.omegacentauri.raspberryjammod.network.CodeEvent.RobotErrorEvent;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -37,6 +38,12 @@ public class Server implements Proxy {
 
 	@SubscribeEvent
 	public void codeError(CodeEvent.ErrorEvent event) {
+		if (event instanceof RobotErrorEvent) {
+			EntityPlayer player = event.getPlayer();
+			World world = player.worldObj;
+			EntityRobot robot = (EntityRobot) world.getEntityByID(((RobotErrorEvent) event).getEntityId());
+			robot.stopExecutingCode();
+		}
 		NetworkManager.sendTo(new RawErrorMessage(event.getCode(), event.getError(), event.getLine()),
 				(EntityPlayerMP) event.getPlayer());
 	}

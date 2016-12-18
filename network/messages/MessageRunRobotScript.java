@@ -36,7 +36,7 @@ public class MessageRunRobotScript implements IMessage {
 
 			ServerMod.proxy.addScheduledTask(
 					() -> RunPythonShell.run(Arrays.asList(message.getScript().split(Pattern.quote("\n"))),
-							ctx.getServerHandler().playerEntity));
+							ctx.getServerHandler().playerEntity, true, message.getId()));
 			return null;
 		}
 	}
