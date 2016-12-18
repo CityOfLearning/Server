@@ -7,6 +7,7 @@ import com.dyn.server.network.messages.MessageOpenRobotInventory;
 import com.dyn.server.network.messages.MessageProximityBlockUpdate;
 import com.dyn.server.network.messages.MessageRunPythonScript;
 import com.dyn.server.network.messages.MessageRunRobotScript;
+import com.dyn.server.network.messages.MessageTeleportRobot;
 import com.dyn.server.network.messages.MessageTimerBlockUpdate;
 import com.dyn.server.network.messages.MessageToggleRobotFollow;
 import com.dyn.server.network.messages.RawErrorMessage;
@@ -135,6 +136,7 @@ public class NetworkManager {
 		registerMessage(MessageOpenRobotInventory.class, MessageOpenRobotInventory.Handler.class, Side.SERVER);
 		registerMessage(MessageTimerBlockUpdate.class, MessageTimerBlockUpdate.Handler.class, Side.SERVER);
 		registerMessage(MessageProximityBlockUpdate.class, MessageProximityBlockUpdate.Handler.class, Side.SERVER);
+		registerMessage(MessageTeleportRobot.class, MessageTeleportRobot.Handler.class, Side.SERVER);
 
 		registerMessage(RawErrorMessage.class, RawErrorMessage.Handler.class, Side.CLIENT);
 	}
