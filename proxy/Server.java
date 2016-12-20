@@ -24,7 +24,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -138,6 +140,17 @@ public class Server implements Proxy {
 	@SubscribeEvent
 	public void logoutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
 		CCOLPlayerInfo.writeDataToJson(event.player, new CCOLPlayerInfo(event.player.getName()));
+	}
+	
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void chatEvent(ServerChatEvent event){
+		if(event.player != null){
+			event.setCanceled(true);
+			//only send to players in the same dimension
+			for(EntityPlayer player : event.player.worldObj.playerEntities){
+				player.addChatComponentMessage(event.getComponent());
+			}
+		}
 	}
 
 	@Override
