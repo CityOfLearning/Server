@@ -36,7 +36,7 @@ public class RequestStudentScriptMessage extends AbstractMessage<RequestStudentS
 	public void process(EntityPlayer player, Side side) {
 		if (side.isClient()) {
 			NetworkManager.sendToServer(new RequestStudentScriptMessage(
-					RobotMod.proxy.getProgrammingInterface().getConsoleText(), playerId));
+					RobotMod.proxy.getProgrammingInterfaceText(), playerId));
 		} else {
 			EntityPlayerMP mentor = null;
 			for (World w : MinecraftServer.getServer().worldServers) {
