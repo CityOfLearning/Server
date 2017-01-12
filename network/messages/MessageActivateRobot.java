@@ -3,18 +3,21 @@ package com.dyn.server.network.messages;
 import java.util.List;
 
 import com.dyn.robot.RobotMod;
+import com.dyn.robot.blocks.BlockDynRobot;
 import com.dyn.robot.entity.DynRobotEntity;
 import com.dyn.robot.entity.EntityRobot;
 import com.dyn.server.ServerMod;
-import com.forgeessentials.chat.Censor;
+import com.dyn.server.network.NetworkManager;
+import com.dyn.utils.HelperFunctions;
+import com.forgeessentials.commons.Censor;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.ItemMonsterPlacer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -27,15 +30,29 @@ public class MessageActivateRobot implements IMessage {
 		@Override
 		public IMessage onMessage(final MessageActivateRobot message, final MessageContext ctx) {
 			ServerMod.proxy.addScheduledTask(() -> {
+				EnumFacing dir = EnumFacing.NORTH;
+				World world = ctx.getServerHandler().playerEntity.worldObj;
+
 				if (message.isActivating()) {
-					World world1 = ctx.getServerHandler().playerEntity.worldObj;
-					world1.setBlockToAir(message.getPosition());
-					DynRobotEntity new_robot = (DynRobotEntity) ItemMonsterPlacer.spawnCreature(world1,
+					dir = world.getBlockState(message.getPosition()).getValue(BlockDynRobot.FACING);
+					world.setBlockToAir(message.getPosition());
+					DynRobotEntity new_robot = (DynRobotEntity) ItemMonsterPlacer.spawnCreature(world,
 							EntityList.classToStringMapping.get(DynRobotEntity.class),
 							message.getPosition().getX() + 0.5, message.getPosition().getY(),
 							message.getPosition().getZ() + 0.5);
 					new_robot.setOwner(ctx.getServerHandler().playerEntity);
 					new_robot.setRobotName(Censor.filter(message.getName()));
+					new_robot.rotate(HelperFunctions.getAngleFromFacing(dir));
+					NetworkManager.sendTo(new MessageOpenRobotRemoteInterface(new_robot.getEntityId()),
+							ctx.getServerHandler().playerEntity);
+					/*
+					 * Minecraft.getMinecraft().getSoundHandler()
+					 * .playSound(PositionedSoundRecord.create(new
+					 * ResourceLocation("dynrobot:robot.on"), (float)
+					 * (message.getPosition().getX() + 0.5),
+					 * message.getPosition().getY(),
+					 * message.getPosition().getZ() + 0.5f));
+					 */
 				} else {
 					List<EntityRobot> robots = ctx.getServerHandler().playerEntity.worldObj.getEntitiesWithinAABB(
 							EntityRobot.class,
@@ -44,23 +61,15 @@ public class MessageActivateRobot implements IMessage {
 									message.getPosition().getY() + 1, message.getPosition().getZ() + 1));
 					for (EntityRobot robot : robots) {
 						if (robot.isOwner(ctx.getServerHandler().playerEntity)) {
+							dir = robot.getHorizontalFacing();
 							robot.setDead();
 						}
 					}
-					World world2 = ctx.getServerHandler().playerEntity.worldObj;
-					world2.setBlockToAir(message.getPosition());
-					world2.setBlockState(message.getPosition(), safeGetStateFromMeta(RobotMod.dynRobot, 0), 3);
+					ctx.getServerHandler().playerEntity.inventory
+							.addItemStackToInventory(new ItemStack(RobotMod.dynRobot, 1, dir.ordinal()));
 				}
 			});
 			return null;
-		}
-
-		private IBlockState safeGetStateFromMeta(Block b, int meta) {
-			try {
-				return b.getStateFromMeta(meta);
-			} catch (Exception e) {
-				return b.getStateFromMeta(0);
-			}
 		}
 	}
 

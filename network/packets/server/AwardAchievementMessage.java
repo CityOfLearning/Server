@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class AwardAchievementMessage extends AbstractServerMessage<AwardAchievementMessage> {
 	private int id;
-	private UUID fake_uuid = UUID.fromString("00000000-0000-0000-0000-000000000000");
+	private final UUID fake_uuid = UUID.fromString("00000000-0000-0000-0000-000000000000");
 	private UUID ccol_uuid;
 	private String player_name;
 
@@ -39,7 +39,7 @@ public class AwardAchievementMessage extends AbstractServerMessage<AwardAchievem
 	@Override
 	public void process(EntityPlayer player, Side side) {
 		if (side.isServer()) {
-			if (ccol_uuid != fake_uuid) {
+			if (!ccol_uuid.equals(fake_uuid)) {
 				AchievementManager.findAchievementById(id).awardAchievement(player, ccol_uuid);
 			} else {
 				AchievementManager.findAchievementById(id).awardAchievement(player, null);
@@ -59,8 +59,9 @@ public class AwardAchievementMessage extends AbstractServerMessage<AwardAchievem
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataOutputStream
+		buffer.writeString(player_name);
 		buffer.writeInt(id);
 		buffer.writeUuid(ccol_uuid);
-		buffer.writeString(player_name);
+
 	}
 }

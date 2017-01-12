@@ -4,6 +4,7 @@ import com.dyn.server.network.messages.MessageActivateRobot;
 import com.dyn.server.network.messages.MessageDebugRobot;
 import com.dyn.server.network.messages.MessageDialogUpdate;
 import com.dyn.server.network.messages.MessageOpenRobotInventory;
+import com.dyn.server.network.messages.MessageOpenRobotRemoteInterface;
 import com.dyn.server.network.messages.MessageProximityBlockUpdate;
 import com.dyn.server.network.messages.MessageRunPythonScript;
 import com.dyn.server.network.messages.MessageRunRobotScript;
@@ -21,6 +22,7 @@ import com.dyn.server.network.packets.client.GroupPermissionsMessage;
 import com.dyn.server.network.packets.client.PlayerStatusMessage;
 import com.dyn.server.network.packets.client.PlotNamesMessage;
 import com.dyn.server.network.packets.client.ReturnFlagMessage;
+import com.dyn.server.network.packets.client.RobotPathMessage;
 import com.dyn.server.network.packets.client.RobotSpeakMessage;
 import com.dyn.server.network.packets.client.ServerUserlistMessage;
 import com.dyn.server.network.packets.client.SyncAchievementsMessage;
@@ -139,6 +141,8 @@ public class NetworkManager {
 		registerMessage(MessageTeleportRobot.class, MessageTeleportRobot.Handler.class, Side.SERVER);
 
 		registerMessage(RawErrorMessage.class, RawErrorMessage.Handler.class, Side.CLIENT);
+		registerMessage(MessageOpenRobotRemoteInterface.class, MessageOpenRobotRemoteInterface.Handler.class,
+				Side.CLIENT);
 	}
 	// ========================================================//
 	// The following methods are the 'wrapper' methods; again,
@@ -164,6 +168,8 @@ public class NetworkManager {
 		registerMessage(SyncAchievementsMessage.class);
 		registerMessage(GroupPermissionsMessage.class);
 		registerMessage(ZonePermissionsMessage.class);
+		registerMessage(RobotPathMessage.class);
+
 		// Packets meant for All players
 		registerMessage(SyncSkinsMessage.class);
 		registerMessage(SyncNamesMessage.class);
