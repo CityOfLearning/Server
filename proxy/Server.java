@@ -38,6 +38,17 @@ public class Server implements Proxy {
 		FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(runnable);
 	}
 
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void chatEvent(ServerChatEvent event) {
+		if (event.player != null) {
+			event.setCanceled(true);
+			// only send to players in the same dimension
+			for (EntityPlayer player : event.player.worldObj.playerEntities) {
+				player.addChatComponentMessage(event.getComponent());
+			}
+		}
+	}
+
 	@SubscribeEvent
 	public void codeError(CodeEvent.ErrorEvent event) {
 		if (event instanceof RobotErrorEvent) {
@@ -124,7 +135,7 @@ public class Server implements Proxy {
 		DYNServerMod.CcolPlayerInfo = new CCOLPlayerInfo(event.player.getName());
 		if ((DYNServerMod.CcolPlayerInfo != null) && (DYNServerMod.CcolPlayerInfo.getCCOLid() != null)) {
 			if (!CCOLPlayerInfo.isReturningCcolUser(DYNServerMod.CcolPlayerInfo)) {
-				CCOLPlayerInfo.writeCCOLInfoToJson(DYNServerMod.CcolPlayerInfo);
+				CCOLPlayerInfo.writeCCOLInfoToJson(DYNServerMod.CcolPlayerInfo, event.player);
 			} else {
 				CCOLPlayerInfo.readCCOLInfo(DYNServerMod.CcolPlayerInfo, true);
 			}
@@ -140,17 +151,6 @@ public class Server implements Proxy {
 	@SubscribeEvent
 	public void logoutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
 		CCOLPlayerInfo.writeDataToJson(event.player, new CCOLPlayerInfo(event.player.getName()));
-	}
-	
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void chatEvent(ServerChatEvent event){
-		if(event.player != null){
-			event.setCanceled(true);
-			//only send to players in the same dimension
-			for(EntityPlayer player : event.player.worldObj.playerEntities){
-				player.addChatComponentMessage(event.getComponent());
-			}
-		}
 	}
 
 	@Override
