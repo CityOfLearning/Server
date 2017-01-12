@@ -43,7 +43,8 @@ public class PostBadge extends Thread {
 	private AchievementPlus achievement;
 
 	public PostBadge(int badgeId, String uuid, String secret, String key, EntityPlayer player, AchievementPlus ach) {
-		if (uuid.isEmpty() || secret.isEmpty() || key.isEmpty()) {
+		if ((uuid == null) || (secret == null) || (key == null) || uuid.isEmpty() || secret.isEmpty()
+				|| key.isEmpty()) {
 			return;
 		}
 		CCOL_UUID = uuid;
