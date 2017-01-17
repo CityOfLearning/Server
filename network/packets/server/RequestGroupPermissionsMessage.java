@@ -16,6 +16,7 @@ import com.forgeessentials.permissions.ModulePermissions;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class RequestGroupPermissionsMessage extends AbstractServerMessage<RequestGroupPermissionsMessage> {
@@ -41,7 +42,8 @@ public class RequestGroupPermissionsMessage extends AbstractServerMessage<Reques
 					.enumGroupPermissions(groupName, false);
 			if (!groupPerms.isEmpty()) {
 				for (Entry<Zone, Map<String, String>> zone : groupPerms.entrySet()) {
-					permissions.add("\u00a7eZone #" + zone.getKey().getId() + "\u00a76 " + zone.getKey().toString());
+					permissions.add(EnumChatFormatting.YELLOW + "Zone #" + zone.getKey().getId()
+							+ EnumChatFormatting.GOLD + " " + zone.getKey().toString());
 					for (Entry<String, String> perm : zone.getValue().entrySet()) {
 						if (perm.getKey().equals(FEPermissions.GROUP)
 								|| perm.getKey().equals(FEPermissions.GROUP_PRIORITY)
@@ -49,7 +51,8 @@ public class RequestGroupPermissionsMessage extends AbstractServerMessage<Reques
 								|| perm.getKey().equals(FEPermissions.SUFFIX)) {
 							continue;
 						}
-						permissions.add("\u00a7d" + perm.getKey() + "\u00a7r = \u00a7a" + perm.getValue());
+						permissions.add(EnumChatFormatting.LIGHT_PURPLE + perm.getKey() + EnumChatFormatting.RESET
+								+ " = " + EnumChatFormatting.GREEN + perm.getValue());
 					}
 				}
 			}
