@@ -1,11 +1,13 @@
 package com.dyn.server.network.packets.client;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 import java.util.regex.Pattern;
 
 import com.dyn.admin.AdminUI;
+import com.dyn.server.ServerMod;
 import com.dyn.server.network.packets.AbstractMessage.AbstractClientMessage;
+import com.forgeessentials.api.permissions.AreaZone;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
@@ -22,9 +24,9 @@ public class WorldZonesMessage extends AbstractClientMessage<WorldZonesMessage> 
 	}
 
 	// We need to initialize our data, so provide a suitable constructor:
-	public WorldZonesMessage(List<String> zones) {
-		for (String s : zones) {
-			data += s + "|";
+	public WorldZonesMessage(Collection<AreaZone> areaZones) {
+		for (AreaZone zone : areaZones) {
+			data += (zone.getId() + "^" + zone.getName() + "|").replace(" ", "");
 		}
 	}
 
@@ -34,12 +36,14 @@ public class WorldZonesMessage extends AbstractClientMessage<WorldZonesMessage> 
 		// tabs are titles and new lines are the items within each requirement
 		// set
 		if (side.isClient() && !data.isEmpty()) {
+			ServerMod.proxy.addScheduledTask(() -> {
 			AdminUI.zones.clear();
 			for (String s : data.split(Pattern.quote("|"))) {
 				String[] subStr = s.split(Pattern.quote("^"));
 				AdminUI.zones.put(Integer.parseInt(subStr[0]), subStr[1]);
 			}
 			AdminUI.zonesMessageRecieved.setFlag(true);
+			});
 		}
 	}
 

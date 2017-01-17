@@ -12,7 +12,8 @@ import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.messages.RawErrorMessage;
 import com.dyn.server.network.packets.client.ServerUserlistMessage;
 import com.dyn.utils.CCOLPlayerInfo;
-import com.dyn.utils.PlayerLevel;
+import com.dyn.utils.PlayerAccessLevel;
+import com.forgeessentials.util.events.PlayerChangedZone;
 
 import mobi.omegacentauri.raspberryjammod.RaspberryJamMod;
 import mobi.omegacentauri.raspberryjammod.network.CodeEvent;
@@ -98,13 +99,13 @@ public class Server implements Proxy {
 	@SubscribeEvent
 	public void loginEvent(PlayerEvent.PlayerLoggedInEvent event) {
 		String playerStatus = DBManager.getPlayerStatus(event.player.getDisplayNameString());
-		PlayerLevel status = PlayerLevel.STUDENT;
+		PlayerAccessLevel status = PlayerAccessLevel.STUDENT;
 		if (playerStatus.contains("Admin")) {
-			status = PlayerLevel.ADMIN;
+			status = PlayerAccessLevel.ADMIN;
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
 					"/p user " + event.player.getDisplayNameString() + " group add _OPS_");
 		} else if (playerStatus.contains("Mentor")) {
-			status = PlayerLevel.MENTOR;
+			status = PlayerAccessLevel.MENTOR;
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
 					"/p user " + event.player.getDisplayNameString() + " group remove _STUDENTS_");
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
@@ -121,7 +122,7 @@ public class Server implements Proxy {
 					"/p user " + event.player.getDisplayNameString() + " group remove _FROZEN_");
 		}
 
-		if (status == PlayerLevel.ADMIN) {
+		if (status == PlayerAccessLevel.ADMIN) {
 			NetworkManager.sendTo(new ServerUserlistMessage(MinecraftServer.getServer().getAllUsernames()),
 					(EntityPlayerMP) event.player);
 		}
@@ -152,6 +153,11 @@ public class Server implements Proxy {
 	public void logoutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
 		CCOLPlayerInfo.writeDataToJson(event.player, new CCOLPlayerInfo(event.player.getName()));
 	}
+
+//	@SubscribeEvent
+//	public void onZoneChange(PlayerChangedZone event) {
+//
+//	}
 
 	@Override
 	public void preInit() {

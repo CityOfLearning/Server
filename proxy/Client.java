@@ -2,7 +2,7 @@ package com.dyn.server.proxy;
 
 import java.util.List;
 
-import com.dyn.DYNServerMod;
+import com.dyn.student.StudentUI;
 import com.forgeessentials.commons.network.Packet1SelectionUpdate;
 
 import net.minecraft.client.Minecraft;
@@ -54,7 +54,7 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 
 	@Override
 	public IMessage onMessage(Packet1SelectionUpdate message, MessageContext ctx) {
-		DYNServerMod.selection = message.getSelection();
+		StudentUI.selection = message.getSelection();
 		return null;
 	}
 
