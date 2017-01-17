@@ -29,6 +29,7 @@ import com.dyn.server.network.packets.client.SyncAchievementsMessage;
 import com.dyn.server.network.packets.client.SyncNamesMessage;
 import com.dyn.server.network.packets.client.SyncSkinsMessage;
 import com.dyn.server.network.packets.client.WorldNamesMessage;
+import com.dyn.server.network.packets.client.WorldZoneAreasMessage;
 import com.dyn.server.network.packets.client.WorldZonesMessage;
 import com.dyn.server.network.packets.client.ZonePermissionsMessage;
 import com.dyn.server.network.packets.server.AwardAchievementMessage;
@@ -163,6 +164,7 @@ public class NetworkManager {
 		registerMessage(GroupNamesMessage.class);
 		registerMessage(WorldNamesMessage.class);
 		registerMessage(WorldZonesMessage.class);
+		registerMessage(WorldZoneAreasMessage.class);
 		registerMessage(ReturnFlagMessage.class);
 		registerMessage(ServerUserlistMessage.class);
 		registerMessage(SyncAchievementsMessage.class);
