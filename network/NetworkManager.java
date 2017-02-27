@@ -1,10 +1,8 @@
 package com.dyn.server.network;
 
 import com.dyn.server.network.messages.MessageActivateRobot;
-import com.dyn.server.network.messages.MessageDebugRobot;
 import com.dyn.server.network.messages.MessageDialogUpdate;
-import com.dyn.server.network.messages.MessageOpenRobotInventory;
-import com.dyn.server.network.messages.MessageOpenRobotRemoteInterface;
+import com.dyn.server.network.messages.MessageOpenRobotInterface;
 import com.dyn.server.network.messages.MessageProximityBlockUpdate;
 import com.dyn.server.network.messages.MessageRunPythonScript;
 import com.dyn.server.network.messages.MessageRunRobotScript;
@@ -135,15 +133,14 @@ public class NetworkManager {
 		registerMessage(MessageRunRobotScript.class, MessageRunRobotScript.Handler.class, Side.SERVER);
 		registerMessage(MessageActivateRobot.class, MessageActivateRobot.Handler.class, Side.SERVER);
 		registerMessage(MessageToggleRobotFollow.class, MessageToggleRobotFollow.Handler.class, Side.SERVER);
-		registerMessage(MessageDebugRobot.class, MessageDebugRobot.Handler.class, Side.SERVER);
-		registerMessage(MessageOpenRobotInventory.class, MessageOpenRobotInventory.Handler.class, Side.SERVER);
 		registerMessage(MessageTimerBlockUpdate.class, MessageTimerBlockUpdate.Handler.class, Side.SERVER);
 		registerMessage(MessageProximityBlockUpdate.class, MessageProximityBlockUpdate.Handler.class, Side.SERVER);
 		registerMessage(MessageTeleportRobot.class, MessageTeleportRobot.Handler.class, Side.SERVER);
+		registerMessage(MessageOpenRobotInterface.class, MessageOpenRobotInterface.Handler.class, Side.SERVER);
 
+		//CLIENT
 		registerMessage(RawErrorMessage.class, RawErrorMessage.Handler.class, Side.CLIENT);
-		registerMessage(MessageOpenRobotRemoteInterface.class, MessageOpenRobotRemoteInterface.Handler.class,
-				Side.CLIENT);
+
 	}
 	// ========================================================//
 	// The following methods are the 'wrapper' methods; again,
