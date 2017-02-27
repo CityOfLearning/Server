@@ -32,7 +32,6 @@ public class MessageRunRobotScript implements IMessage {
 			robot.startExecutingCode();
 
 			RobotAPI.setRobotId(message.getId(), ctx.getServerHandler().playerEntity);
-			RobotAPI.setRobotEcho(message.getId(), message.getEcho());
 
 			ServerMod.proxy.addScheduledTask(
 					() -> RunPythonShell.run(Arrays.asList(message.getScript().split(Pattern.quote("\n"))),

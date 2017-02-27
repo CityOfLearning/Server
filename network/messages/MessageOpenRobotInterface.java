@@ -2,24 +2,25 @@ package com.dyn.server.network.messages;
 
 import com.dyn.robot.RobotMod;
 import com.dyn.robot.entity.EntityRobot;
+import com.dyn.robot.gui.RobotGuiHandler;
 import com.dyn.server.ServerMod;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageOpenRobotRemoteInterface implements IMessage {
+public class MessageOpenRobotInterface implements IMessage {
 
-	public static class Handler implements IMessageHandler<MessageOpenRobotRemoteInterface, IMessage> {
+	public static class Handler implements IMessageHandler<MessageOpenRobotInterface, IMessage> {
 		@Override
-		public IMessage onMessage(final MessageOpenRobotRemoteInterface message, final MessageContext ctx) {
-			ServerMod.proxy.addScheduledTask(() -> {
-				World world = Minecraft.getMinecraft().thePlayer.worldObj;
-				EntityRobot robot = (EntityRobot) world.getEntityByID(message.getEntityId());
-				RobotMod.proxy.openRemoteInterface(robot);
+		public IMessage onMessage(final MessageOpenRobotInterface message, final MessageContext ctx) {
+			ServerMod.proxy.addScheduledTask(() -> {				
+				EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+				player.openGui(RobotMod.instance, RobotGuiHandler.getGuiID(), player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
 			});
 			return null;
 		}
@@ -29,10 +30,10 @@ public class MessageOpenRobotRemoteInterface implements IMessage {
 
 	// The basic, no-argument constructor MUST be included for
 	// automated handling
-	public MessageOpenRobotRemoteInterface() {
+	public MessageOpenRobotInterface() {
 	}
 
-	public MessageOpenRobotRemoteInterface(int id) {
+	public MessageOpenRobotInterface(int id) {
 		entityId = id;
 	}
 
