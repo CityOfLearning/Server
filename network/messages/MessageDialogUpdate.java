@@ -51,6 +51,7 @@ public class MessageDialogUpdate implements IMessage {
 						((DisplayEntity) ((DialogBlockTileEntity) tileEntity).getEntity())
 								.setTexture(new ResourceLocation(message.getSkin()));
 					}
+					((DialogBlockTileEntity) tileEntity).setInterruptible(message.getInterupt());
 					((DialogBlockTileEntity) tileEntity).markForUpdate();
 				}
 			});
@@ -64,18 +65,20 @@ public class MessageDialogUpdate implements IMessage {
 	private BlockPos corner2;
 	private String entity;
 	private String skin;
+	private boolean interupt;
 
 	public MessageDialogUpdate() {
 	}
 
 	public MessageDialogUpdate(String entity, String skin, BlockPos pos, String text, BlockPos corner1,
-			BlockPos corner2) {
+			BlockPos corner2, boolean interupt) {
 		this.entity = entity;
 		this.pos = pos;
 		this.text = text;
 		this.skin = skin;
 		this.corner1 = corner1;
 		this.corner2 = corner2;
+		this.interupt = interupt;
 	}
 
 	@Override
@@ -86,6 +89,7 @@ public class MessageDialogUpdate implements IMessage {
 		corner1 = BlockPos.fromLong(buf.readLong());
 		corner2 = BlockPos.fromLong(buf.readLong());
 		skin = ByteBufUtils.readUTF8String(buf);
+		interupt = buf.readBoolean();
 	}
 
 	public BlockPos getCorner1() {
@@ -120,5 +124,14 @@ public class MessageDialogUpdate implements IMessage {
 		buf.writeLong(corner1.toLong());
 		buf.writeLong(corner2.toLong());
 		ByteBufUtils.writeUTF8String(buf, skin);
+		buf.writeBoolean(interupt);
+	}
+
+	public boolean getInterupt() {
+		return interupt;
+	}
+
+	public void setInterupt(boolean interupt) {
+		this.interupt = interupt;
 	}
 }
