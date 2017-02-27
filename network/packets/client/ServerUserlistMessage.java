@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class ServerUserlistMessage extends AbstractClientMessage<ServerUserlistMessage> {
 
 	// the info needed to increment a requirement
-	private String data;
+	private String data = "";
 
 	// The basic, no-argument constructor MUST be included for
 	// automated handling

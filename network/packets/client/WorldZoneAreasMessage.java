@@ -38,12 +38,12 @@ public class WorldZoneAreasMessage extends AbstractClientMessage<WorldZoneAreasM
 		// set
 		if (side.isClient() && !data.isEmpty()) {
 			ServerMod.proxy.addScheduledTask(() -> {
-			RenderMod.zoneAreas.clear();
-			for (String s : data.split(Pattern.quote("|"))) {
-				String[] subStr = s.split(Pattern.quote("^"));
-				RenderMod.zoneAreas.put(subStr[0], AreaBase.fromString(subStr[1]));
-			}
-			RenderMod.zoneAreasMessageRecieved.setFlag(true);
+				RenderMod.zoneAreas.clear();
+				for (String s : data.split(Pattern.quote("|"))) {
+					String[] subStr = s.split(Pattern.quote("^"));
+					RenderMod.zoneAreas.put(subStr[0], AreaBase.fromString(subStr[1]));
+				}
+				RenderMod.zoneAreasMessageRecieved.setFlag(true);
 			});
 		}
 	}

@@ -37,12 +37,12 @@ public class WorldZonesMessage extends AbstractClientMessage<WorldZonesMessage> 
 		// set
 		if (side.isClient() && !data.isEmpty()) {
 			ServerMod.proxy.addScheduledTask(() -> {
-			AdminUI.zones.clear();
-			for (String s : data.split(Pattern.quote("|"))) {
-				String[] subStr = s.split(Pattern.quote("^"));
-				AdminUI.zones.put(Integer.parseInt(subStr[0]), subStr[1]);
-			}
-			AdminUI.zonesMessageRecieved.setFlag(true);
+				AdminUI.zones.clear();
+				for (String s : data.split(Pattern.quote("|"))) {
+					String[] subStr = s.split(Pattern.quote("^"));
+					AdminUI.zones.put(Integer.parseInt(subStr[0]), subStr[1]);
+				}
+				AdminUI.zonesMessageRecieved.setFlag(true);
 			});
 		}
 	}

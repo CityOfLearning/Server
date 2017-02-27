@@ -13,7 +13,6 @@ import com.dyn.server.network.messages.RawErrorMessage;
 import com.dyn.server.network.packets.client.ServerUserlistMessage;
 import com.dyn.utils.CCOLPlayerInfo;
 import com.dyn.utils.PlayerAccessLevel;
-import com.forgeessentials.util.events.PlayerChangedZone;
 
 import mobi.omegacentauri.raspberryjammod.RaspberryJamMod;
 import mobi.omegacentauri.raspberryjammod.network.CodeEvent;
@@ -154,10 +153,10 @@ public class Server implements Proxy {
 		CCOLPlayerInfo.writeDataToJson(event.player, new CCOLPlayerInfo(event.player.getName()));
 	}
 
-//	@SubscribeEvent
-//	public void onZoneChange(PlayerChangedZone event) {
-//
-//	}
+	// @SubscribeEvent
+	// public void onZoneChange(PlayerChangedZone event) {
+	//
+	// }
 
 	@Override
 	public void preInit() {
