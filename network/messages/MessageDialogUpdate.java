@@ -7,7 +7,7 @@ import com.rabbit.gui.component.display.entity.DisplayEntityHead;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
@@ -29,21 +29,18 @@ public class MessageDialogUpdate implements IMessage {
 					((DialogBlockTileEntity) tileEntity).setData(message.getText(), message.getCorner1(),
 							message.getCorner2());
 					if (!message.getEntity().isEmpty()) {
-						try {
-							int id = Integer.parseInt(message.getEntity());
-							((DialogBlockTileEntity) tileEntity).setEntity(
-									(EntityLivingBase) EntityList.createEntityByID(id, tileEntity.getWorld()), id);
-						} catch (NumberFormatException nfe) {
-							if (message.getEntity().equals("DisplayHead")) {
-								((DialogBlockTileEntity) tileEntity)
-										.setEntity(new DisplayEntityHead(tileEntity.getWorld()), 90);
-							} else if (message.getEntity().equals("DisplayEntity")) {
-								((DialogBlockTileEntity) tileEntity).setEntity(new DisplayEntity(tileEntity.getWorld()),
-										90);
-							} else {
-								((DialogBlockTileEntity) tileEntity).setEntity((EntityLivingBase) EntityList
-										.createEntityByName(message.getEntity(), tileEntity.getWorld()), 90);
-							}
+						if (message.getEntity().equals("DisplayHead")) {
+							((DialogBlockTileEntity) tileEntity).setEntity(new DisplayEntityHead(tileEntity.getWorld()),
+									90);
+						} else if (message.getEntity().equals("DisplayEntity")) {
+							((DialogBlockTileEntity) tileEntity).setEntity(new DisplayEntity(tileEntity.getWorld()),
+									90);
+						} else {
+							((DialogBlockTileEntity) tileEntity)
+									.setEntity(
+											(EntityLiving) EntityList.createEntityByName(message.getEntity(),
+													tileEntity.getWorld()),
+											EntityList.getIDFromString(message.getEntity()));
 						}
 					}
 					if ((((DialogBlockTileEntity) tileEntity).getEntity() instanceof DisplayEntity)
@@ -104,6 +101,10 @@ public class MessageDialogUpdate implements IMessage {
 		return entity;
 	}
 
+	public boolean getInterupt() {
+		return interupt;
+	}
+
 	public BlockPos getPos() {
 		return pos;
 	}
@@ -116,6 +117,10 @@ public class MessageDialogUpdate implements IMessage {
 		return text;
 	}
 
+	public void setInterupt(boolean interupt) {
+		this.interupt = interupt;
+	}
+
 	@Override
 	public void toBytes(ByteBuf buf) {
 		ByteBufUtils.writeUTF8String(buf, entity);
@@ -125,13 +130,5 @@ public class MessageDialogUpdate implements IMessage {
 		buf.writeLong(corner2.toLong());
 		ByteBufUtils.writeUTF8String(buf, skin);
 		buf.writeBoolean(interupt);
-	}
-
-	public boolean getInterupt() {
-		return interupt;
-	}
-
-	public void setInterupt(boolean interupt) {
-		this.interupt = interupt;
 	}
 }
