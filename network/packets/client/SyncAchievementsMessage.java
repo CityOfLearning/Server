@@ -102,7 +102,7 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 						}
 						if (a.meetsRequirements()) {
 							NetworkManager.sendToServer(
-									new AwardAchievementMessage(a.getId(), DYNServerMod.CcolPlayerInfo.getCCOLid(),
+									new AwardAchievementMessage(a.getId(), DYNServerMod.clientCCOLInfo.getCCOLid(),
 											Minecraft.getMinecraft().thePlayer.getName()));
 							a.setAwarded();
 						}
@@ -124,14 +124,14 @@ public class SyncAchievementsMessage extends AbstractClientMessage<SyncAchieveme
 						}
 						if (a.meetsRequirements()) {
 							NetworkManager.sendToServer(
-									new AwardAchievementMessage(a.getId(), DYNServerMod.CcolPlayerInfo.getCCOLid(),
+									new AwardAchievementMessage(a.getId(), DYNServerMod.clientCCOLInfo.getCCOLid(),
 											Minecraft.getMinecraft().thePlayer.getName()));
 							a.setAwarded();
 						}
 					}
 				} else {
 					NetworkManager.sendToServer(new AwardAchievementMessage(a.getId(),
-							DYNServerMod.CcolPlayerInfo.getCCOLid(), Minecraft.getMinecraft().thePlayer.getName()));
+							DYNServerMod.clientCCOLInfo.getCCOLid(), Minecraft.getMinecraft().thePlayer.getName()));
 					a.setAwarded();
 				}
 			}

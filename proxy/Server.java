@@ -17,6 +17,7 @@ import com.dyn.utils.PlayerAccessLevel;
 import mobi.omegacentauri.raspberryjammod.RaspberryJamMod;
 import mobi.omegacentauri.raspberryjammod.network.CodeEvent;
 import mobi.omegacentauri.raspberryjammod.network.CodeEvent.RobotErrorEvent;
+import mobi.omegacentauri.raspberryjammod.network.SocketEvent;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -97,6 +98,11 @@ public class Server implements Proxy {
 
 	@SubscribeEvent
 	public void loginEvent(PlayerEvent.PlayerLoggedInEvent event) {
+		if (DYNServerMod.developmentEnvironment) {
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
+					"/op " + event.player.getDisplayNameString());
+		}
+
 		String playerStatus = DBManager.getPlayerStatus(event.player.getDisplayNameString());
 		PlayerAccessLevel status = PlayerAccessLevel.STUDENT;
 		if (playerStatus.contains("Admin")) {
@@ -132,13 +138,14 @@ public class Server implements Proxy {
 
 		AchievementManager.setupPlayerAchievements(event.player);
 
-		DYNServerMod.CcolPlayerInfo = new CCOLPlayerInfo(event.player.getName());
-		if ((DYNServerMod.CcolPlayerInfo != null) && (DYNServerMod.CcolPlayerInfo.getCCOLid() != null)) {
-			if (!CCOLPlayerInfo.isReturningCcolUser(DYNServerMod.CcolPlayerInfo)) {
-				CCOLPlayerInfo.writeCCOLInfoToJson(DYNServerMod.CcolPlayerInfo, event.player);
+		CCOLPlayerInfo ccolInfo = new CCOLPlayerInfo(event.player.getName());
+		if ((ccolInfo != null) && (ccolInfo.getCCOLid() != null)) {
+			if (!CCOLPlayerInfo.isReturningCcolUser(ccolInfo)) {
+				CCOLPlayerInfo.writeCCOLInfoToJson(ccolInfo, event.player);
 			} else {
-				CCOLPlayerInfo.readCCOLInfo(DYNServerMod.CcolPlayerInfo, true);
+				CCOLPlayerInfo.readCCOLInfo(ccolInfo, true);
 			}
+			DYNServerMod.playersCcolInfo.put(event.player, ccolInfo);
 		} else {
 			if (!CCOLPlayerInfo.isReturningPlayer(event.player)) {
 				CCOLPlayerInfo.writePlayerInfoToJson(event.player);
@@ -150,7 +157,7 @@ public class Server implements Proxy {
 
 	@SubscribeEvent
 	public void logoutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
-		CCOLPlayerInfo.writeDataToJson(event.player, new CCOLPlayerInfo(event.player.getName()));
+		CCOLPlayerInfo.writeDataToJson(event.player, DYNServerMod.playersCcolInfo.remove(event.player));
 	}
 
 	// @SubscribeEvent
@@ -174,7 +181,7 @@ public class Server implements Proxy {
 
 	// should be fine from server side
 	@SubscribeEvent
-	public void socketClose(CodeEvent.SocketCloseEvent event) {
+	public void socketClose(SocketEvent.Close event) {
 		if (RobotMod.robotid2player.inverse().containsKey(event.getPlayer())) {
 			World world = event.getPlayer().worldObj;
 			EntityRobot robot = (EntityRobot) world
