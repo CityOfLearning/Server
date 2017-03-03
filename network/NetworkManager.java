@@ -138,7 +138,7 @@ public class NetworkManager {
 		registerMessage(MessageTeleportRobot.class, MessageTeleportRobot.Handler.class, Side.SERVER);
 		registerMessage(MessageOpenRobotInterface.class, MessageOpenRobotInterface.Handler.class, Side.SERVER);
 
-		//CLIENT
+		// CLIENT
 		registerMessage(RawErrorMessage.class, RawErrorMessage.Handler.class, Side.CLIENT);
 
 	}

@@ -31,7 +31,7 @@ public class RobotSpeakMessage extends AbstractClientMessage<RobotSpeakMessage> 
 		if (side.isClient()) {
 			World world = player.worldObj;
 			EntityRobot robot = (EntityRobot) world.getEntityByID(robotId);
-			if (robot != null && !robot.isDead) {
+			if ((robot != null) && !robot.isDead) {
 				robot.addMessage(command);
 			}
 		}

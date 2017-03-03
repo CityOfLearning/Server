@@ -2,14 +2,12 @@ package com.dyn.server.network.messages;
 
 import java.util.List;
 
-import com.dyn.DYNServerMod;
 import com.dyn.robot.RobotMod;
 import com.dyn.robot.blocks.BlockDynRobot;
 import com.dyn.robot.entity.DynRobotEntity;
 import com.dyn.robot.entity.EntityRobot;
 import com.dyn.robot.gui.RobotGuiHandler;
 import com.dyn.server.ServerMod;
-import com.dyn.server.network.NetworkManager;
 import com.dyn.utils.HelperFunctions;
 import com.forgeessentials.commons.Censor;
 
@@ -47,10 +45,12 @@ public class MessageActivateRobot implements IMessage {
 					new_robot.setRobotName(Censor.filter(message.getName()));
 					new_robot.rotate(HelperFunctions.getAngleFromFacing(dir));
 					EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-					player.openGui(RobotMod.instance, RobotGuiHandler.getGuiID(), player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+					player.openGui(RobotMod.instance, RobotGuiHandler.getGuiID(), player.worldObj, (int) player.posX,
+							(int) player.posY, (int) player.posZ);
 
-//					NetworkManager.sendTo(new MessageOpenRobotInterface(new_robot.getEntityId()),
-//							ctx.getServerHandler().playerEntity);
+					// NetworkManager.sendTo(new
+					// MessageOpenRobotInterface(new_robot.getEntityId()),
+					// ctx.getServerHandler().playerEntity);
 					/*
 					 * Minecraft.getMinecraft().getSoundHandler()
 					 * .playSound(PositionedSoundRecord.create(new
@@ -62,8 +62,8 @@ public class MessageActivateRobot implements IMessage {
 				} else {
 					List<EntityRobot> robots = ctx.getServerHandler().playerEntity.worldObj.getEntitiesWithinAABB(
 							EntityRobot.class,
-							AxisAlignedBB.fromBounds(message.getPosition().getX()-1, message.getPosition().getY()-1,
-									message.getPosition().getZ()-1, message.getPosition().getX() + 1,
+							AxisAlignedBB.fromBounds(message.getPosition().getX() - 1, message.getPosition().getY() - 1,
+									message.getPosition().getZ() - 1, message.getPosition().getX() + 1,
 									message.getPosition().getY() + 1, message.getPosition().getZ() + 1));
 					String robotName = RobotMod.dynRobot.getLocalizedName();
 					for (EntityRobot robot : robots) {
@@ -75,8 +75,7 @@ public class MessageActivateRobot implements IMessage {
 					}
 					ItemStack robotStack = new ItemStack(RobotMod.dynRobot, 1);
 					robotStack.setStackDisplayName(robotName);
-					ctx.getServerHandler().playerEntity.inventory
-							.addItemStackToInventory(robotStack);
+					ctx.getServerHandler().playerEntity.inventory.addItemStackToInventory(robotStack);
 				}
 			});
 			return null;

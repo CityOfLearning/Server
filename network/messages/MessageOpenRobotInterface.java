@@ -1,14 +1,11 @@
 package com.dyn.server.network.messages;
 
 import com.dyn.robot.RobotMod;
-import com.dyn.robot.entity.EntityRobot;
 import com.dyn.robot.gui.RobotGuiHandler;
 import com.dyn.server.ServerMod;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -18,9 +15,10 @@ public class MessageOpenRobotInterface implements IMessage {
 	public static class Handler implements IMessageHandler<MessageOpenRobotInterface, IMessage> {
 		@Override
 		public IMessage onMessage(final MessageOpenRobotInterface message, final MessageContext ctx) {
-			ServerMod.proxy.addScheduledTask(() -> {				
+			ServerMod.proxy.addScheduledTask(() -> {
 				EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-				player.openGui(RobotMod.instance, RobotGuiHandler.getGuiID(), player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+				player.openGui(RobotMod.instance, RobotGuiHandler.getGuiID(), player.worldObj, (int) player.posX,
+						(int) player.posY, (int) player.posZ);
 			});
 			return null;
 		}
