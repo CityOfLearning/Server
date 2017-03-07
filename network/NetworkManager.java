@@ -1,6 +1,8 @@
 package com.dyn.server.network;
 
 import com.dyn.server.network.messages.MessageActivateRobot;
+import com.dyn.server.network.messages.MessageBlockRedstoneSignalUpdate;
+import com.dyn.server.network.messages.MessageDecisionUpdate;
 import com.dyn.server.network.messages.MessageDialogUpdate;
 import com.dyn.server.network.messages.MessageOpenRobotInterface;
 import com.dyn.server.network.messages.MessageProximityBlockUpdate;
@@ -129,6 +131,7 @@ public class NetworkManager {
 	public static void registerMessages() {
 		// Server
 		registerMessage(MessageDialogUpdate.class, MessageDialogUpdate.Handler.class, Side.SERVER);
+		registerMessage(MessageDecisionUpdate.class, MessageDecisionUpdate.Handler.class, Side.SERVER);
 		registerMessage(MessageRunPythonScript.class, MessageRunPythonScript.Handler.class, Side.SERVER);
 		registerMessage(MessageRunRobotScript.class, MessageRunRobotScript.Handler.class, Side.SERVER);
 		registerMessage(MessageActivateRobot.class, MessageActivateRobot.Handler.class, Side.SERVER);
@@ -137,7 +140,9 @@ public class NetworkManager {
 		registerMessage(MessageProximityBlockUpdate.class, MessageProximityBlockUpdate.Handler.class, Side.SERVER);
 		registerMessage(MessageTeleportRobot.class, MessageTeleportRobot.Handler.class, Side.SERVER);
 		registerMessage(MessageOpenRobotInterface.class, MessageOpenRobotInterface.Handler.class, Side.SERVER);
+		registerMessage(MessageBlockRedstoneSignalUpdate.class, MessageBlockRedstoneSignalUpdate.Handler.class, Side.SERVER);
 
+		
 		// CLIENT
 		registerMessage(RawErrorMessage.class, RawErrorMessage.Handler.class, Side.CLIENT);
 
