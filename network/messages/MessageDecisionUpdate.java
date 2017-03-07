@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -87,7 +88,7 @@ public class MessageDecisionUpdate implements IMessage {
 	private String encodeChoices() {
 		String choiceString = "";
 		for (String key : choices.keySet()) {
-			choiceString += key + "†" + choices.get(key).toString() + "‡";
+			choiceString += key + String.valueOf('\u00a6') + choices.get(key).toString() + String.valueOf('\u00ab');
 		}
 		DYNServerMod.logger.info("Encoded to String: " + choiceString);
 		return choiceString;
@@ -135,8 +136,8 @@ public class MessageDecisionUpdate implements IMessage {
 	private void parseChoices(String stringMap) {
 		choices.clear();
 		DYNServerMod.logger.info("Pasring String: " + stringMap);
-		for (String key : stringMap.split(Pattern.quote("‡"))) {
-			choices.put(key.split(Pattern.quote("†"))[0], Choice.parse(key.split(Pattern.quote("†"))[1]));
+		for (String key : stringMap.split(Pattern.quote(String.valueOf('\u00ab')))) {
+			choices.put(key.split(Pattern.quote(String.valueOf('\u00a6')))[0], Choice.parse(key.split(Pattern.quote(String.valueOf('\u00a6')))[1]));
 		}
 	}
 
