@@ -22,8 +22,12 @@ public class MessageBlockRedstoneSignalUpdate implements IMessage {
 				World world = ctx.getServerHandler().playerEntity.getEntityWorld();
 				TileEntity tileEntity = world.getTileEntity(message.getPos());
 				if (tileEntity instanceof DecisionBlockTileEntity) {
-					world.setBlockState(message.getPos(), ((DecisionBlockTileEntity) tileEntity).getBlockType().getDefaultState().withProperty(ProximityBlock.POWERED, Boolean.valueOf(message.getState())), 3);
-					((DecisionBlock) ((DecisionBlockTileEntity) tileEntity).getBlockType()).notifyNeighbors(world, message.getPos());
+					world.setBlockState(message.getPos(),
+							((DecisionBlockTileEntity) tileEntity).getBlockType().getDefaultState()
+									.withProperty(ProximityBlock.POWERED, Boolean.valueOf(message.getState())),
+							3);
+					((DecisionBlock) ((DecisionBlockTileEntity) tileEntity).getBlockType()).notifyNeighbors(world,
+							message.getPos());
 					((DecisionBlockTileEntity) tileEntity).markForUpdate();
 				}
 			});
@@ -38,7 +42,7 @@ public class MessageBlockRedstoneSignalUpdate implements IMessage {
 	}
 
 	public MessageBlockRedstoneSignalUpdate(BlockPos pos, boolean time) {
-		this.state = time;
+		state = time;
 		this.pos = pos;
 	}
 

@@ -62,6 +62,10 @@ public class MessageProximityBlockUpdate implements IMessage {
 		return corner2;
 	}
 
+	public String getMobType() {
+		return mobType;
+	}
+
 	public BlockPos getPos() {
 		return pos;
 	}
@@ -72,9 +76,5 @@ public class MessageProximityBlockUpdate implements IMessage {
 		buf.writeLong(corner1.toLong());
 		buf.writeLong(corner2.toLong());
 		ByteBufUtils.writeUTF8String(buf, mobType);
-	}
-
-	public String getMobType() {
-		return mobType;
 	}
 }

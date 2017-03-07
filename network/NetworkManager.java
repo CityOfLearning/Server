@@ -140,9 +140,9 @@ public class NetworkManager {
 		registerMessage(MessageProximityBlockUpdate.class, MessageProximityBlockUpdate.Handler.class, Side.SERVER);
 		registerMessage(MessageTeleportRobot.class, MessageTeleportRobot.Handler.class, Side.SERVER);
 		registerMessage(MessageOpenRobotInterface.class, MessageOpenRobotInterface.Handler.class, Side.SERVER);
-		registerMessage(MessageBlockRedstoneSignalUpdate.class, MessageBlockRedstoneSignalUpdate.Handler.class, Side.SERVER);
+		registerMessage(MessageBlockRedstoneSignalUpdate.class, MessageBlockRedstoneSignalUpdate.Handler.class,
+				Side.SERVER);
 
-		
 		// CLIENT
 		registerMessage(RawErrorMessage.class, RawErrorMessage.Handler.class, Side.CLIENT);
 

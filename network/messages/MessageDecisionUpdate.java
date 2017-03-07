@@ -35,8 +35,8 @@ public class MessageDecisionUpdate implements IMessage {
 							message.getCorner2());
 					if (!message.getEntity().isEmpty()) {
 						if (message.getEntity().equals("DisplayHead")) {
-							((DecisionBlockTileEntity) tileEntity).setEntity(new DisplayEntityHead(tileEntity.getWorld()),
-									90);
+							((DecisionBlockTileEntity) tileEntity)
+									.setEntity(new DisplayEntityHead(tileEntity.getWorld()), 90);
 						} else if (message.getEntity().equals("DisplayEntity")) {
 							((DecisionBlockTileEntity) tileEntity).setEntity(new DisplayEntity(tileEntity.getWorld()),
 									90);
@@ -83,6 +83,14 @@ public class MessageDecisionUpdate implements IMessage {
 		this.choices = choices;
 	}
 
+	private String encodeChoices() {
+		String choiceString = "";
+		for (String key : choices.keySet()) {
+			choiceString += key + "†" + choices.get(key).toString() + "‡";
+		}
+		return choiceString;
+	}
+
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		entity = ByteBufUtils.readUTF8String(buf);
@@ -92,6 +100,10 @@ public class MessageDecisionUpdate implements IMessage {
 		corner2 = BlockPos.fromLong(buf.readLong());
 		skin = ByteBufUtils.readUTF8String(buf);
 		parseChoices(ByteBufUtils.readUTF8String(buf));
+	}
+
+	public Map<String, Choice> getChoices() {
+		return choices;
 	}
 
 	public BlockPos getCorner1() {
@@ -106,7 +118,6 @@ public class MessageDecisionUpdate implements IMessage {
 		return entity;
 	}
 
-
 	public BlockPos getPos() {
 		return pos;
 	}
@@ -117,6 +128,13 @@ public class MessageDecisionUpdate implements IMessage {
 
 	public String getText() {
 		return text;
+	}
+
+	private void parseChoices(String stringMap) {
+		choices.clear();
+		for (String key : stringMap.split(Pattern.quote("‡"))) {
+			choices.put(key.split(Pattern.quote("†"))[0], Choice.parse(key.split(Pattern.quote("†"))[1]));
+		}
 	}
 
 	@Override
@@ -130,23 +148,4 @@ public class MessageDecisionUpdate implements IMessage {
 		ByteBufUtils.writeUTF8String(buf, encodeChoices());
 	}
 
-	public Map<String, Choice> getChoices() {
-		return choices;
-	}
-
-	private String encodeChoices(){
-		String choiceString = "";
-		for(String key : choices.keySet()){
-			choiceString += key +"†" + choices.get(key).toString()+"‡";
-		}
-		return choiceString;
-	}
-	
-	private void parseChoices(String stringMap){
-		choices.clear();
-		for(String key : stringMap.split(Pattern.quote("‡"))){
-			choices.put(key.split(Pattern.quote("†"))[0], Choice.parse(key.split(Pattern.quote("†"))[1]));
-		}
-	}
-	
 }
