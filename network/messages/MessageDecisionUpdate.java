@@ -3,6 +3,7 @@ package com.dyn.server.network.messages;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.dyn.DYNServerMod;
 import com.dyn.fixins.blocks.decision.DecisionBlockTileEntity;
 import com.dyn.fixins.blocks.decision.DecisionBlockTileEntity.Choice;
 import com.dyn.server.ServerMod;
@@ -88,6 +89,7 @@ public class MessageDecisionUpdate implements IMessage {
 		for (String key : choices.keySet()) {
 			choiceString += key + "†" + choices.get(key).toString() + "‡";
 		}
+		DYNServerMod.logger.info("Encoded to String: " + choiceString);
 		return choiceString;
 	}
 
@@ -132,6 +134,7 @@ public class MessageDecisionUpdate implements IMessage {
 
 	private void parseChoices(String stringMap) {
 		choices.clear();
+		DYNServerMod.logger.info("Pasring String: " + stringMap);
 		for (String key : stringMap.split(Pattern.quote("‡"))) {
 			choices.put(key.split(Pattern.quote("†"))[0], Choice.parse(key.split(Pattern.quote("†"))[1]));
 		}
