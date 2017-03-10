@@ -36,11 +36,9 @@ public class MessageDialogUpdate implements IMessage {
 							((DialogBlockTileEntity) tileEntity).setEntity(new DisplayEntity(tileEntity.getWorld()),
 									90);
 						} else {
-							((DialogBlockTileEntity) tileEntity)
-									.setEntity(
-											(EntityLiving) EntityList.createEntityByName(message.getEntity(),
-													tileEntity.getWorld()),
-											EntityList.getIDFromString(message.getEntity()));
+							EntityLiving entity = (EntityLiving) EntityList.createEntityByName(message.getEntity(),
+									tileEntity.getWorld());
+							((DialogBlockTileEntity) tileEntity).setEntity(entity, EntityList.getEntityID(entity));
 						}
 					}
 					if ((((DialogBlockTileEntity) tileEntity).getEntity() instanceof DisplayEntity)
