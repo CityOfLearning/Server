@@ -359,7 +359,7 @@ public class DBManager {
 
 	public static JsonObject getAchievementMapDBAsJson() {
 		if (initialized) {
-			DYNServerMod.logger.info("Creadting Achievement Mappings");
+			DYNServerMod.logger.info("Creating Achievement Mappings");
 			try {
 				JsonObject reply = new JsonObject();
 				String sql = "select map_id from achievement_maps";
