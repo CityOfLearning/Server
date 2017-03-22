@@ -29,6 +29,10 @@ public class WorldZoneAreasMessage extends AbstractClientMessage<WorldZoneAreasM
 		for (AreaZone zone : zones) {
 			data += (zone.getName() + "^" + zone.getArea().toString() + "|").replace(" ", "");
 		}
+		if (data.length() >= 32767) {
+			data = "Permission Data is too Large^" + ((AreaZone) zones.toArray()[0]).getArea().toString() + "|";
+		}
+
 	}
 
 	@Override

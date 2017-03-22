@@ -54,6 +54,10 @@ public class WorldZonesMessage extends AbstractClientMessage<WorldZonesMessage> 
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
-		buffer.writeString(data);
+		if (data.length() < 32767) {
+			buffer.writeString(data);
+		} else {
+			buffer.writeString("Permission Data is too Large^contact DYN");
+		}
 	}
 }

@@ -30,9 +30,6 @@ public class GroupPermissionsMessage extends AbstractClientMessage<GroupPermissi
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
-		// we have to split a lot here, the pipe character is each achievement
-		// tabs are titles and new lines are the items within each requirement
-		// set
 		if (side.isClient()) {
 			AdminUI.permissions.clear();
 			for (String s : data.split(Pattern.quote("|"))) {
@@ -49,6 +46,10 @@ public class GroupPermissionsMessage extends AbstractClientMessage<GroupPermissi
 
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
-		buffer.writeString(data);
+		if (data.length() < 32767) {
+			buffer.writeString(data);
+		} else {
+			buffer.writeString("Group Permission Data is too Large|contact DYN");
+		}
 	}
 }
