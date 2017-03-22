@@ -11,6 +11,7 @@ import com.dyn.server.database.DBManager;
 import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.messages.RawErrorMessage;
 import com.dyn.server.network.packets.client.ServerUserlistMessage;
+import com.dyn.server.network.sniffer.Sniffer;
 import com.dyn.utils.CCOLPlayerInfo;
 import com.dyn.utils.PlayerAccessLevel;
 
@@ -93,6 +94,7 @@ public class Server implements Proxy {
 	public void init() {
 		RaspberryJamMod.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new Sniffer());
 		((CommandHandler) MinecraftServer.getServer().getCommandManager()).registerCommand(new CommandFreeze());
 	}
 
