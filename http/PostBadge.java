@@ -60,80 +60,85 @@ public class PostBadge extends Thread {
 
 	@Override
 	public void run() {
-		try {
-			HttpClient httpclient = HttpClients.createDefault();
+		if (DYNServerMod.apacheHttpCoreLoaded && DYNServerMod.apacheHttpClientLoaded) {
+			try {
+				HttpClient httpclient = HttpClients.createDefault();
 
-			// decode the base64 encoded string
-			byte[] decodedKey = secretKey.getBytes();
-			// rebuild key using SecretKeySpec
-			SecretKey theSecretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
+				// decode the base64 encoded string
+				byte[] decodedKey = secretKey.getBytes();
+				// rebuild key using SecretKeySpec
+				SecretKey theSecretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
 
-			HmacSHA256Signer signer = new HmacSHA256Signer(null, null, theSecretKey.getEncoded());
+				HmacSHA256Signer signer = new HmacSHA256Signer(null, null, theSecretKey.getEncoded());
 
-			// Configure JSON token with signer and SystemClock
-			JsonToken token = new JsonToken(signer);
-			token.setExpiration(Instant.now().plusSeconds(300)); // 5 Minutes
-			token.setParam("version", "v1");
-			token.setSubject("issued_badge");
-			JsonObject sPayload = new JsonObject();
-			sPayload.addProperty("badge_id", badgeID);
-			if (CCOL_UUID.contains("@")) {
-				sPayload.addProperty("user_identifier_type", 2);
-			} else {
-				try {
-					UUID.fromString(CCOL_UUID);
-				} catch (IllegalArgumentException iae) {
-					sPayload.addProperty("user_identifier_type", 1);
-				}
-			}
-			sPayload.addProperty("recipient", CCOL_UUID);
-			token.addJsonObject("payload", sPayload);
-
-			HttpPost postReq = new HttpPost("http://chicago.col-engine.com/partner_organizations/api.json");
-
-			postReq.setHeader("Accept", "application/json");
-			postReq.setHeader("Authorization", "JWT token=" + orgKey);
-
-			List<NameValuePair> pairs = new ArrayList<>();
-			pairs.add(new BasicNameValuePair("jwt", token.serializeAndSign()));
-
-			postReq.setEntity(new UrlEncodedFormEntity(pairs));
-
-			// Execute and get the response.
-			HttpResponse reply = httpclient.execute(postReq);
-			HttpEntity entity = reply.getEntity();
-
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				try {
-					response = "";
-					int data = instream.read();
-					while (data != -1) {
-						char theChar = (char) data;
-						response = response + theChar;
-						data = instream.read();
+				// Configure JSON token with signer and SystemClock
+				JsonToken token = new JsonToken(signer);
+				token.setExpiration(Instant.now().plusSeconds(300)); // 5
+																		// Minutes
+				token.setParam("version", "v1");
+				token.setSubject("issued_badge");
+				JsonObject sPayload = new JsonObject();
+				sPayload.addProperty("badge_id", badgeID);
+				if (CCOL_UUID.contains("@")) {
+					sPayload.addProperty("user_identifier_type", 2);
+				} else {
+					try {
+						UUID.fromString(CCOL_UUID);
+					} catch (IllegalArgumentException iae) {
+						sPayload.addProperty("user_identifier_type", 1);
 					}
-					JsonParser jParse = new JsonParser();
-					jsonResponse = jParse.parse(response);
-					JsonObject statusCheck = jsonResponse.getAsJsonObject();
-					if (statusCheck.has("status") && (statusCheck.get("status").getAsInt() == 201)) {
-						achievement.setAwarded(player);
-						player.addChatMessage(
-								new ChatComponentText("Player " + player.getDisplayName() + " has earned the badge"));
-					} else {
-						if (statusCheck.has("status") && (statusCheck.get("status").getAsInt() != 200)) {
-							player.addChatMessage(new ChatComponentText(
-									"Error: Returned Status: " + statusCheck.get("status").getAsInt()));
-						} else {
-							player.addChatMessage(new ChatComponentText("You have already earned this badge"));
+				}
+				sPayload.addProperty("recipient", CCOL_UUID);
+				token.addJsonObject("payload", sPayload);
+
+				HttpPost postReq = new HttpPost("http://chicago.col-engine.com/partner_organizations/api.json");
+
+				postReq.setHeader("Accept", "application/json");
+				postReq.setHeader("Authorization", "JWT token=" + orgKey);
+
+				List<NameValuePair> pairs = new ArrayList<>();
+				pairs.add(new BasicNameValuePair("jwt", token.serializeAndSign()));
+
+				postReq.setEntity(new UrlEncodedFormEntity(pairs));
+
+				// Execute and get the response.
+				HttpResponse reply = httpclient.execute(postReq);
+				HttpEntity entity = reply.getEntity();
+
+				if (entity != null) {
+					InputStream instream = entity.getContent();
+					try {
+						response = "";
+						int data = instream.read();
+						while (data != -1) {
+							char theChar = (char) data;
+							response = response + theChar;
+							data = instream.read();
 						}
+						JsonParser jParse = new JsonParser();
+						jsonResponse = jParse.parse(response);
+						JsonObject statusCheck = jsonResponse.getAsJsonObject();
+						if (statusCheck.has("status") && (statusCheck.get("status").getAsInt() == 201)) {
+							achievement.setAwarded(player);
+							player.addChatMessage(new ChatComponentText(
+									"Player " + player.getDisplayName() + " has earned the badge"));
+						} else {
+							if (statusCheck.has("status") && (statusCheck.get("status").getAsInt() != 200)) {
+								player.addChatMessage(new ChatComponentText(
+										"Error: Returned Status: " + statusCheck.get("status").getAsInt()));
+							} else {
+								player.addChatMessage(new ChatComponentText("You have already earned this badge"));
+							}
+						}
+					} finally {
+						instream.close();
 					}
-				} finally {
-					instream.close();
 				}
+			} catch (Exception e) {
+				DYNServerMod.logger.error("Could not get complete Badge post request", e);
 			}
-		} catch (Exception e) {
-			DYNServerMod.logger.error("Could not get complete Badge post request", e);
+		} else {
+			DYNServerMod.logger.error("Apache Http Libraries not loaded");
 		}
 	}
 }

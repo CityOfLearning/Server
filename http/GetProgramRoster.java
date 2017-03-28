@@ -50,51 +50,56 @@ public class GetProgramRoster extends Thread {
 
 	@Override
 	public void run() {
-		try {
-			HttpClient httpclient = HttpClients.createDefault();
+		if (DYNServerMod.apacheHttpCoreLoaded && DYNServerMod.apacheHttpClientLoaded) {
+			try {
+				HttpClient httpclient = HttpClients.createDefault();
 
-			// decode the base64 encoded string
-			byte[] decodedKey = secretKey.getBytes();
-			// rebuild key using SecretKeySpec
-			SecretKey theSecretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
+				// decode the base64 encoded string
+				byte[] decodedKey = secretKey.getBytes();
+				// rebuild key using SecretKeySpec
+				SecretKey theSecretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
 
-			HmacSHA256Signer signer = new HmacSHA256Signer(null, null, theSecretKey.getEncoded());
+				HmacSHA256Signer signer = new HmacSHA256Signer(null, null, theSecretKey.getEncoded());
 
-			// Configure JSON token with signer and SystemClock
-			JsonToken token = new JsonToken(signer);
-			token.setExpiration(Instant.now().plusSeconds(300)); // 5 Minutes
-			token.setParam("version", "v1");
-			JsonObject sPayload = new JsonObject();
-			sPayload.addProperty("org_id", orgId);
-			token.addJsonObject("payload", sPayload);
+				// Configure JSON token with signer and SystemClock
+				JsonToken token = new JsonToken(signer);
+				token.setExpiration(Instant.now().plusSeconds(300)); // 5
+																		// Minutes
+				token.setParam("version", "v1");
+				JsonObject sPayload = new JsonObject();
+				sPayload.addProperty("org_id", orgId);
+				token.addJsonObject("payload", sPayload);
 
-			HttpGet getReq = new HttpGet(String.format(
-					"http://chicago.col-engine.com/partner_api/v1/orgs/%s/programs/%s/scheduled_programs/%s/user_registrations.json?jwt=%s",
-					orgId, programId, scheduledProgramId, token.serializeAndSign()));
+				HttpGet getReq = new HttpGet(String.format(
+						"http://chicago.col-engine.com/partner_api/v1/orgs/%s/programs/%s/scheduled_programs/%s/user_registrations.json?jwt=%s",
+						orgId, programId, scheduledProgramId, token.serializeAndSign()));
 
-			getReq.setHeader("Accept", "application/json");
-			getReq.setHeader("Authorization", "JWT token=" + orgKey);
-			getReq.addHeader("jwt", token.serializeAndSign());
+				getReq.setHeader("Accept", "application/json");
+				getReq.setHeader("Authorization", "JWT token=" + orgKey);
+				getReq.addHeader("jwt", token.serializeAndSign());
 
-			HttpResponse reply = httpclient.execute(getReq);
+				HttpResponse reply = httpclient.execute(getReq);
 
-			HttpEntity entity = reply.getEntity();
+				HttpEntity entity = reply.getEntity();
 
-			if (entity != null) {
-				response = EntityUtils.toString(entity);
-				JsonParser jParse = new JsonParser();
-				jsonResponse = jParse.parse(response);
+				if (entity != null) {
+					response = EntityUtils.toString(entity);
+					JsonParser jParse = new JsonParser();
+					jsonResponse = jParse.parse(response);
 
-				responseReceived.setFlag(true);
+					responseReceived.setFlag(true);
+				}
+			} catch (InvalidKeyException e) {
+				DYNServerMod.logger.error("Key is invalid", e);
+			} catch (SignatureException e) {
+				DYNServerMod.logger.error("Signature is invalid", e);
+			} catch (ClientProtocolException e) {
+				DYNServerMod.logger.error("HTTP Protocol error", e);
+			} catch (IOException e) {
+				DYNServerMod.logger.error("Failed parsing JSON file", e);
 			}
-		} catch (InvalidKeyException e) {
-			DYNServerMod.logger.error("Key is invalid", e);
-		} catch (SignatureException e) {
-			DYNServerMod.logger.error("Signature is invalid", e);
-		} catch (ClientProtocolException e) {
-			DYNServerMod.logger.error("HTTP Protocol error", e);
-		} catch (IOException e) {
-			DYNServerMod.logger.error("Failed parsing JSON file", e);
+		} else {
+			DYNServerMod.logger.error("Apache Http Libraries not loaded");
 		}
 	}
 }
