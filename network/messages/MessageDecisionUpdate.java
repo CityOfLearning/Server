@@ -54,6 +54,7 @@ public class MessageDecisionUpdate implements IMessage {
 								.setTexture(new ResourceLocation(message.getSkin()));
 					}
 					((DecisionBlockTileEntity) tileEntity).setChoices(message.getChoices());
+					((DecisionBlockTileEntity) tileEntity).setIsQuiz(message.isQuiz());
 					((DecisionBlockTileEntity) tileEntity).markForUpdate();
 				}
 			});
@@ -67,6 +68,11 @@ public class MessageDecisionUpdate implements IMessage {
 	private BlockPos corner2;
 	private String entity;
 	private String skin;
+	private boolean isQuiz;
+	public boolean isQuiz() {
+		return isQuiz;
+	}
+
 	private Map<String, Choice> choices = Maps.newHashMap();
 
 	Pattern p1 = Pattern.compile("\u2021", Pattern.LITERAL);
@@ -76,7 +82,7 @@ public class MessageDecisionUpdate implements IMessage {
 	}
 
 	public MessageDecisionUpdate(String entity, String skin, BlockPos pos, String text, BlockPos corner1,
-			BlockPos corner2, Map<String, Choice> choices) {
+			BlockPos corner2, Map<String, Choice> choices, boolean isQuiz) {
 		this.entity = entity;
 		this.pos = pos;
 		this.text = text;
@@ -84,12 +90,13 @@ public class MessageDecisionUpdate implements IMessage {
 		this.corner1 = corner1;
 		this.corner2 = corner2;
 		this.choices = choices;
+		this.isQuiz = isQuiz;
 	}
 
 	private String encodeChoices() {
 		String choiceString = "";
 		for (String key : choices.keySet()) {
-			choiceString += key + String.valueOf('\u2020') + choices.get(key).toString() + String.valueOf('\u2021');
+			choiceString += key + p2.pattern() + choices.get(key).toString() + p1.pattern();
 		}
 		return choiceString;
 	}
@@ -102,6 +109,7 @@ public class MessageDecisionUpdate implements IMessage {
 		corner1 = BlockPos.fromLong(buf.readLong());
 		corner2 = BlockPos.fromLong(buf.readLong());
 		skin = ByteBufUtils.readUTF8String(buf);
+		isQuiz = buf.readBoolean();
 		parseChoices(ByteBufUtils.readUTF8String(buf));
 	}
 
@@ -148,6 +156,7 @@ public class MessageDecisionUpdate implements IMessage {
 		buf.writeLong(corner1.toLong());
 		buf.writeLong(corner2.toLong());
 		ByteBufUtils.writeUTF8String(buf, skin);
+		buf.writeBoolean(isQuiz);
 		ByteBufUtils.writeUTF8String(buf, encodeChoices());
 	}
 
