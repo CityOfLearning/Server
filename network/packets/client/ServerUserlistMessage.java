@@ -34,7 +34,7 @@ public class ServerUserlistMessage extends AbstractClientMessage<ServerUserlistM
 			String[] users = data.split(" ");
 			DYNServerMod.usernames.clear();
 			for (String u : users) {
-				if ((u != null) && !u.equals("null")) {
+				if ((u != null) && !u.equals("null") && !u.isEmpty()) {
 					DYNServerMod.usernames.add(u);
 				}
 			}
