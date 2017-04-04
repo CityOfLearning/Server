@@ -3,7 +3,6 @@ package com.dyn.server.network.packets.server;
 import java.io.IOException;
 
 import com.dyn.achievements.achievement.RequirementType;
-import com.dyn.server.ServerMod;
 import com.dyn.server.network.NetworkManager;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 import com.dyn.server.network.packets.client.SyncAchievementsMessage;
@@ -11,6 +10,7 @@ import com.dyn.server.network.packets.client.SyncAchievementsMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class MentorGivingAchievementMessage extends AbstractServerMessage<MentorGivingAchievementMessage> {
@@ -35,12 +35,9 @@ public class MentorGivingAchievementMessage extends AbstractServerMessage<Mentor
 	public void process(EntityPlayer player, Side side) {
 		// using the message instance gives access to 'this.id'
 		if (side.isServer()) {
-			for (EntityPlayerMP p : ServerMod.proxy.getServerUsers()) {
-				if (p.getDisplayNameString().equals(player_name)) {
-					NetworkManager.sendTo(
-							new SyncAchievementsMessage("" + ach_id + " " + RequirementType.MENTOR + " 0", true), p);
-				}
-			}
+			EntityPlayerMP p = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(player_name);
+			NetworkManager.sendTo(new SyncAchievementsMessage("" + ach_id + " " + RequirementType.MENTOR + " 0", true),
+					p);
 		}
 	}
 

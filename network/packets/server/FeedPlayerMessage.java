@@ -2,12 +2,12 @@ package com.dyn.server.network.packets.server;
 
 import java.io.IOException;
 
-import com.dyn.server.ServerMod;
 import com.dyn.server.network.packets.AbstractMessage.AbstractServerMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class FeedPlayerMessage extends AbstractServerMessage<FeedPlayerMessage> {
@@ -27,11 +27,8 @@ public class FeedPlayerMessage extends AbstractServerMessage<FeedPlayerMessage> 
 	public void process(EntityPlayer player, Side side) {
 		// using the message instance gives access to 'this.id'
 		if (side.isServer()) {
-			for (EntityPlayerMP p : ServerMod.proxy.getServerUsers()) {
-				if (p.getDisplayNameString().equals(player_name)) {
-					p.getFoodStats().setFoodLevel(100);
-				}
-			}
+			EntityPlayerMP p = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(player_name);
+			p.getFoodStats().setFoodLevel(100);
 		}
 	}
 
