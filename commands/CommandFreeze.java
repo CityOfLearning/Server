@@ -32,15 +32,15 @@ public class CommandFreeze extends CommandBase {
 				for (String arg : args) {
 					try {
 						EntityPlayer entityplayer = getPlayer(sender, arg);
-						DYNServerMod.frozenPlayers.add(entityplayer.getDisplayNameString());
+						DYNServerMod.frozenPlayers.add(entityplayer.getName());
 						// its a little weird to have a command call a command
 						// but lets let FE handle its business
 						MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
-								"/p user " + entityplayer.getDisplayNameString() + " group add _FROZEN_");
+								"/p user " + entityplayer.getName() + " group add _FROZEN_");
 						NetworkManager.sendTo(new FreezePlayerMessage(true), (EntityPlayerMP) entityplayer);
 						entityplayer.capabilities.allowEdit = false;
 						notifyOperators(sender, this, "You %s player %s",
-								new Object[] { "froze", entityplayer.getDisplayNameString() });
+								new Object[] { "froze", entityplayer.getName() });
 					} catch (PlayerNotFoundException e) {
 						notifyOperators(sender, this, "Could not find player %s", new Object[] { arg });
 					}
@@ -52,13 +52,13 @@ public class CommandFreeze extends CommandBase {
 				for (String arg : args) {
 					try {
 						EntityPlayer entityplayer = getPlayer(sender, arg);
-						DYNServerMod.frozenPlayers.remove(entityplayer.getDisplayNameString());
+						DYNServerMod.frozenPlayers.remove(entityplayer.getName());
 						MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
-								"/p user " + entityplayer.getDisplayNameString() + " group remove _FROZEN_");
+								"/p user " + entityplayer.getName() + " group remove _FROZEN_");
 						NetworkManager.sendTo(new FreezePlayerMessage(false), (EntityPlayerMP) entityplayer);
 						entityplayer.capabilities.allowEdit = true;
 						notifyOperators(sender, this, "You %s player %s",
-								new Object[] { "unfroze", entityplayer.getDisplayNameString() });
+								new Object[] { "unfroze", entityplayer.getName() });
 					} catch (PlayerNotFoundException e) {
 						notifyOperators(sender, this, "Could not find player %s", new Object[] { arg });
 					}

@@ -102,31 +102,31 @@ public class Server implements Proxy {
 	public void loginEvent(PlayerEvent.PlayerLoggedInEvent event) {
 		if (DYNServerMod.developmentEnvironment) {
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
-					"/op " + event.player.getDisplayNameString());
+					"/op " + event.player.getName());
 		}
 
-		String playerStatus = DBManager.getPlayerStatus(event.player.getDisplayNameString());
+		String playerStatus = DBManager.getPlayerStatus(event.player.getName());
 		PlayerAccessLevel status = PlayerAccessLevel.STUDENT;
 		if (playerStatus.contains("Admin")) {
 			status = PlayerAccessLevel.ADMIN;
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
-					"/p user " + event.player.getDisplayNameString() + " group add _OPS_");
+					"/p user " + event.player.getName() + " group add _OPS_");
 		} else if (playerStatus.contains("Mentor")) {
 			status = PlayerAccessLevel.MENTOR;
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
-					"/p user " + event.player.getDisplayNameString() + " group remove _STUDENTS_");
+					"/p user " + event.player.getName() + " group remove _STUDENTS_");
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
-					"/p user " + event.player.getDisplayNameString() + " group add _MENTORS_");
+					"/p user " + event.player.getName() + " group add _MENTORS_");
 		} else {
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
-					"/p user " + event.player.getDisplayNameString() + " group remove _MENTORS_");
+					"/p user " + event.player.getName() + " group remove _MENTORS_");
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
-					"/p user " + event.player.getDisplayNameString() + " group add _STUDENTS_");
+					"/p user " + event.player.getName() + " group add _STUDENTS_");
 		}
 
 		if (!DYNServerMod.frozenPlayers.contains(event.player)) {
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
-					"/p user " + event.player.getDisplayNameString() + " group remove _FROZEN_");
+					"/p user " + event.player.getName() + " group remove _FROZEN_");
 		}
 
 		if (status == PlayerAccessLevel.ADMIN) {
@@ -134,9 +134,8 @@ public class Server implements Proxy {
 					(EntityPlayerMP) event.player);
 		}
 
-		MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
-				String.format("/nick %s %s", event.player.getDisplayNameString(),
-						DBManager.getDisplayNameFromMCUsername(event.player.getDisplayNameString())));
+		MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), String.format(
+				"/nick %s %s", event.player.getName(), DBManager.getDisplayNameFromMCUsername(event.player.getName())));
 
 		AchievementManager.setupPlayerAchievements(event.player);
 
