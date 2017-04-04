@@ -41,12 +41,15 @@ public class PostBadge extends Thread {
 	private int badgeID;
 	private EntityPlayerMP player;
 	private AchievementPlus achievement;
+	private int orgId;
 
-	public PostBadge(int badgeId, String uuid, String secret, String key, EntityPlayer player, AchievementPlus ach) {
-		if ((uuid == null) || (secret == null) || (key == null) || uuid.isEmpty() || secret.isEmpty()
+	public PostBadge(int orgId, int badgeId, String uuid, String secret, String key, EntityPlayer player,
+			AchievementPlus ach) {
+		if ((orgId < 0) || (uuid == null) || (secret == null) || (key == null) || uuid.isEmpty() || secret.isEmpty()
 				|| key.isEmpty()) {
 			return;
 		}
+		this.orgId = orgId;
 		CCOL_UUID = uuid;
 		secretKey = secret;
 		orgKey = key;
@@ -91,7 +94,8 @@ public class PostBadge extends Thread {
 				sPayload.addProperty("recipient", CCOL_UUID);
 				token.addJsonObject("payload", sPayload);
 
-				HttpPost postReq = new HttpPost("http://chicago.col-engine.com/partner_organizations/api.json");
+				HttpPost postReq = new HttpPost(
+						String.format("http://chicago.col-engine.com/partner_api/v1/orgs/%d/issue_badge.json", orgId));
 
 				postReq.setHeader("Accept", "application/json");
 				postReq.setHeader("Authorization", "JWT token=" + orgKey);

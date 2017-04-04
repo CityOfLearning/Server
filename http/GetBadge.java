@@ -26,8 +26,10 @@ public class GetBadge extends Thread {
 	public static String response;
 	private String secretKey;
 	private String orgKey;
+	private int orgId;
 
-	public GetBadge(String secret, String key) {
+	public GetBadge(int orgId, String secret, String key) {
+		this.orgId = orgId;
 		secretKey = secret;
 		orgKey = key;
 		setName("Server Mod HTTP Get");
@@ -59,7 +61,8 @@ public class GetBadge extends Thread {
 				token.addJsonObject("payload", sPayload);
 
 				HttpGet getReq = new HttpGet(
-						"http://chicago.col-engine.com/partner_organizations/api.json?jwt=" + token.serializeAndSign());
+						String.format("http://chicago.col-engine.com/partner_api/v1/orgs/%d/badges.json?jwt=%s", orgId,
+								token.serializeAndSign()));
 				getReq.setHeader("Accept", "application/json");
 				getReq.setHeader("Authorization", "JWT token=" + orgKey);
 				getReq.addHeader("jwt", token.serializeAndSign());
