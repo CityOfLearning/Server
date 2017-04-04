@@ -41,11 +41,9 @@ public class MessageDecisionUpdate implements IMessage {
 							((DecisionBlockTileEntity) tileEntity).setEntity(new DisplayEntity(tileEntity.getWorld()),
 									90);
 						} else {
-							((DecisionBlockTileEntity) tileEntity)
-									.setEntity(
-											(EntityLiving) EntityList.createEntityByName(message.getEntity(),
-													tileEntity.getWorld()),
-											EntityList.getIDFromString(message.getEntity()));
+							EntityLiving entity = (EntityLiving) EntityList.createEntityByName(message.getEntity(),
+									tileEntity.getWorld());
+							((DecisionBlockTileEntity) tileEntity).setEntity(entity, EntityList.getEntityID(entity));
 						}
 					}
 					if ((((DecisionBlockTileEntity) tileEntity).getEntity() instanceof DisplayEntity)
@@ -69,13 +67,10 @@ public class MessageDecisionUpdate implements IMessage {
 	private String entity;
 	private String skin;
 	private boolean isQuiz;
-	public boolean isQuiz() {
-		return isQuiz;
-	}
-
 	private Map<String, Choice> choices = Maps.newHashMap();
 
 	Pattern p1 = Pattern.compile("\u2021", Pattern.LITERAL);
+
 	Pattern p2 = Pattern.compile("\u2020", Pattern.LITERAL);
 
 	public MessageDecisionUpdate() {
@@ -139,6 +134,10 @@ public class MessageDecisionUpdate implements IMessage {
 
 	public String getText() {
 		return text;
+	}
+
+	public boolean isQuiz() {
+		return isQuiz;
 	}
 
 	private void parseChoices(String stringMap) {
