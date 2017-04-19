@@ -64,6 +64,8 @@ public class Sniffer {
 			mcPlayer.playerNetServerHandler.getNetworkManager().channel().pipeline().remove("dyn_packet_sniffer");
 		} catch (NoSuchElementException nsee) {
 			DYNServerMod.logger.warn("Could not remove Packet Sniffer from pipeline");
+		} catch (NullPointerException npe) {
+			DYNServerMod.logger.warn("Player must have disconnected");
 		}
 	}
 
