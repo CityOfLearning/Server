@@ -44,21 +44,13 @@ public class MessageActivateRobot implements IMessage {
 					new_robot.setOwner(ctx.getServerHandler().playerEntity);
 					new_robot.setRobotName(Censor.filter(message.getName()));
 					new_robot.rotate(HelperFunctions.getAngleFromFacing(dir));
+					new_robot.setIsFollowing(true);
 					EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-					player.openGui(RobotMod.instance, RobotGuiHandler.getGuiID(), player.worldObj, (int) player.posX,
-							(int) player.posY, (int) player.posZ);
+					player.openGui(RobotMod.instance, RobotGuiHandler.getActivationGuiID(), player.worldObj,
+							(int) new_robot.posX, (int) new_robot.posY, (int) new_robot.posZ);
 
-					// NetworkManager.sendTo(new
-					// MessageOpenRobotInterface(new_robot.getEntityId()),
-					// ctx.getServerHandler().playerEntity);
-					/*
-					 * Minecraft.getMinecraft().getSoundHandler()
-					 * .playSound(PositionedSoundRecord.create(new
-					 * ResourceLocation("dynrobot:robot.on"), (float)
-					 * (message.getPosition().getX() + 0.5),
-					 * message.getPosition().getY(),
-					 * message.getPosition().getZ() + 0.5f));
-					 */
+					player.worldObj.playSoundAtEntity(player, "dynrobot:robot.on", 1, 1);
+
 				} else {
 					List<EntityRobot> robots = ctx.getServerHandler().playerEntity.worldObj.getEntitiesWithinAABB(
 							EntityRobot.class,

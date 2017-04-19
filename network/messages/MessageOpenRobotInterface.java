@@ -1,6 +1,7 @@
 package com.dyn.server.network.messages;
 
 import com.dyn.robot.RobotMod;
+import com.dyn.robot.entity.EntityRobot;
 import com.dyn.robot.gui.RobotGuiHandler;
 import com.dyn.server.ServerMod;
 
@@ -17,8 +18,10 @@ public class MessageOpenRobotInterface implements IMessage {
 		public IMessage onMessage(final MessageOpenRobotInterface message, final MessageContext ctx) {
 			ServerMod.proxy.addScheduledTask(() -> {
 				EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-				player.openGui(RobotMod.instance, RobotGuiHandler.getGuiID(), player.worldObj, (int) player.posX,
-						(int) player.posY, (int) player.posZ);
+				EntityRobot robot = (EntityRobot) ctx.getServerHandler().playerEntity.worldObj
+						.getEntityByID(message.getEntityId());
+				player.openGui(RobotMod.instance, RobotGuiHandler.getActivationGuiID(), player.worldObj,
+						(int) robot.posX, (int) robot.posY, (int) robot.posZ);
 			});
 			return null;
 		}
