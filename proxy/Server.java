@@ -187,8 +187,11 @@ public class Server implements Proxy {
 			World world = event.getPlayer().worldObj;
 			EntityRobot robot = (EntityRobot) world
 					.getEntityByID(RobotMod.robotid2player.inverse().get(event.getPlayer()));
-			DYNServerMod.logger.info("Stop Executing Code from Socket Message");
-			robot.stopExecutingCode();
+			DYNServerMod.logger
+					.info("Stop Executing Code from Socket Message for Player: " + event.getPlayer().getName());
+			if (robot != null) {
+				robot.stopExecutingCode();
+			}
 		}
 	}
 
