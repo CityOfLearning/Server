@@ -32,7 +32,8 @@ public class MessageActivateRobot implements IMessage {
 		public IMessage onMessage(final MessageActivateRobot message, final MessageContext ctx) {
 			ServerMod.proxy.addScheduledTask(() -> {
 				EnumFacing dir = EnumFacing.NORTH;
-				World world = ctx.getServerHandler().playerEntity.worldObj;
+				EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+				World world = player.worldObj;
 
 				if (message.isActivating()) {
 					dir = world.getBlockState(message.getPosition()).getValue(BlockDynRobot.FACING);
@@ -41,25 +42,23 @@ public class MessageActivateRobot implements IMessage {
 							EntityList.classToStringMapping.get(DynRobotEntity.class),
 							message.getPosition().getX() + 0.5, message.getPosition().getY(),
 							message.getPosition().getZ() + 0.5);
-					new_robot.setOwner(ctx.getServerHandler().playerEntity);
+					new_robot.setOwner(player);
 					new_robot.setRobotName(Censor.filter(message.getName()));
 					new_robot.rotate(HelperFunctions.getAngleFromFacing(dir));
 					new_robot.setIsFollowing(true);
-					EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-					player.openGui(RobotMod.instance, RobotGuiHandler.getActivationGuiID(), player.worldObj,
-							(int) new_robot.posX, (int) new_robot.posY, (int) new_robot.posZ);
+					player.openGui(RobotMod.instance, RobotGuiHandler.getActivationGuiID(), world, (int) new_robot.posX,
+							(int) new_robot.posY, (int) new_robot.posZ);
 
-					player.worldObj.playSoundAtEntity(player, "dynrobot:robot.on", 1, 1);
+					world.playSoundAtEntity(player, "dynrobot:robot.on", 1, 1);
 
 				} else {
-					List<EntityRobot> robots = ctx.getServerHandler().playerEntity.worldObj.getEntitiesWithinAABB(
-							EntityRobot.class,
+					List<EntityRobot> robots = world.getEntitiesWithinAABB(EntityRobot.class,
 							AxisAlignedBB.fromBounds(message.getPosition().getX() - 1, message.getPosition().getY() - 1,
 									message.getPosition().getZ() - 1, message.getPosition().getX() + 1,
 									message.getPosition().getY() + 1, message.getPosition().getZ() + 1));
 					String robotName = RobotMod.dynRobot.getLocalizedName();
 					for (EntityRobot robot : robots) {
-						if (robot.isOwner(ctx.getServerHandler().playerEntity)) {
+						if (robot.isOwner(player)) {
 							dir = robot.getHorizontalFacing();
 							robotName = robot.getRobotName();
 							robot.setDead();
@@ -67,7 +66,7 @@ public class MessageActivateRobot implements IMessage {
 					}
 					ItemStack robotStack = new ItemStack(RobotMod.dynRobot, 1);
 					robotStack.setStackDisplayName(robotName);
-					ctx.getServerHandler().playerEntity.inventory.addItemStackToInventory(robotStack);
+					player.inventory.addItemStackToInventory(robotStack);
 				}
 			});
 			return null;
