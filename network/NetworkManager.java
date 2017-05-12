@@ -6,6 +6,7 @@ import com.dyn.server.network.messages.MessageDecisionUpdate;
 import com.dyn.server.network.messages.MessageDialogUpdate;
 import com.dyn.server.network.messages.MessageOpenRobotInterface;
 import com.dyn.server.network.messages.MessageProximityBlockUpdate;
+import com.dyn.server.network.messages.MessageReplaceSDCardItemStack;
 import com.dyn.server.network.messages.MessageRunPythonScript;
 import com.dyn.server.network.messages.MessageRunRobotScript;
 import com.dyn.server.network.messages.MessageTeleportRobot;
@@ -142,6 +143,7 @@ public class NetworkManager {
 		registerMessage(MessageOpenRobotInterface.class, MessageOpenRobotInterface.Handler.class, Side.SERVER);
 		registerMessage(MessageBlockRedstoneSignalUpdate.class, MessageBlockRedstoneSignalUpdate.Handler.class,
 				Side.SERVER);
+		registerMessage(MessageReplaceSDCardItemStack.class, MessageReplaceSDCardItemStack.Handler.class, Side.SERVER);
 
 		// CLIENT
 		registerMessage(RawErrorMessage.class, RawErrorMessage.Handler.class, Side.CLIENT);
