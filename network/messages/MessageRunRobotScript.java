@@ -1,11 +1,17 @@
 package com.dyn.server.network.messages;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+import com.dyn.DYNServerMod;
 import com.dyn.robot.api.RobotAPI;
 import com.dyn.robot.entity.EntityRobot;
 import com.dyn.server.ServerMod;
+import com.dyn.utils.FileUtils;
 
 import io.netty.buffer.ByteBuf;
 import mobi.omegacentauri.raspberryjammod.process.RunPythonShell;
@@ -30,6 +36,26 @@ public class MessageRunRobotScript implements IMessage {
 			EntityRobot robot = (EntityRobot) world.getEntityByID(message.getId());
 			robot.clearProgramPath();
 			robot.startExecutingCode();
+
+			if (DYNServerMod.playersCcolInfo.containsKey(player)) {
+				File scriptFile = new File(DYNServerMod.scriptsLoc,
+						DYNServerMod.playersCcolInfo.get(player).getCCOLid().toString() + "/" + LocalDate.now() + "/"
+								+ FileUtils.sanitizeFilename(LocalDateTime.now().toLocalTime() + ".py"));
+				try {
+					FileUtils.writeFile(scriptFile, message.getScript());
+				} catch (IOException e) {
+					DYNServerMod.logger.error("Failed Logging Script File", e);
+				}
+			} else {
+				File scriptFile = new File(DYNServerMod.scriptsLoc, player.getName() + "/" + LocalDate.now() + "/"
+						+ FileUtils.sanitizeFilename(LocalDateTime.now().toLocalTime() + ".py"));
+				try {
+					FileUtils.writeFile(scriptFile, message.getScript());
+				} catch (IOException e) {
+					DYNServerMod.logger.error(
+							"Failed Logging Script File: " + FileUtils.sanitizeFilename(scriptFile.getName()), e);
+				}
+			}
 
 			RobotAPI.setRobotId(message.getId(), ctx.getServerHandler().playerEntity);
 
