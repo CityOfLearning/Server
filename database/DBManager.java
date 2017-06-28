@@ -786,7 +786,7 @@ public class DBManager {
 
 	public static void setPlayerSkin(String player, String skin) {
 		if (initialized) {
-			DYNServerMod.logger.info("Setting Player Skin from Database");
+			DYNServerMod.logger.info("Setting Player Skin in Database");
 			try {
 				// even though the mc_name isnt the primary key its still
 				// unique, only its mutable
