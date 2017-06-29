@@ -8,6 +8,7 @@ import com.dyn.robot.entity.DynRobotEntity;
 import com.dyn.robot.entity.EntityRobot;
 import com.dyn.robot.gui.RobotGuiHandler;
 import com.dyn.server.ServerMod;
+import com.dyn.server.network.NetworkManager;
 import com.dyn.utils.HelperFunctions;
 import com.forgeessentials.commons.Censor;
 
@@ -49,7 +50,7 @@ public class MessageActivateRobot implements IMessage {
 					player.openGui(RobotMod.instance, RobotGuiHandler.getActivationGuiID(), world, (int) new_robot.posX,
 							(int) new_robot.posY, (int) new_robot.posZ);
 
-					world.playSoundAtEntity(player, "dynrobot:robot.on", 1, 1);
+					NetworkManager.sendTo(new PlayCustomSoundMessage("dynrobot:robot.on"), player);
 
 				} else {
 					List<EntityRobot> robots = world.getEntitiesWithinAABB(EntityRobot.class,

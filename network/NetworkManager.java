@@ -1,5 +1,6 @@
 package com.dyn.server.network;
 
+import com.dyn.server.network.messages.CodeExecutionEndedMessage;
 import com.dyn.server.network.messages.MessageActivateRobot;
 import com.dyn.server.network.messages.MessageBlockRedstoneSignalUpdate;
 import com.dyn.server.network.messages.MessageDecisionUpdate;
@@ -12,6 +13,7 @@ import com.dyn.server.network.messages.MessageRunRobotScript;
 import com.dyn.server.network.messages.MessageTeleportRobot;
 import com.dyn.server.network.messages.MessageTimerBlockUpdate;
 import com.dyn.server.network.messages.MessageToggleRobotFollow;
+import com.dyn.server.network.messages.PlayCustomSoundMessage;
 import com.dyn.server.network.messages.RawErrorMessage;
 import com.dyn.server.network.packets.AbstractMessage;
 import com.dyn.server.network.packets.bidirectional.MentorRequstScriptMessage;
@@ -147,6 +149,8 @@ public class NetworkManager {
 
 		// CLIENT
 		registerMessage(RawErrorMessage.class, RawErrorMessage.Handler.class, Side.CLIENT);
+		registerMessage(CodeExecutionEndedMessage.class, CodeExecutionEndedMessage.Handler.class, Side.CLIENT);
+		registerMessage(PlayCustomSoundMessage.class, PlayCustomSoundMessage.Handler.class, Side.CLIENT);
 
 	}
 	// ========================================================//
