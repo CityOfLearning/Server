@@ -6,9 +6,11 @@ import com.dyn.student.StudentUI;
 import com.forgeessentials.commons.network.Packet1SelectionUpdate;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IThreadListener;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -56,6 +58,12 @@ public class Client implements Proxy, IMessageHandler<Packet1SelectionUpdate, IM
 	public IMessage onMessage(Packet1SelectionUpdate message, MessageContext ctx) {
 		StudentUI.selection = message.getSelection();
 		return null;
+	}
+
+	@Override
+	public void playSound(String sound) {
+		Minecraft.getMinecraft().getSoundHandler()
+				.playSound(PositionedSoundRecord.create(new ResourceLocation(sound), 1.0F));
 	}
 
 	@Override

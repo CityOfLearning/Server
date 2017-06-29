@@ -9,6 +9,7 @@ import com.dyn.robot.entity.EntityRobot;
 import com.dyn.server.commands.CommandFreeze;
 import com.dyn.server.database.DBManager;
 import com.dyn.server.network.NetworkManager;
+import com.dyn.server.network.messages.CodeExecutionEndedMessage;
 import com.dyn.server.network.messages.RawErrorMessage;
 import com.dyn.server.network.packets.client.ServerUserlistMessage;
 import com.dyn.utils.CCOLPlayerInfo;
@@ -165,6 +166,12 @@ public class Server implements Proxy {
 	// }
 
 	@Override
+	public void playSound(String sound) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public void preInit() {
 		CCOLPlayerInfo.setCCOLDataFolder(MinecraftServer.getServer().getDataDirectory());
 	}
@@ -191,6 +198,7 @@ public class Server implements Proxy {
 				robot.stopExecutingCode();
 			}
 		}
+		NetworkManager.sendTo(new CodeExecutionEndedMessage("Complete"), (EntityPlayerMP) event.getPlayer());
 	}
 
 }

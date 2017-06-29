@@ -24,6 +24,8 @@ public interface Proxy {
 
 	public void init();
 
+	public void playSound(String sound);
+
 	public void preInit();
 
 	public void renderGUI();
