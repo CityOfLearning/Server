@@ -3,15 +3,12 @@ package com.dyn.server.network;
 import com.dyn.server.network.messages.CodeExecutionEndedMessage;
 import com.dyn.server.network.messages.MessageActivateRobot;
 import com.dyn.server.network.messages.MessageBlockRedstoneSignalUpdate;
-import com.dyn.server.network.messages.MessageDecisionUpdate;
-import com.dyn.server.network.messages.MessageDialogUpdate;
+import com.dyn.server.network.messages.MessageClientUpdateTileEntity;
 import com.dyn.server.network.messages.MessageOpenRobotInterface;
-import com.dyn.server.network.messages.MessageProximityBlockUpdate;
 import com.dyn.server.network.messages.MessageReplaceSDCardItemStack;
 import com.dyn.server.network.messages.MessageRunPythonScript;
 import com.dyn.server.network.messages.MessageRunRobotScript;
 import com.dyn.server.network.messages.MessageTeleportRobot;
-import com.dyn.server.network.messages.MessageTimerBlockUpdate;
 import com.dyn.server.network.messages.MessageToggleRobotFollow;
 import com.dyn.server.network.messages.PlayCustomSoundMessage;
 import com.dyn.server.network.messages.RawErrorMessage;
@@ -22,9 +19,9 @@ import com.dyn.server.network.packets.client.AchievementProgressMessage;
 import com.dyn.server.network.packets.client.FreezePlayerMessage;
 import com.dyn.server.network.packets.client.GroupNamesMessage;
 import com.dyn.server.network.packets.client.GroupPermissionsMessage;
+import com.dyn.server.network.packets.client.MutePlayerAudioMessage;
 import com.dyn.server.network.packets.client.PlayerStatusMessage;
 import com.dyn.server.network.packets.client.PlotNamesMessage;
-import com.dyn.server.network.packets.client.ReturnFlagMessage;
 import com.dyn.server.network.packets.client.RobotPathMessage;
 import com.dyn.server.network.packets.client.RobotSpeakMessage;
 import com.dyn.server.network.packets.client.ServerUserlistMessage;
@@ -133,14 +130,11 @@ public class NetworkManager {
 
 	public static void registerMessages() {
 		// Server
-		registerMessage(MessageDialogUpdate.class, MessageDialogUpdate.Handler.class, Side.SERVER);
-		registerMessage(MessageDecisionUpdate.class, MessageDecisionUpdate.Handler.class, Side.SERVER);
+		registerMessage(MessageClientUpdateTileEntity.class, MessageClientUpdateTileEntity.Handler.class, Side.SERVER);
 		registerMessage(MessageRunPythonScript.class, MessageRunPythonScript.Handler.class, Side.SERVER);
 		registerMessage(MessageRunRobotScript.class, MessageRunRobotScript.Handler.class, Side.SERVER);
 		registerMessage(MessageActivateRobot.class, MessageActivateRobot.Handler.class, Side.SERVER);
 		registerMessage(MessageToggleRobotFollow.class, MessageToggleRobotFollow.Handler.class, Side.SERVER);
-		registerMessage(MessageTimerBlockUpdate.class, MessageTimerBlockUpdate.Handler.class, Side.SERVER);
-		registerMessage(MessageProximityBlockUpdate.class, MessageProximityBlockUpdate.Handler.class, Side.SERVER);
 		registerMessage(MessageTeleportRobot.class, MessageTeleportRobot.Handler.class, Side.SERVER);
 		registerMessage(MessageOpenRobotInterface.class, MessageOpenRobotInterface.Handler.class, Side.SERVER);
 		registerMessage(MessageBlockRedstoneSignalUpdate.class, MessageBlockRedstoneSignalUpdate.Handler.class,
@@ -170,10 +164,10 @@ public class NetworkManager {
 		registerMessage(PlayerStatusMessage.class);
 		registerMessage(PlotNamesMessage.class);
 		registerMessage(GroupNamesMessage.class);
+		registerMessage(MutePlayerAudioMessage.class);
 		registerMessage(WorldNamesMessage.class);
 		registerMessage(WorldZonesMessage.class);
 		registerMessage(WorldZoneAreasMessage.class);
-		registerMessage(ReturnFlagMessage.class);
 		registerMessage(ServerUserlistMessage.class);
 		registerMessage(SyncAchievementsMessage.class);
 		registerMessage(GroupPermissionsMessage.class);
