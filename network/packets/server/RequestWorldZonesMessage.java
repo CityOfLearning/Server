@@ -29,7 +29,7 @@ public class RequestWorldZonesMessage extends AbstractServerMessage<RequestWorld
 
 	public RequestWorldZonesMessage(int dimId, boolean grabArea) {
 		this.dimId = dimId;
-		this.grabArea = true;
+		this.grabArea = grabArea;
 	}
 
 	@Override
