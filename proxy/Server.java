@@ -110,6 +110,8 @@ public class Server implements Proxy {
 			status = PlayerAccessLevel.ADMIN;
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
 					"/p user " + event.player.getName() + " group add _OPS_");
+			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
+					"/p user " + event.player.getName() + " group remove _STUDENTS_");
 		} else if (playerStatus.contains("Mentor")) {
 			status = PlayerAccessLevel.MENTOR;
 			MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(),
